@@ -162,12 +162,12 @@ export const ui = {
   } satisfies Record<Language, [string, string, string]>,
   profile: {
     FR: [
-      'Depuis mai 2023, je travaille chez Neemba Togo, concessionnaire Caterpillar. Je gère l’infrastructure informatique et j’accompagne les utilisateurs. J’y ai notamment déployé Wazuh pour centraliser la surveillance de sécurité.',
+      'Depuis mai 2023, je travaille chez Neemba Togo, concessionnaire Caterpillar. Je gère l’infrastructure informatique et j’accompagne les utilisateurs. Mon projet de stage académique chez Neemba Togo portait sur le déploiement de Wazuh pour centraliser la surveillance de sécurité.',
       'Je m’occupe aussi du budget IT, des fournisseurs et du parc informatique. Avec Power BI et mes outils internes, je facilite le suivi et les tâches du quotidien. Je fais le lien avec la DSI groupe et j’encadre une stagiaire.',
       'Titulaire d’un Master en Réseaux et Systèmes d’Information, je souhaite évoluer vers la gouvernance et la cybersécurité. Mon mémoire portait sur l’intégration de l’IA à un SIEM : un sujet que je prolonge dans mes projets personnels.',
     ],
     EN: [
-      'Since May 2023, I’ve worked at Neemba Togo, a Caterpillar dealer. I manage the IT infrastructure and support users. I also deployed Wazuh to centralise security monitoring.',
+      'Since May 2023, I’ve worked at Neemba Togo, a Caterpillar dealer. I manage the IT infrastructure and support users. My academic internship project at Neemba Togo focused on deploying Wazuh to centralise security monitoring.',
       'I oversee the IT budget, vendors and assets. Through Power BI and internal tools, I make reporting and everyday tasks easier. I liaise with group IT and supervise an intern.',
       'I hold a Master’s in Networks and Information Systems and want to develop my career in IT governance and cybersecurity. My thesis explored integrating AI into a SIEM, a topic I continue to explore through personal projects.',
     ],
@@ -336,8 +336,8 @@ export const skills: { title: LS; desc: LS; tags: string[] }[] = [
   {
     title: { FR: 'Cybersécurité', EN: 'Cybersecurity' },
     desc: {
-      FR: 'Je surveille les événements de sécurité avec Wazuh et je gère les accès, les pare-feu et les sauvegardes. Je suis formé à ISO 27001 et à l’analyse des risques.',
-      EN: 'I monitor security events with Wazuh and manage access, firewalls and backups. My training covers ISO 27001 and risk analysis.',
+      FR: 'J’ai déployé Wazuh dans le cadre de mon stage académique chez Neemba Togo. Mes compétences couvrent aussi les accès, les pare-feu et les sauvegardes, avec une formation à ISO 27001 et à l’analyse des risques.',
+      EN: 'I deployed Wazuh during my academic internship at Neemba Togo. My skills also cover access, firewalls and backups, with training in ISO 27001 and risk analysis.',
     },
     tags: ['Wazuh', 'SIEM / XDR', 'Veeam', 'ISO 27001'],
   },
@@ -395,11 +395,11 @@ export type CaseStudy = {
 export const featuredCases: CaseStudy[] = [
   {
     id: 'siem',
-    title: { FR: 'SIEM / XDR Wazuh', EN: 'Wazuh SIEM / XDR' },
+    title: { FR: 'Wazuh · stage académique', EN: 'Wazuh · academic internship' },
     org: 'Neemba Togo',
     context: {
-      FR: 'Chez Neemba Togo, je devais réunir les événements de sécurité du parc pour faciliter leur analyse et la réponse aux incidents.',
-      EN: 'At Neemba Togo, I needed to bring security events together to make analysis and incident response easier.',
+      FR: 'Dans le cadre de mon stage académique chez Neemba Togo, j’ai travaillé sur la centralisation des événements de sécurité avec Wazuh.',
+      EN: 'During my academic internship at Neemba Togo, I worked on centralising security events with Wazuh.',
     },
     steps: {
       FR: [
@@ -416,8 +416,8 @@ export const featuredCases: CaseStudy[] = [
       ],
     },
     result: {
-      FR: 'J’ai donné à l’équipe IT une vue centralisée des événements de sécurité. Mon mémoire de Master a prolongé ce travail avec l’IA appliquée aux journaux.',
-      EN: 'I gave the IT team a central view of security events. My Master’s thesis extended this work with AI applied to logs.',
+      FR: 'Ce projet de stage m’a permis de mettre en pratique le déploiement d’un SIEM/XDR, la détection et les réponses automatiques aux incidents.',
+      EN: 'This internship project let me apply SIEM/XDR deployment, detection rules and automated incident responses.',
     },
   },
   {
@@ -486,8 +486,8 @@ export const jobs: { start: string; end: string | null; title: LS; org: LS; desc
       EN: 'Neemba Togo (formerly Togo Équipements) · Caterpillar dealer',
     },
     desc: {
-      FR: 'Je gère les systèmes, le réseau et la sécurité de la filiale, où j’ai déployé Wazuh. Je suis également le budget IT, les fournisseurs et le reporting Power BI. Je coordonne les sujets infrastructure avec la DSI groupe, assure le support N2/N3 et encadre une stagiaire.',
-      EN: 'I manage the subsidiary’s systems, network and security, including my Wazuh deployment. I also oversee the IT budget, vendors and Power BI reporting. I coordinate infrastructure matters with group IT, provide L2/L3 support and supervise an intern.',
+      FR: 'Je gère les systèmes, le réseau et la sécurité de la filiale. Je suis également le budget IT, les fournisseurs et le reporting Power BI. Je coordonne les sujets infrastructure avec la DSI groupe, assure le support N2/N3 et encadre une stagiaire.',
+      EN: 'I manage the subsidiary’s systems, network and security. I also oversee the IT budget, vendors and Power BI reporting. I coordinate infrastructure matters with group IT, provide L2/L3 support and supervise an intern.',
     },
   },
   {
@@ -611,11 +611,11 @@ export const projects: {
     family: 'infra',
     year: 2024,
     title: { FR: 'Déploiement SIEM / XDR Wazuh', EN: 'Wazuh SIEM / XDR deployment' },
-    org: same('Neemba Togo'),
+    org: { FR: 'Neemba Togo · stage académique', EN: 'Neemba Togo · academic internship' },
     category: { FR: 'Cybersécurité', EN: 'Cybersecurity' },
     desc: {
-      FR: 'J’ai déployé Wazuh pour centraliser la surveillance du parc et automatiser certaines réponses aux incidents.',
-      EN: 'I deployed Wazuh to centralise fleet monitoring and automate selected incident responses.',
+      FR: 'Pour mon projet de stage académique chez Neemba Togo, j’ai déployé Wazuh pour centraliser les événements de sécurité et automatiser certaines réponses aux incidents.',
+      EN: 'For my academic internship project at Neemba Togo, I deployed Wazuh to centralise security events and automate selected incident responses.',
     },
     tags: ['Wazuh', 'Linux', 'SIEM / XDR'],
   },

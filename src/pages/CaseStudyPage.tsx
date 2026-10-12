@@ -86,7 +86,7 @@ const studies: Record<string, Study> = {
   siem: {
     environment: 'Linux · Wazuh · SIEM / XDR',
     FR: {
-      role: 'Déploiement & supervision',
+      role: 'Projet de stage académique',
       context:
         'Donner à l’équipe IT de Neemba Togo une vue centralisée des événements de sécurité du parc, pour faciliter la détection et l’analyse des incidents.',
       steps: [
@@ -99,7 +99,7 @@ const studies: Record<string, Study> = {
         'Une supervision centralisée qui rend les événements de sécurité visibles et exploitables par l’équipe IT.',
     },
     EN: {
-      role: 'Deployment & monitoring',
+      role: 'Academic internship project',
       context:
         'Give Neemba Togo’s IT team a central view of endpoint security events to support incident detection and investigation.',
       steps: [

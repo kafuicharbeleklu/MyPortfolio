@@ -193,8 +193,8 @@ export const getTimelineData = (lang: Language) => [
     company: 'Neemba Togo',
     desc:
       lang === 'FR'
-        ? 'Déploiement complet de Wazuh SIEM/XDR, maintenance du parc informatique et surveillance continue des performances réseau.'
-        : 'Full Wazuh SIEM/XDR deployment, IT fleet maintenance, and continuous network performance monitoring.',
+        ? 'Maintenance du parc informatique et surveillance continue des performances réseau.'
+        : 'IT fleet maintenance and continuous network performance monitoring.',
     isCurrent: false,
   },
   {

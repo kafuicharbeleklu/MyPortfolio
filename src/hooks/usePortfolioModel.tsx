@@ -432,8 +432,8 @@ const projectCatalog: ProjectCardData[] = [
       EN: 'Neemba Togo · 2023-2024',
     },
     desc: {
-      FR: "Déploiement complet d'une solution Wazuh sur l'ensemble du parc avec supervision centralisée et détection proactive.",
-      EN: 'Complete Wazuh deployment across the environment with centralized monitoring and proactive detection.',
+      FR: "Projet de stage académique chez Neemba Togo : déploiement de Wazuh pour centraliser les événements de sécurité et configurer la détection.",
+      EN: 'Academic internship project at Neemba Togo: Wazuh deployment for centralised security events and detection rules.',
     },
     category: {
       FR: 'Cybersécurité',

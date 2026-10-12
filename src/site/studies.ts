@@ -42,7 +42,7 @@ const writtenStudies: Record<string, PartialStudy> = {
     technologies: ['Wazuh', 'SIEM / XDR', 'Linux', 'OpenSearch', 'Kibana', 'Bash'],
     related: ['orabank', 'mfa'],
     FR: {
-      role: 'Responsable technique',
+      role: 'Stagiaire · projet académique',
       status: 'En production',
       timeline: [
         { date: '2023-05', label: 'Audit du parc et cahier des charges' },
@@ -65,7 +65,7 @@ const writtenStudies: Record<string, PartialStudy> = {
       ],
     },
     EN: {
-      role: 'Technical lead',
+      role: 'Academic intern',
       status: 'In production',
       timeline: [
         { date: '2023-05', label: 'Audit of the fleet and requirements' },
