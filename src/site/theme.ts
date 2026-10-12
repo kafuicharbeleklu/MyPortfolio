@@ -14,9 +14,9 @@ let fadeTimer = 0;
 
 /** The `data-theme` attribute of <html> is the single source of truth. */
 export const getTheme = (): Theme =>
-  typeof document !== 'undefined' && document.documentElement.dataset.theme === 'dark'
-    ? 'dark'
-    : 'light';
+  typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light'
+    ? 'light'
+    : 'dark';
 
 const syncBrowserChrome = (theme: Theme) => {
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', GROUND[theme]);
@@ -53,7 +53,7 @@ const subscribe = (listener: () => void) => {
 };
 
 /** Current theme, shared by every switch on the page. */
-export const useTheme = () => useSyncExternalStore(subscribe, getTheme, (): Theme => 'light');
+export const useTheme = () => useSyncExternalStore(subscribe, getTheme, (): Theme => 'dark');
 
 // A visitor returning in dark mode gets the matching browser chrome from the first frame.
 if (typeof document !== 'undefined') {

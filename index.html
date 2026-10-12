@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="fr" class="scroll-smooth">
+<html lang="fr" class="scroll-smooth" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#e9e0d2" />
+    <meta name="theme-color" content="#1c1d1f" />
     <meta
       name="description"
       content="Portfolio de Kafui Charbel Eklu, technicien informatique à Lomé (Neemba Togo, concessionnaire Caterpillar). Réseaux, systèmes, cybersécurité et gouvernance des SI : SIEM/XDR Wazuh, Active Directory, budget IT, Power BI."
@@ -31,11 +31,12 @@
          Same storage key as src/site/theme.ts. -->
     <script>
       try {
-        if (localStorage.getItem('portfolio_theme') === 'dark') {
-          document.documentElement.dataset.theme = 'dark';
+        if (localStorage.getItem('portfolio_theme') === 'light') {
+          document.documentElement.dataset.theme = 'light';
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#e9e0d2');
         }
       } catch (error) {
-        /* storage unavailable: the light theme stays */
+        /* storage unavailable: the default dark theme stays */
       }
     </script>
     <style>
