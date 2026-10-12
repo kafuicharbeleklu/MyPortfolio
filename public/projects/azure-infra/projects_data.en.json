@@ -1,0 +1,64 @@
+[
+  {
+    "title": "M365 Power BI Dashboard",
+    "slug": "m365-power-bi-dashboard",
+    "tagline": "Power BI dashboard to steer Microsoft 365 usage, licences and risks.",
+    "description": "I built a Power BI dashboard to track Microsoft 365 users, activity and licences. I collect data through Microsoft Graph and organise it to support account cleanup and cost monitoring.",
+    "category": "Dashboard",
+    "status": "Completed",
+    "duration": null,
+    "role": null,
+    "tech_stack": {
+      "frontend": [
+        "Power BI"
+      ],
+      "backend": [
+        "Microsoft Graph API",
+        "OAuth2 Client Credentials",
+        "Power Query M"
+      ],
+      "database": [],
+      "devops": [],
+      "tools": [
+        "DAX",
+        "TMDL",
+        "PBIP",
+        "Git",
+        "Power BI Desktop"
+      ]
+    },
+    "features": [
+      "Overview with global KPIs on accounts, licences and M365 activity",
+      "Licence analysis with available stock, over-allocation, critical alerts and risk level",
+      "User segmentation between active, inactive, never signed in, technical accounts and disabled accounts",
+      "User detail drillthrough page with a 360 profile, key dates, usage score and assigned licences",
+      "DAX measures to track application adoption across Outlook, Teams, Word, Excel, PowerPoint and OneNote",
+      "Business tooltips and UX banners to put indicators in context and prioritise clean-up actions"
+    ],
+    "challenges": "I corrected missing values and double counting in the model. I also distinguished Azure AD sign-ins from actual Microsoft 365 service usage.",
+    "learnings": "I deepened my knowledge of Microsoft Graph, Power Query and DAX. This work taught me to prioritise reliable, easy-to-read indicators.",
+    "links": {
+      "github": "https://github.com/kafuicharbeleklu/M365.git",
+      "live": null,
+      "demo": null
+    },
+    "assets": {
+      "screenshots": [],
+      "has_video": false
+    },
+    "keywords": [
+      "Power BI",
+      "Microsoft 365",
+      "Microsoft Graph API",
+      "Azure AD",
+      "DAX",
+      "Power Query",
+      "PBIP",
+      "TMDL",
+      "Dashboard BI",
+      "License Management",
+      "User Activity Analytics",
+      "Capacity Risk Monitoring"
+    ]
+  }
+]

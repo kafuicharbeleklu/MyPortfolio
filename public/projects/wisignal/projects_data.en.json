@@ -1,0 +1,58 @@
+[
+  {
+    "title": "Wi-Fi Coverage Simulator - Neemba CAT Togo",
+    "slug": "simulateur-couverture-wifi-neemba-cat",
+    "tagline": "Standalone web simulator to visualise and optimise Wi-Fi coverage on a floor plan.",
+    "description": "I built a simulator to plan Wi-Fi coverage for Neemba Togo’s offices, workshops and hangars. I can place access points on a plan, annotate walls, compare scenarios and export a PDF report.",
+    "category": "Dashboard",
+    "status": "Completed",
+    "duration": null,
+    "role": null,
+    "primary_language": "JavaScript",
+    "tech_stack": {
+      "frontend": [
+        "HTML5",
+        "CSS3",
+        "JavaScript (ES6+)",
+        "Canvas API"
+      ],
+      "backend": [],
+      "database": [],
+      "devops": [],
+      "tools": [
+        "Anthropic Claude API"
+      ]
+    },
+    "features": [
+      "RSSI heatmap computed in real time on the site plan",
+      "Interactive placement of access points: add, move, rename and delete",
+      "Manual wall annotation by material, with radio attenuation taken into account",
+      "Import of image plans with scale calibration in pixels per metre",
+      "Side-by-side comparison of deployment scenarios",
+      "Editable catalogue of access point models with AI-assisted search",
+      "RSSI analysis by critical business zone",
+      "PDF export of the simulation, statistics and visual recommendations"
+    ],
+    "challenges": "I combined a radio propagation model and wall annotations in a standalone tool. The challenge was to make simulations useful for planning while keeping the need for field validation in mind.",
+    "learnings": "I deepened my knowledge of Canvas and geometry calculations. This project also helped me understand the differences between radio simulations and real conditions.",
+    "links": {
+      "github": null,
+      "live": null,
+      "demo": null
+    },
+    "assets": {
+      "screenshots": [],
+      "has_video": false
+    },
+    "keywords": [
+      "simulation Wi-Fi",
+      "heatmap RSSI",
+      "plan indoor",
+      "Canvas API",
+      "Single Page Application",
+      "catalogue AP",
+      "comparaison de scénarios",
+      "export PDF"
+    ]
+  }
+]

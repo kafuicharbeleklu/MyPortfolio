@@ -1,0 +1,192 @@
+/* Print stylesheet for the public CV (see README.md in this folder). */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Instrument+Sans:wght@400;500;600&display=swap');
+
+@page {
+  size: A4;
+  margin: 16mm 17mm 15mm;
+}
+
+:root {
+  --ink: #26272a;
+  --mute: #55504a;
+  --tab: #74472a;
+  --seam: rgba(38, 39, 42, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: 'Instrument Sans', 'Segoe UI', Arial, sans-serif;
+  font-size: 9.6pt;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+p,
+ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.serif {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.cap {
+  font-size: 7.4pt;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+header {
+  padding-bottom: 12pt;
+  border-bottom: 1px dashed var(--seam);
+}
+
+header h1 {
+  font-size: 30pt;
+  line-height: 1;
+}
+
+header .role {
+  margin-top: 7pt;
+  color: var(--tab);
+}
+
+header .contact {
+  margin-top: 9pt;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2pt 16pt;
+  color: var(--mute);
+  font-size: 9pt;
+}
+
+/* Block layout with a floated label: unlike grid, it lets a section break across pages. */
+section {
+  padding: 12pt 0 2pt;
+}
+
+section::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+section > h2 {
+  float: left;
+  width: 31mm;
+}
+
+section > :not(h2) {
+  margin-left: 38mm;
+}
+
+section + section {
+  border-top: 1px dashed var(--seam);
+}
+
+section > h2 {
+  color: var(--tab);
+  padding-top: 2.5pt;
+}
+
+.profile {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 12.6pt;
+  line-height: 1.32;
+  padding-bottom: 10pt;
+}
+
+.entry {
+  padding-bottom: 10pt;
+  break-inside: avoid;
+}
+
+.entry__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12pt;
+}
+
+.entry__head h3 {
+  font-size: 14.5pt;
+  line-height: 1.15;
+}
+
+.entry__head span {
+  flex: none;
+  color: var(--mute);
+}
+
+.entry__org {
+  font-weight: 600;
+  color: var(--tab);
+  margin: 1pt 0 4pt;
+}
+
+.entry li {
+  position: relative;
+  padding-left: 10pt;
+  margin-bottom: 2pt;
+}
+
+.entry li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5.6pt;
+  width: 3.4pt;
+  height: 3.4pt;
+  border-radius: 50%;
+  background: var(--tab);
+}
+
+.entry li strong,
+.skills strong {
+  font-weight: 600;
+}
+
+.skills {
+  padding-bottom: 8pt;
+}
+
+.skills li {
+  display: grid;
+  grid-template-columns: 34mm 1fr;
+  column-gap: 4mm;
+  padding: 2.4pt 0;
+}
+
+.skills li + li {
+  border-top: 1px dashed rgba(38, 39, 42, 0.18);
+}
+
+.plain {
+  padding-bottom: 10pt;
+}

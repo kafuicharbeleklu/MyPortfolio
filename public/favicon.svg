@@ -1,5 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="8" fill="#1c1916"/>
-  <path d="M18 14h9v17l16-17h11L35 34l20 16H43L27 37v13h-9V14z" fill="#f8f2ea"/>
-  <path d="M45 46l-8-6 5-5 8 11h-5z" fill="#c4693a"/>
+  <!-- A tailor's button: the mark of the "Sur mesure" portfolio (see ProjectsBadge, BriefDrawer). -->
+  <circle cx="32" cy="32" r="31" fill="#e9e0d2"/>
+  <circle cx="32" cy="32" r="24" fill="#2f3033"/>
+  <circle cx="32" cy="32" r="19.5" fill="none" stroke="#f7f3ea" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <path d="M24.5 24.5 39.5 39.5M39.5 24.5 24.5 39.5" stroke="#b98a3e" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="24.5" cy="24.5" r="3.2" fill="#f7f3ea"/>
+  <circle cx="39.5" cy="24.5" r="3.2" fill="#f7f3ea"/>
+  <circle cx="24.5" cy="39.5" r="3.2" fill="#f7f3ea"/>
+  <circle cx="39.5" cy="39.5" r="3.2" fill="#f7f3ea"/>
 </svg>

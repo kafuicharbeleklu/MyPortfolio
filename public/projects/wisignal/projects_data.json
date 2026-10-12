@@ -3,7 +3,7 @@
     "title": "Simulateur de Couverture Wi-Fi - Neemba CAT Togo",
     "slug": "simulateur-couverture-wifi-neemba-cat",
     "tagline": "Simulateur web autonome pour visualiser et optimiser la couverture Wi-Fi sur plan.",
-    "description": "Conçu pour la DSI de Neemba CAT Togo, ce simulateur aide à évaluer la couverture Wi-Fi sur un site mêlant bureaux, ateliers, hangars et zones extérieures. L'application charge le plan du site, permet de placer des points d'accès, d'annoter les murs et de calculer une heatmap RSSI basée sur un modèle log-distance enrichi. Elle compare plusieurs scénarios de déploiement, calcule des indicateurs de couverture et exporte un rapport PDF exploitable par la direction. Sa valeur ajoutée est de réduire les diagnostics terrain manuels et de fiabiliser la planification avant achat ou réaménagement réseau.",
+    "description": "J’ai conçu un simulateur pour préparer la couverture Wi-Fi des bureaux, ateliers et hangars de Neemba Togo. Je peux placer les points d’accès sur un plan, annoter les murs, comparer les scénarios et exporter un rapport PDF.",
     "category": "Dashboard",
     "status": "Terminé",
     "duration": null,
@@ -33,8 +33,8 @@
       "Analyse RSSI par zones métiers critiques",
       "Export PDF de la simulation, des statistiques et des recommandations visuelles"
     ],
-    "challenges": "Le principal défi était d'obtenir une simulation radio crédible sans backend ni outil spécialisé. Le projet s'appuie sur un modèle log-distance indoor, une carte binaire des murs issue du plan et des annotations manuelles par matériau pour ajuster l'atténuation. Un second enjeu était d'intégrer la recherche de spécifications AP et la génération de rapport dans un fichier HTML autonome ; cela a été résolu via l'API Anthropic côté navigateur et un export Canvas + window.print().",
-    "learnings": "Ce projet a renforcé la maîtrise de Canvas et du calcul géométrique pour des interfaces interactives à forte logique métier. Il a aussi montré comment concevoir une SPA autonome mêlant simulation, reporting et assistance IA sans infrastructure lourde. Enfin, il a apporté une meilleure compréhension des compromis entre modélisation radio théorique et validation terrain.",
+    "challenges": "J’ai combiné un modèle de propagation radio et des annotations de murs dans un outil autonome. Le défi était de rendre les simulations utiles à la planification, tout en gardant à l’esprit la nécessité d’une validation sur le terrain.",
+    "learnings": "J’ai approfondi Canvas et les calculs géométriques. Ce projet m’a aussi appris à mieux comprendre les écarts entre une simulation radio et les conditions réelles.",
     "links": {
       "github": null,
       "live": null,

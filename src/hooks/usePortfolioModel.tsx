@@ -3,14 +3,12 @@ import { motion, AnimatePresence } from 'motion/react';
 import { assetPaths, withBaseAsset } from '../config/assets';
 import { getSkillsData, getTimelineData, getFormationData } from '../data';
 import useLightbox from './useLightbox';
-import useLocalRouting, {
-  createIsDetailPage,
-  isNavigableSection,
-} from './useLocalRouting';
+import useLocalRouting, { createIsDetailPage, isNavigableSection } from './useLocalRouting';
 import useMobileScrollDots from './useMobileScrollDots';
 import usePrefersReducedMotion from './usePrefersReducedMotion';
 import useProjectLoader from './useProjectLoader';
 import HomePage from '../pages/HomePage';
+import Footer from '../components/sections/Footer';
 import { Language, t } from '../translations';
 import type {
   PaginationToken,
@@ -24,12 +22,14 @@ import type {
   TranslationPageSections,
 } from '../types/portfolio';
 
+const CaseStudyPage = lazy(() => import('../pages/CaseStudyPage'));
+const curatedStudyIds = new Set(['tracker', 'siem', 'automate', 'moov', 'orabank', 'biasa']);
 const BiographyPage = lazy(() => import('../pages/BiographyPage'));
 const ProjectsPage = lazy(() => import('../pages/ProjectsPage'));
 const ProjectDetailLightbox = lazy(() =>
   import('../pages/ProjectDetailPage').then((module) => ({
     default: module.ProjectDetailLightbox,
-  }))
+  })),
 );
 
 const getProjectsPerPage = () => {
@@ -52,13 +52,9 @@ const getProjectsPerPage = () => {
   return 3;
 };
 
-const isMobilePeekCarousel = () =>
-  typeof window !== 'undefined' && window.innerWidth <= 768;
+const isMobilePeekCarousel = () => typeof window !== 'undefined' && window.innerWidth <= 768;
 
-const measurePeekCarouselOffset = (
-  shell: HTMLDivElement | null,
-  activeIndex: number
-) => {
+const measurePeekCarouselOffset = (shell: HTMLDivElement | null, activeIndex: number) => {
   if (!shell || !isMobilePeekCarousel()) {
     return 0;
   }
@@ -79,10 +75,7 @@ const measurePeekCarouselOffset = (
   return Math.max(0, Math.min(rawOffset, maxOffset));
 };
 
-const buildPaginationTokens = (
-  currentPage: number,
-  totalPages: number
-): PaginationToken[] => {
+const buildPaginationTokens = (currentPage: number, totalPages: number): PaginationToken[] => {
   if (totalPages <= 5) {
     return Array.from({ length: totalPages }, (_, index) => index + 1);
   }
@@ -92,14 +85,7 @@ const buildPaginationTokens = (
   }
 
   if (currentPage >= totalPages - 2) {
-    return [
-      1,
-      'ellipsis-left',
-      totalPages - 3,
-      totalPages - 2,
-      totalPages - 1,
-      totalPages,
-    ];
+    return [1, 'ellipsis-left', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
   }
 
   return [
@@ -315,20 +301,22 @@ const structuredProjectConfigs: Record<string, StructuredProjectConfig> = {
 };
 
 type StructuredProjectId = keyof typeof structuredProjectConfigs;
-const structuredProjectIds = Object.keys(
-  structuredProjectConfigs
-) as StructuredProjectId[];
+const structuredProjectIds = Object.keys(structuredProjectConfigs) as StructuredProjectId[];
 const isDetailPage = createIsDetailPage(structuredProjectIds);
 
-const getSectionSubcopy = (section: SectionWithSubcopy) =>
-  section.subtitle ?? section.sub ?? '';
+const getSectionSubcopy = (section: SectionWithSubcopy) => section.subtitle ?? section.sub ?? '';
 
 const renderProjectIcon = (icon: ProjectCardData['icon'], accent: string) => {
   switch (icon) {
     case 'shield':
       return (
         <svg width="45" height="45" viewBox="0 0 90 90" fill="none" style={{ opacity: '.3' }}>
-          <path d="M45 10L75 24L75 48C75 64 60 76 45 80C30 76 15 64 15 48L15 24Z" stroke={accent} strokeWidth="2" fill="none" />
+          <path
+            d="M45 10L75 24L75 48C75 64 60 76 45 80C30 76 15 64 15 48L15 24Z"
+            stroke={accent}
+            strokeWidth="2"
+            fill="none"
+          />
           <circle cx="45" cy="46" r="13" stroke={accent} strokeWidth="1.5" fill="none" />
           <circle cx="45" cy="46" r="5" fill={accent} opacity=".6" />
         </svg>
@@ -345,9 +333,36 @@ const renderProjectIcon = (icon: ProjectCardData['icon'], accent: string) => {
     case 'domain':
       return (
         <svg width="45" height="45" viewBox="0 0 60 60" fill="none" style={{ opacity: '.35' }}>
-          <rect x="20" y="8" width="20" height="12" rx="2" stroke={accent} strokeWidth="1.5" fill="none" />
-          <rect x="8" y="34" width="16" height="10" rx="2" stroke={accent} strokeWidth="1" fill="none" />
-          <rect x="36" y="34" width="16" height="10" rx="2" stroke={accent} strokeWidth="1" fill="none" />
+          <rect
+            x="20"
+            y="8"
+            width="20"
+            height="12"
+            rx="2"
+            stroke={accent}
+            strokeWidth="1.5"
+            fill="none"
+          />
+          <rect
+            x="8"
+            y="34"
+            width="16"
+            height="10"
+            rx="2"
+            stroke={accent}
+            strokeWidth="1"
+            fill="none"
+          />
+          <rect
+            x="36"
+            y="34"
+            width="16"
+            height="10"
+            rx="2"
+            stroke={accent}
+            strokeWidth="1"
+            fill="none"
+          />
           <line x1="30" y1="20" x2="30" y2="34" stroke={accent} />
           <line x1="16" y1="28" x2="44" y2="28" stroke={accent} />
           <line x1="16" y1="28" x2="16" y2="34" stroke={accent} />
@@ -357,8 +372,26 @@ const renderProjectIcon = (icon: ProjectCardData['icon'], accent: string) => {
     case 'server':
       return (
         <svg width="45" height="45" viewBox="0 0 60 60" fill="none" style={{ opacity: '.35' }}>
-          <rect x="10" y="16" width="40" height="8" rx="2" stroke={accent} strokeWidth="1.5" fill="none" />
-          <rect x="10" y="28" width="40" height="8" rx="2" stroke={accent} strokeWidth="1" fill="none" />
+          <rect
+            x="10"
+            y="16"
+            width="40"
+            height="8"
+            rx="2"
+            stroke={accent}
+            strokeWidth="1.5"
+            fill="none"
+          />
+          <rect
+            x="10"
+            y="28"
+            width="40"
+            height="8"
+            rx="2"
+            stroke={accent}
+            strokeWidth="1"
+            fill="none"
+          />
           <circle cx="44" cy="20" r="2" fill={accent} />
           <line x1="18" y1="40" x2="42" y2="40" stroke={accent} />
           <line x1="30" y1="36" x2="30" y2="44" stroke={accent} />
@@ -367,7 +400,12 @@ const renderProjectIcon = (icon: ProjectCardData['icon'], accent: string) => {
     case 'cloud':
       return (
         <svg width="45" height="45" viewBox="0 0 60 60" fill="none" style={{ opacity: '.35' }}>
-          <path d="M15 35C15 25 30 20 30 30C30 20 45 25 45 35C50 35 50 45 45 45L15 45C10 45 10 35 15 35Z" stroke={accent} strokeWidth="1.5" fill="none" />
+          <path
+            d="M15 35C15 25 30 20 30 30C30 20 45 25 45 35C50 35 50 45 45 45L15 45C10 45 10 35 15 35Z"
+            stroke={accent}
+            strokeWidth="1.5"
+            fill="none"
+          />
         </svg>
       );
     case 'grid':
@@ -574,6 +612,7 @@ const usePortfolioModel = () => {
   const referenceCarouselRef = useRef<HTMLDivElement | null>(null);
   const detailCarouselRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const projectFilterMenuRef = useRef<HTMLDivElement | null>(null);
+  const projectReturnPageRef = useRef<'main' | 'all-projects'>('main');
   const allProjectsSectionRef = useRef<HTMLElement | null>(null);
   const carouselTouchStartX = useRef<Record<string, number | null>>({});
   const [lang, setLang] = useState<Language>(() => {
@@ -591,7 +630,7 @@ const usePortfolioModel = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const { projects: structuredProjectData, loadProjectDetail } = useProjectLoader(
     structuredProjectConfigs,
-    withBaseAsset
+    withBaseAsset,
   );
   const {
     lightbox: projectImageLightbox,
@@ -611,14 +650,12 @@ const usePortfolioModel = () => {
       ? {
           num: '05',
           title: 'Ma formation',
-          subtitle:
-            'Diplômes obtenus avec distinction dans les meilleures institutions de Lomé.',
+          subtitle: 'Diplômes obtenus avec distinction dans les meilleures institutions de Lomé.',
         }
       : {
           num: '05',
           title: 'My Education',
-          subtitle:
-            'Degrees earned with distinction from leading institutions in Lomé.',
+          subtitle: 'Degrees earned with distinction from leading institutions in Lomé.',
         });
   const referencesSection =
     typedSections.references ??
@@ -723,8 +760,7 @@ const usePortfolioModel = () => {
 
     return chunks;
   };
-  const getSortedTags = (tags: ProjectTag[]) =>
-    sortAlphabetically(tags, (tag) => tag.label);
+  const getSortedTags = (tags: ProjectTag[]) => sortAlphabetically(tags, (tag) => tag.label);
   const sortedSkillsData = sortAlphabetically(skillsData, (skill) => skill.title);
   const sortedTimelineData = sortByDateDesc(timelineData);
   const sortedFormationData = sortByDateDesc(formationData);
@@ -763,7 +799,7 @@ const usePortfolioModel = () => {
             accent: '#83B8FF',
             detailPage: true,
           }
-        : project
+        : project,
     ),
     {
       id: 'automate',
@@ -897,7 +933,7 @@ const usePortfolioModel = () => {
         EN: 'IT fleet · audits · finance',
       },
       desc: {
-        FR: "SPA metier de suivi du parc IT, des demandes, des audits et des depenses avec RBAC et Azure AD.",
+        FR: 'SPA metier de suivi du parc IT, des demandes, des audits et des depenses avec RBAC et Azure AD.',
         EN: 'Business SPA for IT fleet, approvals, audits, and expense tracking with RBAC and Azure AD.',
       },
       category: {
@@ -927,7 +963,7 @@ const usePortfolioModel = () => {
         EN: 'Ubuntu 22.04+ · system security',
       },
       desc: {
-        FR: "Guide technique de configuration MFA sur Ubuntu avec PAM, Google Authenticator et extension aux connexions SSH.",
+        FR: 'Guide technique de configuration MFA sur Ubuntu avec PAM, Google Authenticator et extension aux connexions SSH.',
         EN: 'Technical guide to configure MFA on Ubuntu with PAM, Google Authenticator, and SSH integration.',
       },
       category: {
@@ -1008,7 +1044,7 @@ const usePortfolioModel = () => {
   ];
   const getStructuredScreenshotItems = (
     project: ProjectCardData,
-    detail: StructuredProjectData | null | undefined
+    detail: StructuredProjectData | null | undefined,
   ) =>
     detail
       ? (detail.assets.screenshots ?? [])
@@ -1035,35 +1071,27 @@ const usePortfolioModel = () => {
 
   const catalogProjectsWithCovers = catalogProjects.map((project) => ({
     ...project,
-    coverImage: getStructuredScreenshotItems(project, structuredProjectData[project.id])[0]?.src ?? null,
+    coverImage:
+      getStructuredScreenshotItems(project, structuredProjectData[project.id])[0]?.src ?? null,
   }));
 
-  const projectById = catalogProjectsWithCovers.reduce<Record<string, ProjectCardData>>((acc, project) => {
-    acc[project.id] = project;
-    return acc;
-  }, {});
+  const projectById = catalogProjectsWithCovers.reduce<Record<string, ProjectCardData>>(
+    (acc, project) => {
+      acc[project.id] = project;
+      return acc;
+    },
+    {},
+  );
   const recentMainProjects = [...catalogProjectsWithCovers]
     .filter((project) => project.detailPage)
-    .sort((a, b) => b.sortDate - a.sortDate || alphaCollator.compare(a.title[lang], b.title[lang]))
+    .sort((a, b) => {
+      const priority = (id: string) => (id === 'siem' ? 0 : id === 'automate' ? 1 : 2);
+      return priority(a.id) - priority(b.id) || b.sortDate - a.sortDate;
+    })
     .slice(0, 4);
-  const featuredMainProject = projectById.siem ?? recentMainProjects[0];
+  const featuredMainProject = projectById.tracker ?? recentMainProjects[0];
   const bioExpertiseItems = sortAlphabetically(
     [
-      {
-        label: 'Wazuh Security Ambassador',
-        className: 'bio-tag-link tag tc',
-        href: 'https://wazuh.com/ambassadors/kafui-charbel-eklu/',
-        icon: (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M12 2L20 6V12C20 17 16 20 12 22C8 20 4 17 4 12V6L12 2Z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              fill="none"
-            />
-          </svg>
-        ),
-      },
       { label: 'Windows Server', className: 'tag tr' },
       { label: 'Active Directory', className: 'tag tr' },
       { label: 'Linux / Ubuntu', className: 'tag tl2' },
@@ -1076,7 +1104,7 @@ const usePortfolioModel = () => {
       { label: 'Azure / M365', className: 'tag' },
       { label: 'SCCM / MECM', className: 'tag' },
     ],
-    (item) => item.label
+    (item) => item.label,
   );
   const projectFilters = [
     { key: 'all' as const, label: lang === 'FR' ? 'Tous' : 'All' },
@@ -1099,8 +1127,7 @@ const usePortfolioModel = () => {
   const normalizedProjectSearch = projectSearch.trim().toLowerCase();
   const filteredProjects = catalogProjectsWithCovers
     .filter((project) => {
-      const matchesFilter =
-        projectFilter === 'all' || project.categoryKey === projectFilter;
+      const matchesFilter = projectFilter === 'all' || project.categoryKey === projectFilter;
       const searchableContent = [
         project.title[lang],
         project.companyLine[lang],
@@ -1115,14 +1142,11 @@ const usePortfolioModel = () => {
 
       return matchesFilter && matchesSearch;
     })
-    .sort(
-      (a, b) =>
-        b.sortDate - a.sortDate || alphaCollator.compare(a.title[lang], b.title[lang])
-    );
+    .sort((a, b) => b.sortDate - a.sortDate || alphaCollator.compare(a.title[lang], b.title[lang]));
   const totalProjectPages = Math.max(1, Math.ceil(filteredProjects.length / projectsPerPage));
   const paginatedProjects = filteredProjects.slice(
     (projectPage - 1) * projectsPerPage,
-    projectPage * projectsPerPage
+    projectPage * projectsPerPage,
   );
   const paginatedProjectRange =
     filteredProjects.length === 0
@@ -1144,39 +1168,36 @@ const usePortfolioModel = () => {
     const element = document.getElementById(id);
     if (!element) return;
 
-    const targetTop =
-      window.scrollY + element.getBoundingClientRect().top - getNavOffset();
+    const targetTop = window.scrollY + element.getBoundingClientRect().top - getNavOffset();
 
     window.scrollTo({
       top: Math.max(0, targetTop),
       behavior: getScrollBehavior(),
     });
   };
-  const {
-    activePage,
-    activeSection,
-    navigateTo,
-    navigateToSection,
-    setObservedSection,
-  } = useLocalRouting<StructuredProjectId>({
-    onSectionNavigation: scrollToElement,
-  });
+  const { activePage, activeSection, navigateTo, navigateToSection, setObservedSection } =
+    useLocalRouting<StructuredProjectId>({
+      onSectionNavigation: scrollToElement,
+    });
   const isStructuredProjectId = (value: string): value is StructuredProjectId =>
     structuredProjectIds.includes(value as StructuredProjectId);
 
   useEffect(() => {
     if (activePage !== 'main') return;
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && isNavigableSection(entry.target.id)) {
-          setObservedSection(entry.target.id);
-        }
-      });
-    }, { rootMargin: '-30% 0px -70% 0px' });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && isNavigableSection(entry.target.id)) {
+            setObservedSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-30% 0px -70% 0px' },
+    );
 
     const sections = document.querySelectorAll('main section');
-    sections.forEach(sec => observer.observe(sec));
+    sections.forEach((sec) => observer.observe(sec));
 
     return () => observer.disconnect();
   }, [activePage, setObservedSection]);
@@ -1244,7 +1265,7 @@ const usePortfolioModel = () => {
       }
 
       setReferenceCarouselOffset(
-        measurePeekCarouselOffset(referenceCarouselRef.current, referenceCarouselIndex)
+        measurePeekCarouselOffset(referenceCarouselRef.current, referenceCarouselIndex),
       );
     };
 
@@ -1269,7 +1290,7 @@ const usePortfolioModel = () => {
         Object.keys(structuredProjectConfigs).forEach((projectId) => {
           next[projectId] = measurePeekCarouselOffset(
             detailCarouselRefs.current[projectId] ?? null,
-            detailCarouselIndex[projectId] ?? 0
+            detailCarouselIndex[projectId] ?? 0,
           );
         });
 
@@ -1287,7 +1308,7 @@ const usePortfolioModel = () => {
 
   useEffect(() => {
     setDesktopReferencePage((current) =>
-      Math.min(current, Math.max(desktopReferencePages.length - 1, 0))
+      Math.min(current, Math.max(desktopReferencePages.length - 1, 0)),
     );
   }, [desktopReferencePages.length]);
 
@@ -1329,7 +1350,10 @@ const usePortfolioModel = () => {
       return;
     }
 
-    if (isStructuredProjectId(id)) {
+    if (activePage === 'main' || activePage === 'all-projects') {
+      projectReturnPageRef.current = activePage;
+    }
+    if (isStructuredProjectId(id) && !curatedStudyIds.has(id)) {
       void loadProjectDetail(id);
     }
 
@@ -1348,9 +1372,18 @@ const usePortfolioModel = () => {
     }, 100);
   };
 
+  const backFromDetail = () => {
+    if (projectReturnPageRef.current === 'all-projects') {
+      navigateTo('all-projects');
+      window.scrollTo({ top: 0, behavior: getScrollBehavior() });
+      return;
+    }
+    backToMain();
+  };
+
   const stepReferenceCarousel = (direction: 1 | -1) => {
     setReferenceCarouselIndex((current) =>
-      Math.max(0, Math.min(current + direction, sortedReferencesData.length - 1))
+      Math.max(0, Math.min(current + direction, sortedReferencesData.length - 1)),
     );
   };
 
@@ -1461,10 +1494,10 @@ const usePortfolioModel = () => {
                 ...(detail.tech_stack.database ?? []),
                 ...(detail.tech_stack.devops ?? []),
                 ...(detail.tech_stack.tools ?? []),
-              ].filter((item): item is string => Boolean(item))
-            )
+              ].filter((item): item is string => Boolean(item)),
+            ),
           ),
-          (item) => item
+          (item) => item,
         )
       : [];
     const keywordItems = detail
@@ -1474,7 +1507,7 @@ const usePortfolioModel = () => {
       .map((relatedId) => projectById[relatedId])
       .filter(Boolean);
     const linkItems = detail
-      ? [
+      ? ([
           detail.links.github
             ? {
                 href: detail.links.github,
@@ -1487,7 +1520,7 @@ const usePortfolioModel = () => {
                 label: lang === 'FR' ? 'Lien live' : 'Live link',
               }
             : null,
-        ].filter(Boolean) as { href: string; label: string }[]
+        ].filter(Boolean) as { href: string; label: string }[])
       : [];
     const resourceLinks =
       config.resourceLinks?.map((link) => ({
@@ -1500,7 +1533,7 @@ const usePortfolioModel = () => {
     const screenshotPages = chunkItems(screenshotItems, 2);
     const activeScreenshotPage = Math.min(
       Math.floor(activeScreenshotIndex / 2),
-      Math.max(screenshotPages.length - 1, 0)
+      Math.max(screenshotPages.length - 1, 0),
     );
     const metaItems = [
       {
@@ -1510,9 +1543,7 @@ const usePortfolioModel = () => {
       {
         label: lang === 'FR' ? 'Role' : 'Role',
         value:
-          detail?.role ||
-          config.role?.[lang] ||
-          (lang === 'FR' ? 'Non precise' : 'Not specified'),
+          detail?.role || config.role?.[lang] || (lang === 'FR' ? 'Non precise' : 'Not specified'),
       },
       {
         label: lang === 'FR' ? 'Environnement' : 'Environment',
@@ -1532,20 +1563,22 @@ const usePortfolioModel = () => {
     ];
 
     return (
-      <div className={`page ${activePage === projectId ? 'active' : ''}`} id={`page-${projectId}`} key={projectId}>
+      <div
+        className={`page ${activePage === projectId ? 'active' : ''}`}
+        id={`page-${projectId}`}
+        key={projectId}
+      >
         <nav className="nav">
           <button
             type="button"
             className="nav-logo nav-control-btn"
             onClick={() => scrollToSection('hero')}
           >
-            K · E
+            <span className="studio-monogram">
+              ce<span>.</span>
+            </span>
           </button>
-          <button
-            type="button"
-            className="nav-back nav-control-btn"
-            onClick={backToMain}
-          >
+          <button type="button" className="nav-back nav-control-btn" onClick={backFromDetail}>
             {lang === 'FR' ? '← Retour aux projets' : '← Back to projects'}
           </button>
           <div className="nav-tag">{project.category[lang]}</div>
@@ -1597,7 +1630,9 @@ const usePortfolioModel = () => {
                 <p>{detail?.description ?? project.desc[lang]}</p>
               </div>
               <div className="blk">
-                <h3 className="blk-ttl">{lang === 'FR' ? 'Fonctionnalites cles' : 'Key features'}</h3>
+                <h3 className="blk-ttl">
+                  {lang === 'FR' ? 'Fonctionnalites cles' : 'Key features'}
+                </h3>
                 {detail?.features?.length ? (
                   <ul className="steps">
                     {detail.features.map((feature) => (
@@ -1618,20 +1653,27 @@ const usePortfolioModel = () => {
               </div>
               {detail?.challenges ? (
                 <div className="blk">
-                  <h3 className="blk-ttl">{lang === 'FR' ? 'Defis traites' : 'Challenges addressed'}</h3>
+                  <h3 className="blk-ttl">
+                    {lang === 'FR' ? 'Defis traites' : 'Challenges addressed'}
+                  </h3>
                   <p>{detail.challenges}</p>
                 </div>
               ) : null}
               {screenshotItems.length ? (
                 <div className="blk">
-                  <h3 className="blk-ttl">{lang === 'FR' ? 'Captures projet' : 'Project screenshots'}</h3>
+                  <h3 className="blk-ttl">
+                    {lang === 'FR' ? 'Captures projet' : 'Project screenshots'}
+                  </h3>
                   <div className="detail-shot-desktop-carousel">
                     <div
                       className="detail-shot-desktop-track"
                       style={{ transform: `translateX(-${activeScreenshotPage * 100}%)` }}
                     >
                       {screenshotPages.map((page, pageIndex) => (
-                        <div className="detail-shot-desktop-page" key={`${projectId}-shot-page-${pageIndex + 1}`}>
+                        <div
+                          className="detail-shot-desktop-page"
+                          key={`${projectId}-shot-page-${pageIndex + 1}`}
+                        >
                           <div className="detail-shot-grid detail-shot-grid-desktop">
                             {page.map((shot, index) => {
                               const absoluteIndex = pageIndex * 2 + index;
@@ -1641,7 +1683,9 @@ const usePortfolioModel = () => {
                                   key={`${projectId}-shot-desktop-${absoluteIndex + 1}`}
                                   type="button"
                                   className="detail-shot-card"
-                                  onClick={() => openProjectImageLightbox(screenshotItems, absoluteIndex)}
+                                  onClick={() =>
+                                    openProjectImageLightbox(screenshotItems, absoluteIndex)
+                                  }
                                   aria-label={
                                     lang === 'FR'
                                       ? `Afficher la capture ${absoluteIndex + 1} du projet ${project.title.FR}`
@@ -1702,41 +1746,47 @@ const usePortfolioModel = () => {
                   {screenshotItems.length > 1 ? (
                     <div
                       className="carousel-dots detail-shot-dots"
-                      aria-label={lang === 'FR' ? 'Position dans les captures projet' : 'Project screenshots position'}
+                      aria-label={
+                        lang === 'FR'
+                          ? 'Position dans les captures projet'
+                          : 'Project screenshots position'
+                      }
                     >
-                      {(isMobilePeekCarousel() ? screenshotItems : screenshotPages).map((shot, index) => (
-                        <button
-                          key={`${projectId}-shot-dot-${index + 1}`}
-                          type="button"
-                          className={`carousel-dot ${
-                            isMobilePeekCarousel()
-                              ? activeScreenshotIndex === index
-                              : activeScreenshotPage === index
-                              ? 'active'
-                              : ''
-                          }`}
-                          onClick={() =>
-                            goToDetailCarouselItem(
-                              projectId,
-                              isMobilePeekCarousel() ? index : index * 2
-                            )
-                          }
-                          aria-label={
-                            lang === 'FR'
-                              ? `Voir la capture ${index + 1}`
-                              : `View screenshot ${index + 1}`
-                          }
-                          aria-current={
-                            isMobilePeekCarousel()
-                              ? activeScreenshotIndex === index
-                                ? 'true'
-                                : undefined
-                              : activeScreenshotPage === index
-                              ? 'true'
-                              : undefined
-                          }
-                        />
-                      ))}
+                      {(isMobilePeekCarousel() ? screenshotItems : screenshotPages).map(
+                        (shot, index) => (
+                          <button
+                            key={`${projectId}-shot-dot-${index + 1}`}
+                            type="button"
+                            className={`carousel-dot ${
+                              isMobilePeekCarousel()
+                                ? activeScreenshotIndex === index
+                                : activeScreenshotPage === index
+                                  ? 'active'
+                                  : ''
+                            }`}
+                            onClick={() =>
+                              goToDetailCarouselItem(
+                                projectId,
+                                isMobilePeekCarousel() ? index : index * 2,
+                              )
+                            }
+                            aria-label={
+                              lang === 'FR'
+                                ? `Voir la capture ${index + 1}`
+                                : `View screenshot ${index + 1}`
+                            }
+                            aria-current={
+                              isMobilePeekCarousel()
+                                ? activeScreenshotIndex === index
+                                  ? 'true'
+                                  : undefined
+                                : activeScreenshotPage === index
+                                  ? 'true'
+                                  : undefined
+                            }
+                          />
+                        ),
+                      )}
                     </div>
                   ) : null}
                 </div>
@@ -1762,8 +1812,8 @@ const usePortfolioModel = () => {
                 ) : (
                   <p className="detail-empty-copy">
                     {lang === 'FR'
-                      ? 'Le dossier projet est branche, mais la stack detaillee n est pas encore renseignee.'
-                      : 'The project folder is connected, but the detailed stack is not filled in yet.'}
+                      ? 'Les technologies de ce projet seront détaillées prochainement.'
+                      : 'A detailed technology overview will be available soon.'}
                   </p>
                 )}
               </div>
@@ -1802,8 +1852,8 @@ const usePortfolioModel = () => {
                 ) : (
                   <p className="detail-empty-copy">
                     {lang === 'FR'
-                      ? 'Le detail provient du dossier projet local, sans lien externe publie pour l instant.'
-                      : 'Details are sourced from the local project folder, with no published external link yet.'}
+                      ? 'Une présentation plus détaillée est disponible sur demande.'
+                      : 'A more detailed presentation is available on request.'}
                   </p>
                 )}
               </div>
@@ -1831,6 +1881,7 @@ const usePortfolioModel = () => {
             </div>
           </div>
         </div>
+        <Footer lang={lang} onNavigate={scrollToSection} />
       </div>
     );
   };
@@ -1881,280 +1932,24 @@ const usePortfolioModel = () => {
   );
 
   const detailPages = (
-    <>
-{/* ====== DETAIL PAGES ====== */}
-
-      {/* SIEM */}
-      <div className={`page ${activePage === 'siem' ? 'active' : ''}`} id="page-siem">
-        <nav className="nav">
-          <button
-            type="button"
-            className="nav-logo nav-control-btn"
-            onClick={() => scrollToSection('hero')}
-          >
-            K · E
-          </button>
-          <button
-            type="button"
-            className="nav-back nav-control-btn"
-            onClick={backToMain}
-          >
-            ← Retour aux projets
-          </button>
-          <div className="nav-tag">Cybersécurité</div>
-        </nav>
-        <div className="sec">
-          <div className="det-hero">
-            <div className="det-vis" style={{ background: '#2C3E2E' }}><svg width="100" height="100" viewBox="0 0 90 90" fill="none" style={{ opacity: '.3' }}><path d="M45 10L75 24L75 48C75 64 60 76 45 80C30 76 15 64 15 48L15 24Z" stroke="#D4956A" strokeWidth="2" fill="none" /><circle cx="45" cy="46" r="14" stroke="#D4956A" strokeWidth="1.5" fill="none" /><circle cx="45" cy="46" r="6" fill="#D4956A" opacity=".5" /><line x1="45" y1="22" x2="45" y2="32" stroke="#D4956A" /><line x1="45" y1="60" x2="45" y2="70" stroke="#D4956A" /><line x1="21" y1="46" x2="31" y2="46" stroke="#D4956A" /><line x1="59" y1="46" x2="69" y2="46" stroke="#D4956A" /></svg></div>
-            <div><p className="det-eye">01 — Neemba Togo · 2023–2024</p><h1 className="det-title">Déploiement SIEM / XDR Wazuh</h1><p className="det-co">Neemba Togo</p><p className="det-desc">Déploiement complet d'une plateforme SIEM/XDR Wazuh sur l'ensemble du parc afin de centraliser la détection des menaces, automatiser les alertes et fournir une visibilité totale sur les événements de sécurité.</p>
-              <div className="det-meta"><div className="dm"><small>Durée</small><p>14 mois</p></div><div className="dm"><small>Rôle</small><p>Lead technique</p></div><div className="dm"><small>Env.</small><p>Linux · On-premise</p></div><div className="dm"><small>Statut</small><p style={{ color: '#4CAF7D' }}>Production active</p></div></div></div>
-          </div>
-          <div className="det-body">
-            <div>
-              <div className="blk"><h3 className="blk-ttl">Contexte & problème</h3><p>Neemba Togo ne disposait d'aucune solution centralisée de surveillance sécuritaire. Les incidents n'étaient détectés qu'après impact, sans corrélation ni historique exploitable.</p></div>
-              <div className="blk"><h3 className="blk-ttl">Ce que j'ai réalisé</h3><ul className="steps"><li>Audit du parc existant et cartographie des assets à surveiller.</li><li>Installation et configuration du manager Wazuh sur serveur Linux dédié.</li><li>Déploiement des agents Wazuh sur tous les postes Windows et Linux.</li><li>Création de règles de détection personnalisées adaptées au contexte métier.</li><li>Intégration des alertes avec tableau de bord OpenSearch/Kibana.</li><li>Formation de l'équipe IT à l'analyse et l'interprétation des alertes.</li></ul></div>
-              <div className="blk"><h3 className="blk-ttl">Résultats</h3><div className="res-dark"><small>Couverture endpoints</small><big>100 %</big><em>Du parc surveillé en temps réel</em></div><div className="res-dark" style={{ background: '#EDE7DE' }}><small style={{ color: '#9A8E82' }}>Posture sécurité</small><big style={{ color: '#1C1916', fontSize: '1.125rem' }}>Réactif → Proactif</big><em style={{ color: '#7A6F64' }}>Alertes avant impact confirmé</em></div></div>
-            </div>
-            <div>
-              <div className="sb-blk"><div className="sb-lbl">Technologies</div><div className="tags" style={{ gap: '0.375rem' }}><span className="tag tc">Wazuh</span><span className="tag tc">SIEM</span><span className="tag tc">XDR</span><span className="tag tl2">Linux</span><span className="tag tl2">OpenSearch</span><span className="tag">Kibana</span><span className="tag">Bash</span></div></div>
-              <div className="sb-blk"><div className="sb-lbl">Chronologie</div>
-                <div className="tl-li"><div className="tl-d"></div><div><span>Mai 2023</span>Audit & cahier des charges</div></div>
-                <div className="tl-li"><div className="tl-d"></div><div><span>Juil. 2023</span>Installation manager Wazuh</div></div>
-                <div className="tl-li"><div className="tl-d"></div><div><span>Sept. 2023</span>Déploiement agents parc</div></div>
-                <div className="tl-li"><div className="tl-d"></div><div><span>Déc. 2023</span>Règles personnalisées actives</div></div>
-                <div className="tl-li"><div className="tl-d ok"></div><div><span>Août 2024</span>100 % couverture · Production</div></div>
-              </div>
-              <div className="sb-blk"><div className="sb-lbl">Certification liée</div><p style={{ fontSize: '0.75rem', color: '#5A4F44', lineHeight: '1.6' }}>Wazuh Security Ambassador — Ambassadeur officiel reconnu pour l'expertise SIEM/XDR.</p></div>
-            </div>
-          </div>
-          <div className="rel">
-            <h3 className="rel">Projets similaires</h3>
-            <div className="rel-grid" style={{ marginTop: '1rem' }}>
-              <button
-                type="button"
-                className="rel-card card-action"
-                onClick={() => showDetail('orabank')}
-                aria-label="Voir le projet Contrôleur de Domaine Orabank"
-              >
-                <h4>Contrôleur de Domaine Orabank</h4>
-                <p>Orabank · Réseau entreprise</p>
-              </button>
-              <button
-                type="button"
-                className="rel-card card-action"
-                onClick={() => showDetail('moov')}
-                aria-label="Voir le projet Portabilité MOOV vers Togocom"
-              >
-                <h4>Portabilité MOOV → Togocom</h4>
-                <p>Neemba Togo · Télécom</p>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* MOOV */}
-      <div className={`page ${activePage === 'moov' ? 'active' : ''}`} id="page-moov">
-        <nav className="nav">
-          <button
-            type="button"
-            className="nav-logo nav-control-btn"
-            onClick={() => scrollToSection('hero')}
-          >
-            K · E
-          </button>
-          <button
-            type="button"
-            className="nav-back nav-control-btn"
-            onClick={backToMain}
-          >
-            ← Retour aux projets
-          </button>
-          <div className="nav-tag">Télécom</div>
-        </nav>
-        <div className="sec">
-          <div className="det-hero">
-            <div className="det-vis" style={{ background: '#2B3A4A' }}><svg width="100" height="100" viewBox="0 0 60 60" fill="none" style={{ opacity: '.35' }}><circle cx="30" cy="30" r="22" stroke="#7BBFD0" strokeWidth="1.5" fill="none" /><circle cx="30" cy="30" r="15" stroke="#7BBFD0" strokeWidth="1" fill="none" /><circle cx="30" cy="30" r="8" stroke="#7BBFD0" strokeWidth="1" fill="none" /><circle cx="30" cy="30" r="3" fill="#7BBFD0" /></svg></div>
-            <div><p className="det-eye">02 — Neemba Togo · 2024</p><h1 className="det-title">Portabilité Réseau MOOV → Togocom</h1><p className="det-co">Neemba Togo</p><p className="det-desc">Pilotage de la migration complète du réseau mobile de Neemba Togo depuis l'opérateur MOOV vers Togocom. Coordination multi-acteurs, maintien de la continuité de service et supervision VSAT tout au long de la transition.</p>
-              <div className="det-meta"><div className="dm"><small>Durée</small><p>6 mois</p></div><div className="dm"><small>Rôle</small><p>Chef de projet IT</p></div><div className="dm"><small>Type</small><p>Migration réseau</p></div><div className="dm"><small>Statut</small><p style={{ color: '#4CAF7D' }}>Livré</p></div></div></div>
-          </div>
-          <div className="det-body">
-            <div>
-              <div className="blk"><h3 className="blk-ttl">Contexte & enjeux</h3><p>Neemba Togo devait migrer l'intégralité de son parc de lignes mobiles professionnelles dans un délai contraint, sans interruption des communications critiques ni perte de continuité sur les liaisons VSAT.</p></div>
-              <div className="blk"><h3 className="blk-ttl">Ce que j'ai réalisé</h3><ul className="steps"><li>Cartographie complète des lignes mobiles actives et dépendances réseau.</li><li>Coordination avec MOOV Togo et Togocom pour le calendrier de migration.</li><li>Supervision des liaisons VSAT pendant toute la durée de la migration.</li><li>Tests de continuité et validation de la qualité de service post-bascule.</li><li>Documentation de la nouvelle infrastructure réseau mobile.</li></ul></div>
-              <div className="blk"><h3 className="blk-ttl">Résultat</h3><div className="res-dark"><small>Continuité de service</small><big>Zéro interruption</big><em>Migration transparente pour les utilisateurs finaux</em></div></div>
-            </div>
-            <div>
-              <div className="sb-blk"><div className="sb-lbl">Technologies</div><div className="tags" style={{ gap: '0.375rem' }}><span className="tag tt">VSAT</span><span className="tag tt">ARCEP</span><span className="tag tt">Télécom</span><span className="tag">Gestion de projet</span></div></div>
-              <div className="sb-blk"><div className="sb-lbl">Chronologie</div>
-                <div className="tl-li"><div className="tl-d"></div><div><span>Jan. 2024</span>Audit & cartographie lignes</div></div>
-                <div className="tl-li"><div className="tl-d"></div><div><span>Mars 2024</span>Coordination opérateurs</div></div>
-                <div className="tl-li"><div className="tl-d ok"></div><div><span>Juin 2024</span>Migration finalisée</div></div>
-              </div>
-            </div>
-          </div>
-          <div className="rel">
-            <h3>Projets similaires</h3>
-            <div className="rel-grid" style={{ marginTop: '1rem' }}>
-              <button
-                type="button"
-                className="rel-card card-action"
-                onClick={() => showDetail('siem')}
-                aria-label="Voir le projet Déploiement SIEM XDR Wazuh"
-              >
-                <h4>Déploiement SIEM/XDR Wazuh</h4>
-                <p>Neemba Togo · Cybersécurité</p>
-              </button>
-              <button
-                type="button"
-                className="rel-card card-action"
-                onClick={() => showDetail('biasa')}
-                aria-label="Voir le projet Services Réseau Linux BIASA"
-              >
-                <h4>Services Réseau Linux · BIASA</h4>
-                <p>Clinique BIASA · Infrastructure</p>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ORABANK */}
-      <div className={`page ${activePage === 'orabank' ? 'active' : ''}`} id="page-orabank">
-        <nav className="nav">
-          <button
-            type="button"
-            className="nav-logo nav-control-btn"
-            onClick={() => scrollToSection('hero')}
-          >
-            K · E
-          </button>
-          <button
-            type="button"
-            className="nav-back nav-control-btn"
-            onClick={backToMain}
-          >
-            ← Retour aux projets
-          </button>
-          <div className="nav-tag">Réseau Entreprise</div>
-        </nav>
-        <div className="sec">
-          <div className="det-hero">
-            <div className="det-vis" style={{ background: '#3A2C1E' }}><svg width="100" height="100" viewBox="0 0 60 60" fill="none" style={{ opacity: '.35' }}><rect x="20" y="6" width="20" height="14" rx="2" stroke="#C8A85A" strokeWidth="1.5" fill="none" /><rect x="6" y="36" width="18" height="12" rx="2" stroke="#C8A85A" strokeWidth="1" fill="none" /><rect x="36" y="36" width="18" height="12" rx="2" stroke="#C8A85A" strokeWidth="1" fill="none" /><line x1="30" y1="20" x2="30" y2="36" stroke="#C8A85A" strokeWidth="1.2" /><line x1="15" y1="28" x2="45" y2="28" stroke="#C8A85A" /><line x1="15" y1="28" x2="15" y2="36" stroke="#C8A85A" /><line x1="45" y1="28" x2="45" y2="36" stroke="#C8A85A" /></svg></div>
-            <div><p className="det-eye">03 — Orabank Togo · Stage 2022</p><h1 className="det-title">Contrôleur de Domaine Orabank</h1><p className="det-co">Orabank Togo</p><p className="det-desc">Installation et configuration d'un contrôleur de domaine Windows Server pour centraliser l'authentification, appliquer les GPO et assurer le support N2/N3 des agences bancaires.</p>
-              <div className="det-meta"><div className="dm"><small>Durée</small><p>5 mois (stage)</p></div><div className="dm"><small>Rôle</small><p>Technicien Système</p></div><div className="dm"><small>Env.</small><p>Windows Server 2019</p></div><div className="dm"><small>Statut</small><p style={{ color: '#4CAF7D' }}>Livré</p></div></div></div>
-          </div>
-          <div className="det-body">
-            <div>
-              <div className="blk"><h3 className="blk-ttl">Contexte</h3><p>Les agences Orabank nécessitaient une infrastructure d'authentification centralisée pour sécuriser les accès, uniformiser les politiques de sécurité et simplifier la gestion des comptes utilisateurs multi-sites.</p></div>
-              <div className="blk"><h3 className="blk-ttl">Ce que j'ai réalisé</h3><ul className="steps"><li>Installation d'un contrôleur de domaine Active Directory sur Windows Server 2019.</li><li>Configuration des GPO : mots de passe, verrouillage, restrictions logicielles.</li><li>Jonction au domaine de l'ensemble des postes des agences concernées.</li><li>Mise en place des solutions de transfert de fonds sécurisées.</li><li>Support N2/N3 : résolution d'incidents et documentation technique.</li></ul></div>
-              <div className="blk"><h3 className="blk-ttl">Résultat</h3><div className="res-dark"><small>Gestion centralisée</small><big>Multi-agences</big><em>Authentification et politiques unifiées sur tout le réseau</em></div></div>
-            </div>
-            <div>
-              <div className="sb-blk"><div className="sb-lbl">Technologies</div><div className="tags" style={{ gap: '0.375rem' }}><span className="tag tr">Windows Server</span><span className="tag tr">Active Directory</span><span className="tag tr">GPO</span><span className="tag">DNS</span><span className="tag">DHCP</span></div></div>
-              <div className="sb-blk"><div className="sb-lbl">Chronologie</div>
-                <div className="tl-li"><div className="tl-d"></div><div><span>Juin 2022</span>Analyse & installation AD</div></div>
-                <div className="tl-li"><div className="tl-d"></div><div><span>Août 2022</span>GPO & jonction postes</div></div>
-                <div className="tl-li"><div className="tl-d ok"></div><div><span>Oct. 2022</span>Recette finale & remise</div></div>
-              </div>
-            </div>
-          </div>
-          <div className="rel">
-            <h3>Projets similaires</h3>
-            <div className="rel-grid" style={{ marginTop: '1rem' }}>
-              <button
-                type="button"
-                className="rel-card card-action"
-                onClick={() => showDetail('siem')}
-                aria-label="Voir le projet Déploiement SIEM XDR Wazuh"
-              >
-                <h4>Déploiement SIEM/XDR Wazuh</h4>
-                <p>Neemba Togo · Cybersécurité</p>
-              </button>
-              <button
-                type="button"
-                className="rel-card card-action"
-                onClick={() => showDetail('biasa')}
-                aria-label="Voir le projet Services Réseau Linux BIASA"
-              >
-                <h4>Services Réseau Linux · BIASA</h4>
-                <p>Clinique BIASA · Infrastructure</p>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* BIASA */}
-      <div className={`page ${activePage === 'biasa' ? 'active' : ''}`} id="page-biasa">
-        <nav className="nav">
-          <button
-            type="button"
-            className="nav-logo nav-control-btn"
-            onClick={() => scrollToSection('hero')}
-          >
-            K · E
-          </button>
-          <button
-            type="button"
-            className="nav-back nav-control-btn"
-            onClick={backToMain}
-          >
-            ← Retour aux projets
-          </button>
-          <div className="nav-tag">Linux · Infrastructure</div>
-        </nav>
-        <div className="sec">
-          <div className="det-hero">
-            <div className="det-vis" style={{ background: '#2A3830' }}><svg width="100" height="100" viewBox="0 0 60 60" fill="none" style={{ opacity: '.35' }}><rect x="8" y="14" width="44" height="10" rx="2" stroke="#7DC4A0" strokeWidth="1.5" fill="none" /><rect x="8" y="28" width="44" height="10" rx="2" stroke="#7DC4A0" strokeWidth="1" fill="none" /><circle cx="46" cy="19" r="2.5" fill="#7DC4A0" /><line x1="30" y1="42" x2="30" y2="50" stroke="#7DC4A0" strokeWidth="1.2" /><line x1="18" y1="50" x2="42" y2="50" stroke="#7DC4A0" strokeWidth="1.2" /></svg></div>
-            <div><p className="det-eye">04 — Clinique BIASA · Stage 2021</p><h1 className="det-title">Services Réseau Linux · Clinique BIASA</h1><p className="det-co">Clinique BIASA</p><p className="det-desc">Déploiement de services réseau essentiels (DNS, DHCP, Apache, NAT) sur Ubuntu Server pour interconnecter les équipements de la clinique et héberger les ressources internes.</p>
-              <div className="det-meta"><div className="dm"><small>Durée</small><p>2 mois (stage)</p></div><div className="dm"><small>Rôle</small><p>Technicien réseau</p></div><div className="dm"><small>OS</small><p>Ubuntu Server LTS</p></div><div className="dm"><small>Statut</small><p style={{ color: '#4CAF7D' }}>Livré</p></div></div></div>
-          </div>
-          <div className="det-body">
-            <div>
-              <div className="blk"><h3 className="blk-ttl">Contexte</h3><p>La clinique ne disposait pas d'infrastructure réseau structurée. Les postes fonctionnaient en workgroup sans gestion centralisée des IP ni DNS interne, rendant la maintenance complexe.</p></div>
-              <div className="blk"><h3 className="blk-ttl">Ce que j'ai réalisé</h3><ul className="steps"><li>Installation et configuration d'Ubuntu Server LTS sur le serveur dédié.</li><li>Mise en place du service DNS interne pour la résolution locale des noms.</li><li>Configuration DHCP pour l'attribution automatique des adresses IP.</li><li>Déploiement d'Apache pour l'hébergement des ressources intranet.</li><li>Configuration NAT pour le partage de la connexion internet.</li><li>Formation des utilisateurs et rédaction de la documentation technique.</li></ul></div>
-              <div className="blk"><h3 className="blk-ttl">Résultat</h3><div className="res-dark"><small>Infrastructure créée from scratch</small><big>Réseau opérationnel</big><em>DNS · DHCP · Apache · NAT — 100 % des postes connectés</em></div></div>
-            </div>
-            <div>
-              <div className="sb-blk"><div className="sb-lbl">Technologies</div><div className="tags" style={{ gap: '0.375rem' }}><span className="tag tl2">Ubuntu Server</span><span className="tag tl2">DNS</span><span className="tag tl2">DHCP</span><span className="tag tl2">Apache</span><span className="tag">NAT</span><span className="tag">Bash</span></div></div>
-              <div className="sb-blk"><div className="sb-lbl">Chronologie</div>
-                <div className="tl-li"><div className="tl-d"></div><div><span>Sept. 2021</span>Installation Ubuntu Server</div></div>
-                <div className="tl-li"><div className="tl-d"></div><div><span>Oct. 2021</span>Services DNS/DHCP/Apache/NAT</div></div>
-                <div className="tl-li"><div className="tl-d ok"></div><div><span>Oct. 2021</span>Formation & remise</div></div>
-              </div>
-            </div>
-          </div>
-          <div className="rel">
-            <h3>Projets similaires</h3>
-            <div className="rel-grid" style={{ marginTop: '1rem' }}>
-              <button
-                type="button"
-                className="rel-card card-action"
-                onClick={() => showDetail('orabank')}
-                aria-label="Voir le projet Contrôleur de Domaine Orabank"
-              >
-                <h4>Contrôleur de Domaine Orabank</h4>
-                <p>Orabank · Réseau entreprise</p>
-              </button>
-              <button
-                type="button"
-                className="rel-card card-action"
-                onClick={() => showDetail('siem')}
-                aria-label="Voir le projet Déploiement SIEM XDR Wazuh"
-              >
-                <h4>Déploiement SIEM/XDR Wazuh</h4>
-                <p>Neemba Togo · Cybersécurité</p>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {Object.keys(structuredProjectConfigs).map((projectId) =>
-        renderStructuredProjectPage(projectId)
+    <Suspense fallback={null}>
+      {curatedStudyIds.has(activePage) && projectById[activePage] && (
+        <CaseStudyPage
+          project={projectById[activePage]}
+          lang={lang}
+          onBack={backFromDetail}
+          onNavigate={scrollToSection}
+          onProject={showDetail}
+          related={['tracker', 'siem', 'automate', 'moov', 'orabank', 'biasa']
+            .filter((id) => id !== activePage)
+            .slice(0, 2)
+            .map((id) => projectById[id])}
+        />
       )}
-    </>
+      {activePage in structuredProjectConfigs &&
+        !curatedStudyIds.has(activePage) &&
+        renderStructuredProjectPage(activePage)}
+    </Suspense>
   );
 
   const biographyPage = (

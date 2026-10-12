@@ -1,0 +1,72 @@
+[
+  {
+    "title": "PostgreSQL SSL/TLS on Windows Server",
+    "slug": "postgresql-ssl-windows-server",
+    "tagline": "Setting up self-signed SSL/TLS encryption to secure PostgreSQL connections.",
+    "description": "I documented PostgreSQL connection encryption on Windows Server 2022. The guide covers a self-signed certificate, SSL/TLS activation and hostssl access rules.",
+    "category": "Infrastructure",
+    "status": "Completed",
+    "duration": null,
+    "role": "System configuration, certificates and documentation",
+    "primary_language": "PowerShell",
+    "tech_stack": {
+      "frontend": [],
+      "backend": [
+        "PostgreSQL",
+        "Windows Server 2022",
+        "OpenSSL"
+      ],
+      "database": [
+        "PostgreSQL"
+      ],
+      "devops": [],
+      "tools": [
+        "postgresql.conf",
+        "pg_hba.conf",
+        "SSL/TLS",
+        "server.crt",
+        "server.key"
+      ]
+    },
+    "features": [
+      "Installing OpenSSL and generating a self-signed server certificate.",
+      "Enabling SSL in PostgreSQL with Windows paths handled correctly.",
+      "Updating pg_hba.conf with hostssl to enforce encryption on the targeted connections.",
+      "Checking permissions on the private key so the PostgreSQL service runs correctly.",
+      "Client connection tests with sslmode=require to validate end-to-end encryption."
+    ],
+    "challenges": "I had to manage Windows paths, private-key permissions and service reloads. I then checked certificate recognition and encrypted client connections.",
+    "learnings": "I strengthened my knowledge of PostgreSQL administration and SSL/TLS configuration on Windows.",
+    "links": {
+      "github": null,
+      "live": null,
+      "demo": null
+    },
+    "assets": {
+      "screenshots": [
+        "projects/postgresql_ssl/screens/1741163733169.jpg",
+        "projects/postgresql_ssl/screens/1741163733390.jpg",
+        "projects/postgresql_ssl/screens/1741163733652.jpg",
+        "projects/postgresql_ssl/screens/1741163734748.jpg",
+        "projects/postgresql_ssl/screens/1741163735070.jpg",
+        "projects/postgresql_ssl/screens/1741163735201.jpg",
+        "projects/postgresql_ssl/screens/1741163735249.jpg",
+        "projects/postgresql_ssl/screens/1741163735295.jpg",
+        "projects/postgresql_ssl/screens/1741163736077.jpg",
+        "projects/postgresql_ssl/screens/1741163736446.jpg"
+      ],
+      "has_video": false
+    },
+    "keywords": [
+      "postgresql",
+      "ssl",
+      "tls",
+      "openssl",
+      "windows server",
+      "database security",
+      "certificat auto-signe",
+      "pg_hba.conf",
+      "postgresql.conf"
+    ]
+  }
+]

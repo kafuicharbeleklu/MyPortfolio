@@ -3,11 +3,11 @@
     "title": "Configuration MFA Ubuntu avec Google Authenticator",
     "slug": "ubuntu-mfa-google-authenticator",
     "tagline": "Guide technique pour activer une authentification multifacteur sur Ubuntu, y compris pour SSH.",
-    "description": "Ce projet documente la mise en place d'une authentification multifacteur sur Ubuntu avec Google Authenticator. Il couvre la preparation du systeme, l'installation du module PAM, la configuration de common-auth, puis l'activation du MFA pour les connexions SSH. L'objectif est de renforcer la securite des acces en ajoutant un second facteur sans complexifier excessivement l'administration quotidienne.",
+    "description": "J’ai rédigé un guide pour activer le MFA sur Ubuntu avec Google Authenticator et PAM, y compris pour SSH. J’y détaille la préparation, la configuration et les tests.",
     "category": "Cybersecurity",
-    "status": "Termine",
+    "status": "Terminé",
     "duration": null,
-    "role": "Documentation technique et implementation",
+    "role": "Documentation technique et implémentation",
     "primary_language": "Bash",
     "tech_stack": {
       "frontend": [],
@@ -26,14 +26,14 @@
       ]
     },
     "features": [
-      "Preparation et mise a jour du systeme Ubuntu avant configuration MFA.",
-      "Generation d'un secret TOTP par utilisateur via Google Authenticator.",
-      "Integration du module pam_google_authenticator.so dans common-auth.",
+      "Préparation et mise à jour du système Ubuntu avant configuration MFA.",
+      "Génération d'un secret TOTP par utilisateur via Google Authenticator.",
+      "Intégration du module pam_google_authenticator.so dans common-auth.",
       "Activation du MFA pour les connexions SSH avec ajustement de sshd_config.",
-      "Conseils de depannage et de recuperation en cas de refus de code ou desynchronisation horaire."
+      "Conseils de dépannage et de récupération en cas de refus de code ou de désynchronisation horaire."
     ],
-    "challenges": "Le principal point de vigilance est d'activer le MFA sans se verrouiller hors du serveur. Cela impose une sequence stricte: sauvegarder la configuration, tester PAM localement, puis ouvrir le challenge MFA sur SSH en gardant un plan de retour arriere.",
-    "learnings": "Ce travail renforce la maitrise de PAM, de la securisation des acces SSH et de la documentation pas a pas pour des environnements Linux de production.",
+    "challenges": "Je devais renforcer les accès sans perdre la connexion au serveur. J’ai prévu une sauvegarde, des tests locaux et un retour arrière avant d’activer le MFA sur SSH.",
+    "learnings": "J’ai approfondi PAM et la sécurité SSH, tout en apprenant à documenter une procédure claire et reproductible.",
     "links": {
       "github": null,
       "live": null,

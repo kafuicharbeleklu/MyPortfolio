@@ -1,0 +1,66 @@
+[
+  {
+    "title": "SmartProcure AI",
+    "slug": "smartprocure",
+    "tagline": "AI-assisted platform for comparative analysis of supplier offers.",
+    "description": "I created SmartProcure AI to compare supplier offers from PDF quotes or images. Gemini extracts the data, then the tool presents a comparison and PDF/CSV exports. This MVP uses local storage without a dedicated backend.",
+    "category": "Dashboard",
+    "status": "MVP",
+    "duration": "1 week",
+    "role": "Solo Developer",
+    "tech_stack": {
+      "frontend": [
+        "React 19",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS v4",
+        "Recharts",
+        "Lucide React"
+      ],
+      "backend": [
+        "Google Gemini API (@google/genai)"
+      ],
+      "database": [
+        "Browser localStorage"
+      ],
+      "devops": [],
+      "tools": [
+        "jsPDF",
+        "html2canvas",
+        "@material/material-color-utilities"
+      ]
+    },
+    "features": [
+      "Import of requirements and supplier offers as PDF, PNG, JPG and WEBP",
+      "AI extraction of supplier data, prices excluding and including tax, currencies, warranties, lead times and scores",
+      "Automatic normalisation of amounts, VAT and currencies, and de-duplication of offers",
+      "Comparison engine with price, quality or lead-time priorities and a recommendation of the best supplier",
+      "Interactive result visualisations with radar and bar charts, filters and per-supplier details",
+      "Export of analyses as PDF and CSV for sharing or use in Excel",
+      "Local supplier management, analysis history, draft autosave, FR/EN language and theming"
+    ],
+    "challenges": "I constrained AI extraction with a JSON schema and rules for currencies, VAT and duplicates. I also optimised file processing; client-side API key handling remains an MVP limitation.",
+    "learnings": "I learned to validate AI extraction results and present data to support purchasing decisions.",
+    "links": {
+      "github": "https://github.com/kafuicharbeleklu/SmartProcure.git",
+      "live": "https://ai.studio/apps/dfe55992-d190-4541-9429-038257a6b650",
+      "demo": null
+    },
+    "assets": {
+      "screenshots": [],
+      "has_video": false
+    },
+    "keywords": [
+      "procurement dashboard",
+      "supplier analysis",
+      "comparatif fournisseurs",
+      "Gemini API",
+      "React TypeScript",
+      "IBM Carbon Design System",
+      "analyse PDF",
+      "financial normalization",
+      "appel d'offres",
+      "AI procurement"
+    ]
+  }
+]

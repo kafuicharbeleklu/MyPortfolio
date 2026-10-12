@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# personal documents and loose images dropped at the root: never part of the public site
+BIDC/
+/*.jpg
+/*.jpeg
+/*.png

@@ -1,204 +1,71 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion';
-import { t, Language } from '../../translations';
+import { ArrowUpRight, Network, ShieldCheck, Workflow } from 'lucide-react';
+import Reveal from '../Reveal';
+import type { Language } from '../../translations';
 
-interface AboutProps {
-  lang: Language;
-  onReadMore: () => void;
-}
-
-const About: React.FC<AboutProps> = ({ lang, onReadMore }) => {
-  const [statIndex, setStatIndex] = useState(0);
-  const [isHoveringStats, setIsHoveringStats] = useState(false);
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const statTransition = prefersReducedMotion ? { duration: 0 } : { duration: 0.3 };
-
-  const v = t[lang];
-
-  useEffect(() => {
-    let statTimer: ReturnType<typeof setInterval> | undefined;
-    if (!isHoveringStats && !prefersReducedMotion) {
-      statTimer = setInterval(() => {
-        setStatIndex((prev) => (prev + 1) % 4);
-      }, 3000);
-    }
-
-    return () => {
-      if (statTimer) {
-        clearInterval(statTimer);
-      }
-    };
-  }, [isHoveringStats, prefersReducedMotion]);
-
+export default function About({ lang, onReadMore }: { lang: Language; onReadMore: () => void }) {
+  const fr = lang === 'FR';
+  const principles = [
+    {
+      Icon: Network,
+      title: fr ? 'Faire fonctionner' : 'Keep things running',
+      text: fr
+        ? 'Des systèmes stables, des équipes accompagnées, des services qui tiennent leurs promesses.'
+        : 'Stable systems, supported teams, and services that deliver.',
+    },
+    {
+      Icon: ShieldCheck,
+      title: fr ? 'Voir et anticiper' : 'See and anticipate',
+      text: fr
+        ? 'La supervision et la sécurité intégrées aux opérations, dès la conception.'
+        : 'Monitoring and security built into operations from the outset.',
+    },
+    {
+      Icon: Workflow,
+      title: fr ? 'Rendre plus simple' : 'Make it simpler',
+      text: fr
+        ? 'Automatiser ce qui se répète. Créer les outils qui manquent. Redonner du temps aux équipes.'
+        : 'Automate recurring work. Build the tools that are missing. Give teams their time back.',
+    },
+  ];
   return (
-    <section className="sec" id="about">
-      <div className="sec-hdr">
-        <span className="sec-num">{v.about.num}</span>
-        <h2 className="sec-ttl">{v.about.title}.</h2>
-      </div>
-      <div className="about-grid">
-        <div className="about-text">
-          {lang === 'FR' ? (
-            <>
-              <p>
-                Ingénieur des travaux informatiques formé à l’IAI-Togo, j’ai ensuite obtenu mon
-                <strong> Master II Réseaux & Systèmes d’Information </strong>
-                au Collège de Paris Supérieur de Lomé avec la
-                <strong> mention bien</strong>.
-              </p>
-              <p>
-                Chez <strong>Neemba Togo</strong>, j’interviens sur les infrastructures, le support avancé,
-                les sujets télécoms, ainsi que sur l’amélioration des environnements IT avec une approche
-                orientée fiabilité, clarté et efficacité.
-              </p>
-              <p>
-                En tant que <strong>Wazuh Security Ambassador</strong>, je conçois et déploie aussi des
-                architectures de supervision et de sécurité capables d’apporter une visibilité concrète sur
-                les menaces et les événements critiques.
-              </p>
-              <p style={{ marginTop: '1.25rem' }}>
-                <button type="button" className="nav-btn" onClick={onReadMore}>
-                  En savoir plus →
-                </button>
-              </p>
-            </>
-          ) : (
-            <>
-              <p>
-                Trained in IT engineering at IAI-Togo, I later earned a
-                <strong> Master II in Information Systems & Networks </strong>
-                from Collège de Paris Supérieur in Lomé with
-                <strong> honors</strong>.
-              </p>
-              <p>
-                At <strong>Neemba Togo</strong>, I work across infrastructure, advanced support, telecom
-                operations, and IT environment improvement with a strong focus on reliability, clarity, and
-                execution quality.
-              </p>
-              <p>
-                As a <strong>Wazuh Security Ambassador</strong>, I also design and deploy monitoring and
-                security architectures that provide concrete visibility into threats and critical events.
-              </p>
-              <p style={{ marginTop: '1.25rem' }}>
-                <button type="button" className="nav-btn" onClick={onReadMore}>
-                  Read more →
-                </button>
-              </p>
-            </>
-          )}
-        </div>
-        <div
-          className="acard overflow-hidden"
-          onMouseEnter={() => setIsHoveringStats(true)}
-          onMouseLeave={() => setIsHoveringStats(false)}
-        >
-          <small>{lang === 'FR' ? 'Expérience IT' : 'IT experience'}</small>
-          <div className="anim-stat-wrap">
-            <AnimatePresence mode="wait">
-              {statIndex === 0 && (
-                <motion.div
-                  key="stat1"
-                  initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -10 }}
-                  transition={statTransition}
-                  className="anim-stat-abs"
-                >
-                  <big>3+</big>
-                  <br />
-                  <em>{lang === 'FR' ? 'Années · Admin & sécurité' : 'Years · Admin & security'}</em>
-                </motion.div>
-              )}
-              {statIndex === 1 && (
-                <motion.div
-                  key="stat2"
-                  initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -10 }}
-                  transition={statTransition}
-                  className="anim-stat-abs"
-                >
-                  <big>15+</big>
-                  <br />
-                  <em>{lang === 'FR' ? 'Technologies maîtrisées' : 'Technologies mastered'}</em>
-                </motion.div>
-              )}
-              {statIndex === 2 && (
-                <motion.div
-                  key="stat3"
-                  initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -10 }}
-                  transition={statTransition}
-                  className="anim-stat-abs"
-                >
-                  <big>6</big>
-                  <br />
-                  <em>{lang === 'FR' ? 'Projets techniques livrés' : 'Technical projects delivered'}</em>
-                </motion.div>
-              )}
-              {statIndex === 3 && (
-                <motion.div
-                  key="stat4"
-                  initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -10 }}
-                  transition={statTransition}
-                  className="anim-stat-abs"
-                >
-                  <big style={{ fontSize: '2rem' }}>Master II</big>
-                  <br />
-                  <em>{lang === 'FR' ? 'Collège de Paris · Mention bien' : 'College de Paris · With honors'}</em>
-                </motion.div>
-              )}
-            </AnimatePresence>
+    <section className="studio-section studio-about" id="about">
+      <div className="studio-container">
+        <Reveal className="studio-about-intro">
+          <div>
+            <p className="studio-eyebrow">01 / {fr ? 'Ma façon de travailler' : 'How I work'}</p>
+            <h2>
+              {fr ? 'J’administre l’essentiel.' : 'I run what matters.'}
+              <br />
+              <span>{fr ? 'Je construis ce qui manque.' : 'I build what’s missing.'}</span>
+            </h2>
           </div>
-        </div>
-        <div
-          className="acard-dark overflow-hidden"
-          onMouseEnter={() => setIsHoveringStats(true)}
-          onMouseLeave={() => setIsHoveringStats(false)}
-        >
-          <small>{lang === 'FR' ? 'Localisation & poste' : 'Location & role'}</small>
-          <div className="anim-stat-wrap">
-            <AnimatePresence mode="wait">
-              {statIndex % 2 === 0 && (
-                <motion.div
-                  key="loc1"
-                  initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -10 }}
-                  transition={statTransition}
-                  className="anim-stat-abs"
-                >
-                  <big>
-                    {lang === 'FR' ? 'Lomé,' : 'Lome,'}
-                    <br />
-                    Togo
-                  </big>
-                </motion.div>
-              )}
-              {statIndex % 2 === 1 && (
-                <motion.div
-                  key="loc2"
-                  initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -10 }}
-                  transition={statTransition}
-                  className="anim-stat-abs"
-                >
-                  <big style={{ fontSize: '1.375rem' }}>Neemba Togo</big>
-                  <br />
-                  <em>{lang === 'FR' ? 'Admin Digital Workplace' : 'Digital Workplace Admin'}</em>
-                </motion.div>
-              )}
-            </AnimatePresence>
+          <div className="studio-about-copy">
+            <p>
+              {fr
+                ? 'Je suis Charbel, professionnel de l’IT basé à Lomé. Chez Neemba Togo, je fais le lien entre les besoins du terrain et les solutions techniques : infrastructure, support, cybersécurité et outils métier.'
+                : 'I’m Charbel, an IT professional based in Lomé. At Neemba Togo, I connect operational needs with technical solutions: infrastructure, support, cybersecurity, and business tools.'}
+            </p>
+            <p>
+              {fr
+                ? 'Ce qui m’intéresse : comprendre un problème, construire une réponse utile, puis la rendre fiable et accessible à ceux qui l’utilisent.'
+                : 'What drives me: understanding a problem, building something useful, and making it reliable and accessible to the people who use it.'}
+            </p>
+            <button className="studio-text-link" onClick={onReadMore}>
+              {fr ? 'Mon parcours en détail' : 'More about my background'}{' '}
+              <ArrowUpRight size={17} />
+            </button>
           </div>
+        </Reveal>
+        <div className="studio-principles">
+          {principles.map(({ Icon, title, text }, index) => (
+            <Reveal key={title} className="studio-principle" delay={index * 0.08}>
+              <Icon size={28} strokeWidth={1.5} />
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default About;
+}

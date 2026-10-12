@@ -1,6 +1,16 @@
 export const assetPaths = {
+  backgroundMusic: 'media/music/duo-des-fleurs.mp3',
   profilePortrait: 'media/profile/charbel-eklu.jpg',
+  // studio portrait shown in the "Profil" section of the Sur mesure design
+  studioPortrait: {
+    jpg: 'media/profile/portrait-studio.jpg',
+    webp: 'media/profile/portrait-studio.webp',
+  },
   resume: 'documents/cv/CV_EKLU_Kafui_Charbel_Admin_System.pdf',
+  resumes: {
+    FR: 'documents/cv/CV_Kafui_Charbel_Eklu_FR.pdf',
+    EN: 'documents/cv/CV_Kafui_Charbel_Eklu_EN.pdf',
+  },
   projects: {
     automate: 'projects/automate',
     azureInfra: 'projects/azure-infra',

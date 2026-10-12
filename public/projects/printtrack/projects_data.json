@@ -2,8 +2,8 @@
   {
     "title": "PrintTrack",
     "slug": "print-track",
-    "tagline": "Dashboard de gestion des consommables d'impression et des couts par departement.",
-    "description": "PrintTrack est une application web de suivi des consommables d'impression, pensee pour centraliser les achats, les affectations internes et l'etat du stock. Le projet couvre des references toner multi-marques ainsi que le papier, avec une interface en francais et un affichage monetaire adapte au contexte FCFA. La valeur ajoutee vient surtout de la couche metier cote client: calcul du PMP, valorisation du stock, alertes de rupture et ventilation analytique des couts par service. L'application est fonctionnelle et deployable, mais son architecture actuelle reste celle d'un MVP sans backend metier connecte.",
+    "tagline": "Dashboard de gestion des consommables d'impression et des coûts par département.",
+    "description": "J’ai développé PrintTrack pour centraliser les achats, les affectations et le stock de toners et de papier. L’application calcule les coûts et signale les ruptures ; ce MVP conserve les données localement, sans backend connecté.",
     "category": "Dashboard",
     "status": "MVP",
     "duration": null,
@@ -31,17 +31,17 @@
       ]
     },
     "features": [
-      "Tableau de bord avec KPI, tendances recentes et graphiques de consommation/couts.",
+      "Tableau de bord avec KPI, tendances récentes et graphiques de consommation/coûts.",
       "Gestion CRUD des achats de toners et de papier avec filtres, pagination et recherche.",
-      "Affectation des consommables par departement avec blocage si le stock disponible est insuffisant.",
-      "Calcul automatique du PMP, de la valeur du stock et des niveaux disponibles par reference.",
-      "Ajustements de stock manuels avec alertes de stock bas et de rupture en temps reel.",
-      "Analyse des couts par departement et par canal (Mono, CMYK, Papier) via graphiques Recharts.",
+      "Affectation des consommables par département avec blocage si le stock disponible est insuffisant.",
+      "Calcul automatique du PMP, de la valeur du stock et des niveaux disponibles par référence.",
+      "Ajustements de stock manuels avec alertes de stock bas et de rupture en temps réel.",
+      "Analyse des coûts par département et par canal (Mono, CMYK, Papier) via graphiques Recharts.",
       "Export CSV des achats et des affectations.",
-      "Parametres locaux d'organisation, devise, seuil d'alerte, palette de commandes et raccourcis clavier."
+      "Paramètres locaux d'organisation, devise, seuil d'alerte, palette de commandes et raccourcis clavier."
     ],
-    "challenges": "Le point technique le plus delicat est la gestion d'un inventaire heterogene dans une logique unique: toners monochromes, familles CMYK et papier en cartons avec conversions paquets/feuilles. Le projet resolvait cela avec un contexte React centralisant les donnees, des types TypeScript explicites et des calculs derives pour le PMP, la valorisation, les alertes et les previsions. L'autre difficulte vient du choix d'un MVP sans backend: il faut garder une coherence forte entre ecrans, filtres, exports et preferences tout en persistant localement via localStorage.",
-    "learnings": "Ce projet m'a appris a structurer une couche metier robuste directement dans le front-end, a transformer des regles de gestion en calculs fiables et a soigner l'ergonomie d'un outil interne avec dashboards, raccourcis clavier et feedback immediat. Il m'a aussi montre les limites d'une persistance 100% locale, notamment pour l'authentification reelle, la synchronisation multi-utilisateur et l'evolution vers un produit plus enterprise.",
+    "challenges": "J’ai réuni les toners et le papier dans une même logique de stock, avec leurs unités et leurs conversions. J’ai aussi veillé à la cohérence entre les calculs, les tableaux de bord et les exports.",
+    "learnings": "J’ai appris à traduire des règles de gestion en calculs fiables. La persistance locale m’a aussi permis de mieux cerner les besoins d’une future version multi-utilisateur.",
     "links": {
       "github": null,
       "live": null,

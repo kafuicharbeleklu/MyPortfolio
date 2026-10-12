@@ -1,103 +1,73 @@
-# MyPortofolio
+# MyPortfolio
 
-Portfolio React/Vite de **Kafui Charbel Eklu**, oriente administration systemes, reseaux, cybersecurite et Digital Workplace.
+Portfolio bilingue (FR/EN) de **Kafui Charbel Eklu**, technicien informatique à Lomé : réseaux,
+systèmes, cybersécurité et gouvernance des SI.
 
-Site public : `https://kafuicharbeleklu.github.io/MyPortofolio/`
+Site public : `https://kafuicharbeleklu.github.io/MyPortfolio/`
 
-## Apercu
+## Le site « Sur mesure »
 
-Le projet presente :
-
-- un hero bilingue avec diaporamas et navigation one-page
-- des sections `About`, `Projects`, `Contact` et `Footer`
-- un catalogue projets avec recherche, filtres et pages detail
-- un bouton `Back to top` anime
-- un toggle de langue `FR / EN`
-- un chatbot Gemini avec fallback propre si aucune cle n'est disponible
+- Une page d'entrée plein écran (l'affiche), quittée par une porte qui fait tomber un rideau.
+- Un accueil en cinq scènes : Profil, Expertise, Réalisations, Parcours, Contact.
+- Un tiroir « En bref » (fiche de mesures) accessible depuis le bord droit de chaque page.
+- Un catalogue de 15 réalisations avec filtres, et une page par projet (étude de cas et fiche
+  technique chargée depuis `public/projects/<slug>/projects_data(.en).json`).
+- Thèmes clair et sombre, langue FR/EN persistante, mouvement réduit respecté.
+- Un assistant relayé par un Worker Cloudflare vers Gemini, avec repli par email.
 
 ## Stack
 
-- `React 19`
-- `TypeScript`
-- `Vite 6`
-- `Tailwind Vite plugin`
-- `motion`
-- CSS global centralise dans `src/index.css`
+`React 19`, `TypeScript 5.8`, `Vite 6`, `motion/react`, `lucide-react`, une seule feuille de style
+(`src/site/site.css`, tokens `--sm-*`), `node:test` pour les tests, Worker Cloudflare pour l'API.
 
 ## Structure
 
 ```text
-src/
-  components/
-    sections/        # Hero, About, Projects, Contact, Footer
-  config/assets.ts   # chemins centralises des assets publics
-  hooks/             # hooks UI partages
-  App.tsx            # orchestration principale du portfolio
-  data.tsx           # competences, experiences, formation
-  translations.ts    # contenus FR / EN
-public/
-  documents/cv/      # CV telechargeable
-  media/profile/     # photo de profil
-  projects/<slug>/   # assets specifiques a chaque projet
-docs/
-  project-structure.md
+src/site/            # le site rendu : SiteRoot, CoverPage, HomePage, ProjectsPage, ProjectPage,
+                     # SiteHeader, SiteMenu, BriefDrawer, ProjectsBadge, Chatbot, content.ts, studies.ts
+src/config/assets.ts # chemins des assets publics (withBaseAsset préfixe le base path)
+src/hooks/           # useProjectLoader, usePrefersReducedMotion (le reste sert l'ancienne version)
+public/projects/     # fiches techniques JSON (FR et EN) et exports PDF de chaque projet
+public/documents/cv/ # CV FR et EN
+tests/               # routage par hash, périodes et durées
+cloudflare-worker/   # worker.ts : POST /api/chat vers Gemini
+docs/                # revues et sources HTML des CV
 ```
 
-## Lancement local
+L'ancienne version (`src/hooks/usePortfolioModel.tsx`, `src/pages/`, `src/components/`,
+`src/index.css`) compile encore mais n'est plus montée.
 
-Prerequis recommandes : `Node.js 22+`
-
-```bash
-npm install
-npm run dev
-```
-
-Autres commandes utiles :
+## Commandes
 
 ```bash
-npm run lint
-npm run build
+npm install          # Node 22+
+npm run dev          # http://localhost:3000
+npm run lint         # eslint, zéro avertissement
+npm run typecheck    # tsc --noEmit
+npm test             # node:test
+npm run build        # dist/ sous /MyPortfolio/
 npm run preview
 ```
 
 ## Configuration
 
-Cree un fichier `.env.local` :
+`.env.local` :
 
 ```env
-VITE_GEMINI_API_KEY=your_key_here
+VITE_CHATBOT_API_URL=https://ton-worker.ton-compte.workers.dev/api/chat
 ```
 
-Variables prises en charge :
+`VITE_BASE_PATH` force le base path (production : `/MyPortfolio/`). La clé Gemini reste un secret
+`GEMINI_API_KEY` côté Worker (`cloudflare-worker/README.md`).
 
-- `VITE_GEMINI_API_KEY` : cle Gemini cote client
-- `GEMINI_API_KEY` : fallback compatible
-- `VITE_BASE_PATH=/MyPortofolio/` : optionnel en local, deja gere en production
+## Contenu
 
-Note : GitHub Pages est un hebergement statique. Sans backend/proxy, le chatbot ne doit pas exposer une vraie cle publique en production.
+Tout le texte du site vit dans `src/site/content.ts` et `src/site/studies.ts`, en français et en
+anglais. Les dates d'expérience et de formation sont stockées en ISO (`start`, `end`) ; la période
+et la durée affichées sont calculées. Règles : aucun montant financier, aucun tiret cadratin, une
+seule photo (le portrait).
 
-## Assets et organisation
+## Déploiement
 
-Les assets publics passent par `src/config/assets.ts` pour eviter les chemins codes en dur.
-
-Convention recommandee pour chaque projet :
-
-- `public/projects/<slug>/cover.*`
-- `public/projects/<slug>/screens/`
-- `public/projects/<slug>/diagrams/`
-- `public/projects/<slug>/exports/`
-
-Le detail est documente dans `docs/project-structure.md`.
-
-## Deploiement
-
-Le depot est configure pour **GitHub Pages** avec base path `/MyPortofolio/`.
-
-Workflow habituel :
-
-```bash
-npm run build
-git push origin main
-```
-
-Le workflow GitHub Actions publie ensuite le contenu construit sur GitHub Pages.
+GitHub Pages, source « GitHub Actions » : `.github/workflows/deploy.yml` construit et publie à
+chaque push sur `main`, et exige le secret de dépôt `VITE_CHATBOT_API_URL`.

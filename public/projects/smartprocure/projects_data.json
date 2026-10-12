@@ -2,8 +2,8 @@
   {
     "title": "SmartProcure AI",
     "slug": "smartprocure",
-    "tagline": "Plateforme intelligente d'analyse comparative des offres fournisseurs assistee par IA.",
-    "description": "SmartProcure AI est un dashboard d'aide a la decision pour les equipes achats qui doivent comparer rapidement plusieurs offres fournisseurs. L'application permet d'importer des besoins et des devis en PDF ou en image, puis s'appuie sur Gemini pour extraire, normaliser et comparer les donnees financieres et techniques. Elle centralise ensuite l'historique des analyses, la gestion des fournisseurs, les reglages metier et l'evaluation finale du fournisseur retenu dans une interface inspiree d'IBM Carbon. Le projet est actuellement concu comme un MVP front-end, avec persistance locale, export PDF/CSV et sans backend dedie.",
+    "tagline": "Plateforme intelligente d'analyse comparative des offres fournisseurs assistée par IA.",
+    "description": "J’ai créé SmartProcure AI pour comparer les offres fournisseurs à partir de devis PDF ou d’images. Gemini extrait les données, puis l’outil présente un comparatif et des exports PDF/CSV. Ce MVP fonctionne avec une persistance locale, sans backend dédié.",
     "category": "Dashboard",
     "status": "MVP",
     "duration": "1 semaine",
@@ -32,15 +32,15 @@
     },
     "features": [
       "Import des besoins et des offres fournisseurs en PDF, PNG, JPG et WEBP",
-      "Extraction IA des donnees fournisseurs, prix HT/TTC, devises, garanties, delais et scores",
-      "Normalisation automatique des montants, TVA, monnaies et deduplication des offres",
-      "Moteur de comparaison avec priorites prix, qualite ou delai et recommandation du meilleur fournisseur",
-      "Visualisations interactives des resultats avec graphiques radar et barres, filtres et details par fournisseur",
+      "Extraction IA des données fournisseurs, prix HT/TTC, devises, garanties, délais et scores",
+      "Normalisation automatique des montants, TVA, monnaies et déduplication des offres",
+      "Moteur de comparaison avec priorités prix, qualité ou délai et recommandation du meilleur fournisseur",
+      "Visualisations interactives des résultats avec graphiques radar et barres, filtres et détails par fournisseur",
       "Export des analyses en PDF et CSV pour partage ou exploitation Excel",
       "Gestion locale des fournisseurs, historique des analyses, autosave des brouillons, langue FR/EN et theming"
     ],
-    "challenges": "Le principal defit etait de fiabiliser une analyse IA lancee entierement cote navigateur a partir de documents heterogenes. Le projet repond a cela avec une compression client des images, un schema JSON strict pour contraindre Gemini, un systeme de retry exponentiel, un cache memoire base sur SHA-256, ainsi que des regles de normalisation pour la TVA, les devises et la deduplication des offres. Une autre limite importante est l'absence de backend dedie: la cle API reste cote client, ce qui est documente comme contrainte du MVP avec une trajectoire claire vers une architecture serveur.",
-    "learnings": "Ce projet m'a appris a encadrer une extraction documentaire par IA avec un schema de sortie strict, a optimiser les performances d'un traitement client de fichiers volumineux, et a transformer des donnees achats brutes en experience decisionnelle exploitable. Il m'a aussi permis de consolider une approche local-first avec persistance, autosave, export et UI bilingue pour un usage metier concret.",
+    "challenges": "J’ai encadré l’extraction IA avec un schéma JSON et des règles pour les devises, la TVA et les doublons. J’ai aussi optimisé le traitement des fichiers ; la gestion de la clé API côté client reste une limite du MVP.",
+    "learnings": "J’ai appris à contrôler les résultats d’une extraction par IA et à présenter les données pour faciliter une décision d’achat.",
     "links": {
       "github": "https://github.com/kafuicharbeleklu/SmartProcure.git",
       "live": "https://ai.studio/apps/dfe55992-d190-4541-9429-038257a6b650",

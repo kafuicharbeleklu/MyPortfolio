@@ -1,0 +1,68 @@
+[
+  {
+    "title": "Active Directory on Ubuntu with Samba",
+    "slug": "active-directory-ubuntu-samba",
+    "tagline": "Step-by-step setup of a Samba/LDAP domain controller on Ubuntu.",
+    "description": "I wrote a guide to create a Samba domain on Ubuntu with Kerberos and DNS. I cover server preparation and Windows and Linux client integration.",
+    "category": "Linux",
+    "status": "Completed",
+    "duration": null,
+    "role": "Design, configuration and documentation",
+    "primary_language": "Bash",
+    "tech_stack": {
+      "frontend": [],
+      "backend": [
+        "Ubuntu Server",
+        "Samba AD DC",
+        "Kerberos",
+        "DNS"
+      ],
+      "database": [],
+      "devops": [],
+      "tools": [
+        "samba-tool",
+        "smbclient",
+        "winbind",
+        "realm",
+        "dnsutils"
+      ]
+    },
+    "features": [
+      "Preparing the Ubuntu environment with a static IP, hostname and resolv.conf.",
+      "Installing the Samba AD, Kerberos and Winbind dependencies.",
+      "Provisioning the domain with samba-tool and enabling the samba-ad-dc service.",
+      "Configuring Kerberos and checking the domain DNS records.",
+      "Procedure for joining Windows and Linux workstations to the domain.",
+      "A documentation base for later management of users and groups."
+    ],
+    "challenges": "I needed to keep Samba, Kerberos and DNS consistent. I paid particular attention to the domain name, DNS records and configuration order.",
+    "learnings": "I deepened my understanding of Samba domains and learned to document a repeatable system configuration.",
+    "links": {
+      "github": null,
+      "live": null,
+      "demo": null
+    },
+    "assets": {
+      "screenshots": [
+        "projects/ubuntu_ldap/screens/1734435193638.jpg",
+        "projects/ubuntu_ldap/screens/1734435194221.jpg",
+        "projects/ubuntu_ldap/screens/1734435194290.jpg",
+        "projects/ubuntu_ldap/screens/1734435194432.jpg",
+        "projects/ubuntu_ldap/screens/1734435194572.jpg",
+        "projects/ubuntu_ldap/screens/1734435194689.jpg",
+        "projects/ubuntu_ldap/screens/1734435195858.jpg",
+        "projects/ubuntu_ldap/screens/1734435196566.jpg"
+      ],
+      "has_video": false
+    },
+    "keywords": [
+      "ubuntu server",
+      "samba ad",
+      "active directory",
+      "kerberos",
+      "ldap",
+      "dns",
+      "winbind"
+    ]
+  }
+]

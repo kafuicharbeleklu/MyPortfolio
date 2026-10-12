@@ -3,7 +3,7 @@
     "title": "Veeam Backup Report Automation",
     "slug": "veeam-backup-report-automation",
     "tagline": "Workflow Power Automate qui transforme les emails Veeam en reporting Excel exploitable.",
-    "description": "Ce projet automatise la collecte des emails de notification Veeam Backup & Replication dans Outlook afin d'alimenter un reporting Excel centralise. Le workflow convertit le contenu HTML des emails en texte exploitable, extrait le nom du job et les indicateurs cles (VMs totales, succes, erreurs, avertissements), puis calcule un taux de reussite. Il ajoute ensuite une ligne dans un tableau Excel Online tout en empechant les doublons grace a un controle par date et nom de job. L'ensemble reduit la saisie manuelle et fiabilise le suivi des sauvegardes.",
+    "description": "J’ai créé un flux Power Automate qui transforme les emails Veeam en reporting Excel. Il extrait les résultats des sauvegardes, calcule le taux de réussite et évite les doublons.",
     "category": "Autre",
     "status": null,
     "duration": null,
@@ -25,15 +25,15 @@
       ]
     },
     "features": [
-      "Declenchement automatique a la reception d'un email Outlook contenant le sujet \"Backup\".",
+      "Déclenchement automatique à la réception d'un email Outlook contenant le sujet \"Backup\".",
       "Conversion du corps HTML en texte brut pour faciliter l'analyse des notifications.",
-      "Extraction automatique du nom du job, du total de VMs, des succes, erreurs et avertissements.",
-      "Calcul du taux de succes a partir des metriques extraites.",
-      "Verification des doublons par date et nom de job avant l'ajout dans Excel.",
-      "Insertion des resultats dans un tableau Excel Online dedie au suivi des sauvegardes."
+      "Extraction automatique du nom du job, du total de VMs, des succès, erreurs et avertissements.",
+      "Calcul du taux de succès à partir des métriques extraites.",
+      "Vérification des doublons par date et nom de job avant l'ajout dans Excel.",
+      "Insertion des résultats dans un tableau Excel Online dédié au suivi des sauvegardes."
     ],
-    "challenges": "Le point sensible est l'extraction de donnees semi-structurees depuis plusieurs formats d'emails Veeam, avec nettoyage des suffixes de retry, puis l'idempotence lors de l'ecriture dans Excel. Le flow le resout avec une conversion HTML-vers-texte, des expressions conditionnelles de type split/trim/replace, et une verification de doublon sur Date et JobName avant insertion.",
-    "learnings": "Ce projet montre une bonne maitrise des workflows low-code robustes, de l'analyse de contenu non structure dans Power Automate et de la mise en place d'une logique d'idempotence sur une source de stockage simple comme Excel.",
+    "challenges": "J’ai dû gérer plusieurs formats d’email et les notifications de relance. J’ai nettoyé les données et vérifié la date et le nom du job avant chaque insertion.",
+    "learnings": "J’ai appris à rendre un flux low-code plus fiable, de l’extraction des données au contrôle des doublons.",
     "links": {
       "github": null,
       "live": null,

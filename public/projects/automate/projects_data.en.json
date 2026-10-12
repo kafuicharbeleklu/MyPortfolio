@@ -1,0 +1,56 @@
+[
+  {
+    "title": "Veeam Backup Report Automation",
+    "slug": "veeam-backup-report-automation",
+    "tagline": "Power Automate workflow that turns Veeam emails into usable Excel reporting.",
+    "description": "I created a Power Automate flow that turns Veeam emails into Excel reports. It extracts backup results, calculates success rates and prevents duplicates.",
+    "category": "Other",
+    "status": null,
+    "duration": null,
+    "role": null,
+    "tech_stack": {
+      "frontend": [],
+      "backend": [
+        "Microsoft Power Automate",
+        "Azure Logic Apps Workflow Definition"
+      ],
+      "database": [
+        "Excel Online (Business)"
+      ],
+      "devops": [],
+      "tools": [
+        "Office 365 Outlook",
+        "Content Conversion",
+        "Veeam Backup & Replication"
+      ]
+    },
+    "features": [
+      "Automatic trigger when an Outlook email with \"Backup\" in the subject is received.",
+      "Conversion of the HTML body to plain text to make notifications easier to parse.",
+      "Automatic extraction of the job name, total VMs, successes, errors and warnings.",
+      "Success rate computed from the extracted metrics.",
+      "Duplicate check on date and job name before anything is added to Excel.",
+      "Results inserted into an Excel Online table dedicated to backup tracking."
+    ],
+    "challenges": "I had to handle different email formats and retry notifications. I cleaned the data and checked the date and job name before each insertion.",
+    "learnings": "I learned to make a low-code workflow more reliable, from data extraction to duplicate checks.",
+    "links": {
+      "github": null,
+      "live": null,
+      "demo": null
+    },
+    "assets": {
+      "screenshots": [],
+      "has_video": false
+    },
+    "keywords": [
+      "power automate",
+      "veeam backup",
+      "excel online",
+      "office 365",
+      "workflow automation",
+      "backup reporting",
+      "low-code"
+    ]
+  }
+]

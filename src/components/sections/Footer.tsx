@@ -15,7 +15,9 @@ const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
         <div className="footer-top">
           <div className="footer-brand">
             <button type="button" className="footer-logo" onClick={() => onNavigate('hero')}>
-              K · E
+              <span className="studio-monogram">
+                ce<span>.</span>
+              </span>
             </button>
           </div>
 
@@ -23,27 +25,47 @@ const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
             <h3 className="footer-col-title">{v.footer.navTitle}</h3>
             <ul className="footer-nav">
               <li>
-                <button type="button" className="footer-link-button" onClick={() => onNavigate('about')}>
+                <button
+                  type="button"
+                  className="footer-link-button"
+                  onClick={() => onNavigate('about')}
+                >
                   {v.nav.about}
                 </button>
               </li>
               <li>
-                <button type="button" className="footer-link-button" onClick={() => onNavigate('skills')}>
+                <button
+                  type="button"
+                  className="footer-link-button"
+                  onClick={() => onNavigate('skills')}
+                >
                   {v.nav.skills}
                 </button>
               </li>
               <li>
-                <button type="button" className="footer-link-button" onClick={() => onNavigate('parcours')}>
+                <button
+                  type="button"
+                  className="footer-link-button"
+                  onClick={() => onNavigate('parcours')}
+                >
                   {v.nav.experience}
                 </button>
               </li>
               <li>
-                <button type="button" className="footer-link-button" onClick={() => onNavigate('projets')}>
+                <button
+                  type="button"
+                  className="footer-link-button"
+                  onClick={() => onNavigate('projets')}
+                >
                   {v.nav.projects}
                 </button>
               </li>
               <li>
-                <button type="button" className="footer-link-button" onClick={() => onNavigate('contact')}>
+                <button
+                  type="button"
+                  className="footer-link-button"
+                  onClick={() => onNavigate('contact')}
+                >
                   {v.nav.contact}
                 </button>
               </li>

@@ -1,5 +1,5 @@
 {
-  "name": "react-example",
+  "name": "myportfolio",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "eslint src --ext .ts,.tsx --max-warnings 0",
-    "format": "prettier --write src"
+    "format": "prettier --write src",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.4",

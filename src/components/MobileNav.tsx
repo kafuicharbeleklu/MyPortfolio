@@ -1,6 +1,8 @@
-import React from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { t, Language } from '../translations';
+import { X } from 'lucide-react';
+import { t, type Language } from '../translations';
+import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion';
 
 interface MobileNavProps {
   lang: Language;
@@ -10,131 +12,103 @@ interface MobileNavProps {
   scrollToSection: (id: string) => void;
 }
 
-const MobileNav: React.FC<MobileNavProps> = ({
+export default function MobileNav({
   lang,
   isMobileMenuOpen,
   activeSection,
   toggleMobileMenu,
   scrollToSection,
-}) => {
+}: MobileNavProps) {
+  const panel = useRef<HTMLDivElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef(toggleMobileMenu);
+  closeRef.current = toggleMobileMenu;
+  const reduced = usePrefersReducedMotion();
   const v = t[lang];
-
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeButton.current?.focus();
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeRef.current();
+      }
+      if (event.key !== 'Tab') return;
+      const elements = panel.current?.querySelectorAll<HTMLElement>('button, a[href]');
+      if (!elements?.length) return;
+      const first = elements[0],
+        last = elements[elements.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', keydown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', keydown);
+      previousFocus?.focus({ preventScroll: true });
+    };
+  }, [isMobileMenuOpen]);
+  const items = [
+    ['about', v.nav.about],
+    ['projets', v.nav.projects],
+    ['skills', v.nav.skills],
+    ['parcours', v.nav.experience],
+    ['formation', v.nav.education],
+    ['refs', v.nav.references],
+    ['contact', v.nav.contact],
+  ];
   return (
     <AnimatePresence>
       {isMobileMenuOpen && (
         <motion.div
+          ref={panel}
           id="mobile-menu"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
           className="mobile-nav"
+          role="dialog"
+          aria-modal="true"
           aria-label={lang === 'FR' ? 'Navigation mobile' : 'Mobile navigation'}
+          initial={reduced ? false : { opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: reduced ? 0 : -16 }}
+          transition={{ duration: reduced ? 0 : 0.2 }}
         >
           <button
+            ref={closeButton}
             type="button"
             className="close-btn"
             onClick={toggleMobileMenu}
             aria-label={lang === 'FR' ? 'Fermer le menu' : 'Close menu'}
           >
-            ×
+            <X size={26} />
           </button>
           <ul className="mobile-nav-links">
-            <li>
-              <a
-                href="#about"
-                className={activeSection === 'about' ? 'active' : ''}
-                aria-current={activeSection === 'about' ? 'page' : undefined}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection('about');
-                }}
-              >
-                {v.nav.about}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#skills"
-                className={activeSection === 'skills' ? 'active' : ''}
-                aria-current={activeSection === 'skills' ? 'page' : undefined}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection('skills');
-                }}
-              >
-                {v.nav.skills}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#parcours"
-                className={activeSection === 'parcours' ? 'active' : ''}
-                aria-current={activeSection === 'parcours' ? 'page' : undefined}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection('parcours');
-                }}
-              >
-                {v.nav.experience}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#formation"
-                className={activeSection === 'formation' ? 'active' : ''}
-                aria-current={activeSection === 'formation' ? 'page' : undefined}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection('formation');
-                }}
-              >
-                {v.nav.education}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#projets"
-                className={activeSection === 'projets' ? 'active' : ''}
-                aria-current={activeSection === 'projets' ? 'page' : undefined}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection('projets');
-                }}
-              >
-                {v.nav.projects}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#refs"
-                className={activeSection === 'refs' ? 'active' : ''}
-                aria-current={activeSection === 'refs' ? 'page' : undefined}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection('refs');
-                }}
-              >
-                {v.nav.references}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#contact"
-                className={activeSection === 'contact' ? 'active' : ''}
-                aria-current={activeSection === 'contact' ? 'page' : undefined}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection('contact');
-                }}
-              >
-                {v.nav.contact}
-              </a>
-            </li>
+            {items.map(([id, label], index) => (
+              <li key={id}>
+                <a
+                  href={'#' + id}
+                  className={activeSection === id ? 'active' : ''}
+                  aria-current={activeSection === id ? 'location' : undefined}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToSection(id);
+                  }}
+                >
+                  <span className="studio-menu-index">0{index + 1}</span>
+                  {label}
+                </a>
+              </li>
+            ))}
           </ul>
         </motion.div>
       )}
     </AnimatePresence>
   );
-};
-
-export default MobileNav;
+}

@@ -1,351 +1,214 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { MessageCircle, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { MessageCircle, X, Send, ArrowUpRight } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import type { Language } from '../translations';
+import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion';
 
-const apiUrl = import.meta.env.VITE_CHATBOT_API_URL;
-console.log('[Chatbot] API URL au démarrage:', apiUrl);
+const endpoint = (import.meta.env.VITE_CHATBOT_API_URL || '').trim().replace(/\/+$/, '');
+const apiUrl = endpoint ? (endpoint.endsWith('/api/chat') ? endpoint : `${endpoint}/api/chat`) : '';
+type Message = { text: string; isUser: boolean };
+const maxMessages = 10;
 
-const normalizeChatbotApiUrl = (value: string | undefined) => {
-  const trimmed = (value || '').trim();
-  if (!trimmed) {
-    return '';
-  }
-
-  const normalized = trimmed.replace(/\/+$/, '');
-  return normalized.endsWith('/api/chat') ? normalized : `${normalized}/api/chat`;
-};
-
-const chatbotApiUrl = normalizeChatbotApiUrl(apiUrl);
-
-const assistantGreeting =
-  "Bonjour ! Je suis l'assistant virtuel de Kafui. Comment puis-je vous aider aujourd'hui ?";
-const localMissingKeyMessage =
-  "Le chatbot n'est pas configuré. Ajoutez VITE_CHATBOT_API_URL dans .env.local, puis redémarrez l'application.";
-const githubPagesMissingKeyMessage =
-  "Le chatbot IA n'est pas disponible sur cette version GitHub Pages. Utilisez plutôt l'email ou LinkedIn pour me contacter.";
-const chatbotPanelId = 'chatbot-panel';
-const chatbotTitleId = 'chatbot-title';
-const maxSessionMessages = 10;
-const rateLimitMessage = 'Limite de messages atteinte, réessayez plus tard.';
-const genericFailureMessage =
-  "Une erreur réseau est survenue. Vérifiez l'URL du worker Cloudflare puis réessayez.";
-const temporaryServiceMessage =
-  "Le service IA est en cours de mise à jour. Réessayez dans quelques instants.";
-const demoLimitMessage = 'Limite de la démo atteinte. Contactez-moi directement.';
-const directEmail = 'charbelkafuieklu@gmail.com';
-const directPhoneHref = 'tel:+22870664225';
-const directPhoneLabel = '+228 70 66 42 25';
-
-type ChatMessage = {
-  text: string;
-  isUser: boolean;
-};
-
-type ChatbotResponsePayload = {
-  reply?: string;
-  error?:
-    | string
-    | {
-        message?: string;
-      };
-};
-
-const extractErrorMessage = (payload: ChatbotResponsePayload | null) => {
-  if (!payload?.error) {
-    return '';
-  }
-
-  if (typeof payload.error === 'string') {
-    return payload.error;
-  }
-
-  return payload.error.message || '';
-};
-
-const toUserFacingError = (message: string) => {
-  if (!message) {
-    return genericFailureMessage;
-  }
-
-  if (
-    message.includes('Failed to fetch') ||
-    message.includes('NetworkError') ||
-    message.includes('Load failed')
-  ) {
-    return genericFailureMessage;
-  }
-
-  if (message.includes('Limite de messages atteinte')) {
-    return rateLimitMessage;
-  }
-
-  if (
-    message.includes('models/') ||
-    message.includes('NOT_FOUND') ||
-    message.includes('not supported for generateContent')
-  ) {
-    return temporaryServiceMessage;
-  }
-
-  if (message.includes('Missing GEMINI_API_KEY')) {
-    return "Le service IA n'est pas configuré correctement pour le moment.";
-  }
-
-  return message;
-};
-
-const ChatbotButton: React.FC = () => {
-  const isGitHubPagesHost =
-    typeof window !== 'undefined' && window.location.hostname.endsWith('github.io');
-  const shouldRenderChatbot = Boolean(chatbotApiUrl) || !isGitHubPagesHost;
-  const missingKeyMessage = isGitHubPagesHost
-    ? githubPagesMissingKeyMessage
-    : localMissingKeyMessage;
-  const isChatAvailable = Boolean(chatbotApiUrl);
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>(
-    isChatAvailable ? [{ text: assistantGreeting, isUser: false }] : []
-  );
+export default function ChatbotButton({ lang }: { lang: Language }) {
+  const fr = lang === 'FR';
+  const reduced = usePrefersReducedMotion();
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [sentCount, setSentCount] = useState(0);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const remainingMessages = Math.max(0, maxSessionMessages - sentCount);
-  const isSessionLimitReached = sentCount >= maxSessionMessages;
-  const isInputEmpty = !input.trim();
-  const isSendDisabled = isInputEmpty || isLoading || isSessionLimitReached;
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(0);
+  const endRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const requestRef = useRef<AbortController | null>(null);
+  const close = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
 
+  useEffect(() => () => requestRef.current?.abort(), []);
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (open) inputRef.current?.focus();
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && open) {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', escape);
+    return () => document.removeEventListener('keydown', escape);
+  }, [open]);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' });
+  }, [messages, loading, reduced]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading || isSessionLimitReached) {
-      return;
-    }
-
-    const userMessage = input.trim();
+  const send = async () => {
+    const message = input.trim();
+    if (!message || loading || sent >= maxMessages || !apiUrl) return;
     setInput('');
-    setSentCount((prev) => prev + 1);
-    setMessages((prev) => [...prev, { text: userMessage, isUser: true }]);
-
-    if (!isChatAvailable) {
-      setMessages((prev) => [...prev, { text: missingKeyMessage, isUser: false }]);
-      return;
-    }
-
-    setIsLoading(true);
-
+    setLoading(true);
+    setSent((value) => value + 1);
+    setMessages((value) => [...value, { text: message, isUser: true }]);
+    const controller = new AbortController();
+    requestRef.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 20000);
     try {
-      const history = messages.slice(1).map((message) => ({
-        role: message.isUser ? 'user' : 'assistant',
-        text: message.text,
-      }));
-
-      const response = await fetch(chatbotApiUrl, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
-          message: userMessage,
-          history,
+          message,
+          history: messages.map((item) => ({
+            role: item.isUser ? 'user' : 'assistant',
+            text: item.text,
+          })),
         }),
       });
-
-      const payload = (await response.json().catch(() => null)) as ChatbotResponsePayload | null;
-      console.log('[Chatbot] Réponse Worker complète:', payload);
-      console.log('[Chatbot] Structure:', JSON.stringify(payload).slice(0, 300));
-
-      const workerError = extractErrorMessage(payload);
-
-      if (response.status === 429) {
-        console.error('[Chatbot] Erreur HTTP:', response.status, payload);
-        throw new Error(workerError || rateLimitMessage);
-      }
-
-      if (!response.ok) {
-        console.error('[Chatbot] Erreur HTTP:', response.status, payload);
-        throw new Error(workerError || `HTTP ${response.status}`);
-      }
-
-      const reply = payload?.reply?.trim() || '';
-      if (!reply) {
-        throw new Error(workerError || temporaryServiceMessage);
-      }
-
-      setMessages((prev) => [...prev, { text: reply, isUser: false }]);
+      if (response.status === 429) throw new Error('rate-limit');
+      const payload = await response.json();
+      if (!response.ok || typeof payload.reply !== 'string' || !payload.reply.trim())
+        throw new Error('unavailable');
+      setMessages((value) => [...value, { text: payload.reply.trim(), isUser: false }]);
     } catch (error) {
-      console.error('[Chatbot] Erreur complète:', error);
-      const message =
-        error instanceof Error && error.message.trim()
-          ? error.message
-          : genericFailureMessage;
-      setMessages((prev) => [...prev, { text: message, isUser: false }]);
+      const limited = error instanceof Error && error.message === 'rate-limit';
+      setMessages((value) => [
+        ...value,
+        {
+          isUser: false,
+          text: limited
+            ? fr
+              ? 'La limite de messages est atteinte. Vous pouvez me contacter directement par email.'
+              : 'The message limit has been reached. You can contact me directly by email.'
+            : fr
+              ? 'L’assistant est momentanément indisponible. Réessayez plus tard ou contactez-moi par email.'
+              : 'The assistant is temporarily unavailable. Please try later or contact me by email.',
+        },
+      ]);
     } finally {
-      setIsLoading(false);
+      window.clearTimeout(timeout);
+      requestRef.current = null;
+      setLoading(false);
     }
   };
 
-  if (!shouldRenderChatbot) {
-    return null;
-  }
-
   return (
     <>
-      {isOpen && (
-        <div
-          className="chat-window"
-          id={chatbotPanelId}
-          role="dialog"
-          aria-modal="false"
-          aria-labelledby={chatbotTitleId}
-        >
-          <div className="chat-header">
-            <div className="chat-header-left">
-              <div className={`chat-status-dot ${isChatAvailable ? 'online' : 'offline'}`}></div>
-              <h3 id={chatbotTitleId}>Assistant Virtuel</h3>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="chat-window"
+            id="chatbot-panel"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="chatbot-title"
+            initial={reduced ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: reduced ? 0 : 8 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="chat-header">
+              <div className="chat-header-left">
+                <span className="studio-status-dot" />
+                <h3 id="chatbot-title">
+                  {apiUrl
+                    ? fr
+                      ? 'L’assistant de Charbel'
+                      : 'Charbel’s assistant'
+                    : fr
+                      ? 'Faisons connaissance'
+                      : 'Let’s connect'}
+                </h3>
+              </div>
+              <button
+                className="chat-close-btn"
+                onClick={close}
+                aria-label={fr ? 'Fermer la conversation' : 'Close conversation'}
+              >
+                <X size={19} />
+              </button>
             </div>
-            <button
-              type="button"
-              className="chat-close-btn"
-              onClick={() => setIsOpen(false)}
-              aria-label="Fermer le chatbot"
-            >
-              <X size={20} />
-            </button>
-          </div>
-
-          <div className="chat-messages" aria-live="polite" aria-busy={isLoading}>
-            {messages.map((msg, idx) => (
-              <div key={idx} className={`chat-bubble ${msg.isUser ? 'user' : 'bot'}`}>
-                {msg.text}
+            <div className="chat-messages" role="log" aria-live="polite" aria-busy={loading}>
+              <div className="chat-bubble bot">
+                {apiUrl
+                  ? fr
+                    ? 'Bonjour ! Je suis l’assistant IA de Charbel. Posez-moi une question sur son parcours, ses compétences ou ses projets.'
+                    : 'Hello! I’m Charbel’s AI assistant. Ask me about his background, skills or projects.'
+                  : fr
+                    ? 'Un projet, une opportunité ou simplement une question ? Échangeons directement.'
+                    : 'A project, an opportunity, or a question? Let’s talk directly.'}
               </div>
-            ))}
-            {isLoading && (
-              <div className="chat-loading" role="status" aria-live="polite">
-                <span className="chat-loading-indicator" aria-hidden="true">
-                  <span className="dot" />
-                  <span className="dot" />
-                  <span className="dot" />
-                </span>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {isChatAvailable ? (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                padding: '12px',
-                borderTop: '1px solid rgba(0,0,0,0.1)',
-                background: 'white',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: '8px',
+              {messages.map((message, index) => (
+                <div className={'chat-bubble ' + (message.isUser ? 'user' : 'bot')} key={index}>
+                  {message.text}
+                </div>
+              ))}
+              {loading && (
+                <p className="studio-chat-loading" role="status">
+                  {fr ? 'Réponse en cours…' : 'Thinking…'}
+                </p>
+              )}
+              <div ref={endRef} />
+            </div>
+            {apiUrl && (
+              <form
+                className="studio-chat-form"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void send();
                 }}
               >
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && !isLoading && handleSend()}
-                  placeholder="Écrivez un message..."
-                  disabled={isLoading || isSessionLimitReached}
-                  aria-label="Message à envoyer"
-                  style={{
-                    flex: 1,
-                    height: '44px',
-                    padding: '0 12px',
-                    borderRadius: 'var(--radius-card)',
-                    border: '1px solid rgba(0,0,0,0.15)',
-                    fontSize: '14px',
-                    outline: 'none',
-                    background: 'white',
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={handleSend}
-                  disabled={isSendDisabled}
-                  aria-label="Envoyer le message"
-                  style={{
-                    flexShrink: 0,
-                    width: '44px',
-                    height: '44px',
-                    borderRadius: 'var(--radius-card)',
-                    background: '#c0392b',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    opacity: isSendDisabled ? 0.4 : 1,
-                    transition: 'opacity 0.2s',
-                  }}
-                >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
+                <div className="studio-chat-input-row">
+                  <input
+                    ref={inputRef}
+                    value={input}
+                    onChange={(event) => setInput(event.target.value)}
+                    maxLength={2000}
+                    placeholder={fr ? 'Votre question…' : 'Your question…'}
+                    aria-label={fr ? 'Votre question' : 'Your question'}
+                    disabled={loading || sent >= maxMessages}
+                  />
+                  <button
+                    type="submit"
+                    disabled={!input.trim() || loading || sent >= maxMessages}
+                    aria-label={fr ? 'Envoyer le message' : 'Send message'}
                   >
-                    <line x1="22" y1="2" x2="11" y2="13" />
-                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                  </svg>
-                </button>
-              </div>
-              <div className="chat-meta">
-                <p className="chat-remaining-count">
-                  {remainingMessages}/{maxSessionMessages} messages restants
+                    <Send size={17} />
+                  </button>
+                </div>
+                <p>
+                  {fr
+                    ? `${maxMessages - sent} messages restants`
+                    : `${maxMessages - sent} messages remaining`}
                 </p>
-                {isSessionLimitReached && (
-                  <div className="chat-limit-note">
-                    <p>{demoLimitMessage}</p>
-                    <div className="chat-limit-links">
-                      <a href={`mailto:${directEmail}`}>{directEmail}</a>
-                      <a href={directPhoneHref}>{directPhoneLabel}</a>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="chat-unavailable">
-              <p className="chat-unavailable-copy">
-                {isGitHubPagesHost
-                  ? "Le chatbot IA n'est pas disponible tant que le worker Cloudflare n'est pas configuré."
-                  : "Ajoutez une URL de worker Cloudflare pour activer l'assistant."}
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
+              </form>
+            )}
+            <a className="studio-chat-contact" href="mailto:charbelkafuieklu@gmail.com">
+              {fr ? 'Contacter Charbel par email' : 'Email Charbel'}
+              <ArrowUpRight size={15} />
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <button
+        ref={triggerRef}
         type="button"
         className="chat-fab"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label={isOpen ? 'Fermer le chatbot' : 'Ouvrir le chatbot'}
-        aria-expanded={isOpen}
-        aria-controls={chatbotPanelId}
+        onClick={() => (open ? close() : setOpen(true))}
+        aria-label={
+          open
+            ? fr
+              ? 'Fermer la conversation'
+              : 'Close conversation'
+            : fr
+              ? 'Ouvrir la conversation'
+              : 'Open conversation'
+        }
+        aria-expanded={open}
+        aria-controls="chatbot-panel"
       >
-        {isOpen ? <X size={28} /> : <MessageCircle size={28} />}
+        {open ? <X size={25} /> : <MessageCircle size={25} />}
       </button>
     </>
   );
-};
-
-export default ChatbotButton;
+}

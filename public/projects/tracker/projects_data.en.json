@@ -1,0 +1,86 @@
+[
+  {
+    "title": "Neemba Tracker",
+    "slug": "neemba-tracker",
+    "tagline": "Internal dashboard for tracking IT assets, audits and spending.",
+    "description": "I’m developing Neemba Tracker to manage IT assets, assignments, approvals and audits. It integrates Azure AD, role-based access, PDF/CSV exports and a Node.js API for machine check-ins.",
+    "category": "Dashboard",
+    "status": "In progress",
+    "duration": "2 weeks",
+    "role": "Solo Fullstack Developer",
+    "tech_stack": {
+      "frontend": [
+        "React 19",
+        "TypeScript 5.8",
+        "Vite 6",
+        "Tailwind CSS v4",
+        "Material Design 3",
+        "Azure AD / MSAL"
+      ],
+      "backend": [
+        "Node.js",
+        "API HTTP ESM",
+        "PowerShell"
+      ],
+      "database": [
+        "LocalStorage",
+        "JSON",
+        "JSONL"
+      ],
+      "devops": [
+        "GitHub Actions",
+        "GitHub Pages"
+      ],
+      "tools": [
+        "Playwright",
+        "ESLint",
+        "Prettier",
+        "jsPDF",
+        "jspdf-autotable",
+        "pdfjs-dist",
+        "Tesseract.js",
+        "xlsx"
+      ]
+    },
+    "features": [
+      "KPI dashboard with recent activity, status indicators and a financial view of the fleet.",
+      "Full inventory management with asset records, filters, pagination, CSV import/export and safe deletion.",
+      "Assignment, return and manager/IT/allocation approval workflows for equipment requests.",
+      "User management with statuses, roles, password/PIN reset and RBAC controls.",
+      "Finance module with budgets, an expense log, document preview and automatic extraction of PDF/image invoices.",
+      "Physical audit and machine data collection through QR codes and check-ins, with a receiving API, duplicate protection and batch import.",
+      "Operational reporting and PDF/CSV exports for inventory and user data.",
+      "Responsive MD3 interface checked by multi-device, accessibility and visual regression audits."
+    ],
+    "challenges": "I’m organising the modules to keep the application clear and its access rules consistent. Invoice imports and machine check-ins also require validation and duplicate checks.",
+    "learnings": "This project is teaching me to design business workflows, manage permissions and maintain a consistent interface across desktop and mobile.",
+    "links": {
+      "github": "https://github.com/kafuicharbeleklu/Tracker",
+      "live": null,
+      "demo": "https://kafuicharbeleklu.github.io/Tracker/"
+    },
+    "assets": {
+      "screenshots": [
+        "C:\\Users\\eklu\\Downloads\\111\\TRACKER\\docs\\mobile-targeted-qa\\2026-02-18\\dashboard.png",
+        "C:\\Users\\eklu\\Downloads\\111\\TRACKER\\docs\\mobile-targeted-qa\\2026-02-18\\inventory.png",
+        "C:\\Users\\eklu\\Downloads\\111\\TRACKER\\docs\\md3-visual-current\\2026-02-20\\expanded\\assignment_wizard.png",
+        "C:\\Users\\eklu\\Downloads\\111\\TRACKER\\docs\\md3-visual-current\\2026-02-20\\expanded\\audit_details.png",
+        "C:\\Users\\eklu\\Downloads\\111\\TRACKER\\docs\\md3-visual-current\\2026-02-20\\expanded\\finance.png",
+        "C:\\Users\\eklu\\Downloads\\111\\TRACKER\\docs\\md3-visual-current\\2026-02-20\\expanded\\login.png"
+      ],
+      "has_video": false
+    },
+    "keywords": [
+      "gestion de parc informatique",
+      "fleet tracking",
+      "asset management",
+      "dashboard React",
+      "TypeScript",
+      "Azure AD",
+      "RBAC",
+      "OCR facture",
+      "reporting PDF",
+      "inventaire IT"
+    ]
+  }
+]

@@ -1,4 +1,6 @@
 import React from 'react';
+import ProjectCard from '../components/ProjectCard';
+import Footer from '../components/sections/Footer';
 import type { Language } from '../translations';
 import type {
   PaginationToken,
@@ -74,27 +76,28 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
           className="nav-logo nav-control-btn"
           onClick={() => scrollToSection('hero')}
         >
-          K · E
+          <span className="studio-monogram">
+            ce<span>.</span>
+          </span>
         </button>
-        <button
-          type="button"
-          className="nav-back nav-control-btn"
-          onClick={backToMain}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Retour à l'accueil
+        <button type="button" className="nav-back nav-control-btn" onClick={backToMain}>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          {lang === 'FR' ? 'Retour au portfolio' : 'Back to portfolio'}
         </button>
       </nav>
-      <section
-        ref={allProjectsSectionRef}
-        className="sec projects-page"
-        style={{ minHeight: '80vh', background: '#F5F1EC' }}
-      >
+      <section ref={allProjectsSectionRef} className="sec projects-page section-muted">
         <div className="sec-hdr">
           <span className="sec-num">06</span>
-          <h2 className="sec-ttl">
-            {lang === 'FR' ? 'Tous mes projets.' : 'All my projects.'}
-          </h2>
+          <h1 className="sec-ttl">{lang === 'FR' ? 'Tous mes projets.' : 'All my projects.'}</h1>
           <span className="sec-sub">
             {lang === 'FR'
               ? 'Explore mes réalisations par mot-clé, domaine ou environnement technique.'
@@ -211,74 +214,16 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
 
         {filteredProjects.length > 0 ? (
           <>
-            <div className="pj-grid pj-grid-all">
-              {paginatedProjects.map((project) =>
-                project.detailPage ? (
-                  <button
-                    key={project.id}
-                    type="button"
-                    className="pj-card card-action"
-                    onClick={() => showDetail(project.id)}
-                    aria-label={
-                      lang === 'FR'
-                        ? `Voir le détail du projet ${project.title.FR}`
-                        : `View details of the ${project.title.EN} project`
-                    }
-                  >
-                    <div className="pj-vis" style={{ background: project.background }}>
-                      {project.coverImage ? (
-                        <img
-                          className="project-card-cover"
-                          src={project.coverImage}
-                          alt={project.title[lang]}
-                          loading="lazy"
-                        />
-                      ) : (
-                        renderProjectIcon(project.icon, project.accent)
-                      )}
-                    </div>
-                    <div className="pj-body">
-                      <h3 className="pj-title">{project.title[lang]}</h3>
-                      <div className="pj-foot">
-                        <div className="tags">
-                          {getSortedTags(project.tags).map((tag) => (
-                            <span key={`${project.id}-${tag.label}`} className={`tag ${tag.className}`}>
-                              {tag.label}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                ) : (
-                  <article key={project.id} className="pj-card project-card-static">
-                    <div className="pj-vis" style={{ background: project.background }}>
-                      {project.coverImage ? (
-                        <img
-                          className="project-card-cover"
-                          src={project.coverImage}
-                          alt={project.title[lang]}
-                          loading="lazy"
-                        />
-                      ) : (
-                        renderProjectIcon(project.icon, project.accent)
-                      )}
-                    </div>
-                    <div className="pj-body">
-                      <h3 className="pj-title">{project.title[lang]}</h3>
-                      <div className="pj-foot">
-                        <div className="tags">
-                          {getSortedTags(project.tags).map((tag) => (
-                            <span key={`${project.id}-${tag.label}`} className={`tag ${tag.className}`}>
-                              {tag.label}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                )
-              )}
+            <div className="studio-project-grid">
+              {paginatedProjects.map((project, index) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  lang={lang}
+                  index={index}
+                  onOpen={project.detailPage ? showDetail : undefined}
+                />
+              ))}
             </div>
             {totalProjectPages > 1 ? (
               <nav
@@ -305,7 +250,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
                       >
                         …
                       </span>
-                    )
+                    ),
                   )}
                 </div>
               </nav>
@@ -322,6 +267,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
           </div>
         )}
       </section>
+      <Footer lang={lang} onNavigate={scrollToSection} />
     </div>
   );
 };

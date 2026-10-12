@@ -1,365 +1,215 @@
-import React from 'react';
-import { assetPaths, withBaseAsset } from '../config/assets';
+import { ArrowUpRight, Download } from 'lucide-react';
+import type { ReactNode } from 'react';
 import type { Language } from '../translations';
-
-type BioExpertiseItem = {
-  label: string;
-  className: string;
-  href?: string;
-  icon?: React.ReactNode;
-};
+import { assetPaths, withBaseAsset } from '../config/assets';
+import { getTimelineData, getFormationData } from '../data';
+import Reveal from '../components/Reveal';
+import Footer from '../components/sections/Footer';
 
 interface BiographyPageProps {
   lang: Language;
-  bioExpertiseItems: BioExpertiseItem[];
+  bioExpertiseItems: { label: string; className: string; href?: string; icon?: ReactNode }[];
   scrollToSection: (id: string) => void;
 }
 
-const BiographyPage: React.FC<BiographyPageProps> = ({
+export default function BiographyPage({
   lang,
   bioExpertiseItems,
   scrollToSection,
-}) => {
+}: BiographyPageProps) {
+  const fr = lang === 'FR';
   return (
-    <div className="page active" id="page-biography">
+    <div className="page active studio-bio-page" id="page-biography">
       <nav className="nav">
         <button
           type="button"
           className="nav-logo nav-control-btn"
           onClick={() => scrollToSection('hero')}
         >
-          K · E
+          <span className="studio-monogram">
+            ce<span>.</span>
+          </span>
         </button>
         <button
           type="button"
           className="nav-back nav-control-btn"
-          onClick={() => scrollToSection('hero')}
+          onClick={() => scrollToSection('about')}
         >
-          ← Retour à l'accueil
+          {fr ? '← Retour au portfolio' : '← Back to portfolio'}
         </button>
-        <div className="nav-tag">Biographie</div>
       </nav>
-
-      <section className="bio-hero">
-        <div className="bio-hero-photo">
-          <img
-            src={withBaseAsset(assetPaths.profilePortrait)}
-            alt="Kafui Charbel Eklu"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div className="bio-hero-info">
-          <p className="bio-hero-eyebrow">Biographie</p>
-          <h1 className="bio-hero-name">
-            EKLU Kafui
+      <div className="studio-container studio-bio-hero">
+        <Reveal>
+          <p className="studio-eyebrow">
+            {fr ? 'Un peu plus que mon CV' : 'A little more than my résumé'}
+          </p>
+          <h1>
+            {fr ? 'La curiosité mène.' : 'Curiosity leads.'}
             <br />
-            Charbel
+            <span>{fr ? 'Le terrain apprend.' : 'Experience teaches.'}</span>
           </h1>
-          <p className="bio-hero-role">Administrateur Digital Workplace & Infrastructure</p>
-          <div className="bio-hero-badges">
-            <span className="badge-location">
-              <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
-                <path
-                  d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5s4.5-5 4.5-8.5c0-2.5-2-4.5-4.5-4.5zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
-                  fill="currentColor"
-                />
-              </svg>
-              {lang === 'FR' ? 'Lomé, Togo' : 'Lome, Togo'}
-            </span>
-            <span className="badge-mobility">
-              <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
-                <circle
-                  cx="8"
-                  cy="8"
-                  r="6"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  fill="none"
-                />
-                <path
-                  d="M8 2c0 0-3 2.5-3 6s3 6 3 6"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  fill="none"
-                />
-                <path
-                  d="M8 2c0 0 3 2.5 3 6s-3 6-3 6"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  fill="none"
-                />
-                <path d="M2 8h12" stroke="currentColor" strokeWidth="1.2" />
-              </svg>
-              {lang === 'FR' ? 'Mobilité internationale' : 'International mobility'}
-            </span>
+          <p className="studio-bio-lead">
+            {fr
+              ? 'Je suis Kafui Charbel Eklu. Administrateur Digital Workplace & Infrastructure à Lomé, je construis des environnements numériques au service des personnes qui les utilisent.'
+              : 'I’m Kafui Charbel Eklu. A Digital Workplace & Infrastructure Administrator in Lomé, building digital environments around the people who use them.'}
+          </p>
+          <div className="studio-bio-actions">
+            <a
+              className="studio-button studio-button-primary"
+              href={withBaseAsset(assetPaths.resume)}
+              download
+            >
+              <Download size={16} /> {fr ? 'Télécharger mon CV' : 'Download my résumé'}
+            </a>
+            <button
+              className="studio-button studio-button-quiet"
+              onClick={() => scrollToSection('contact')}
+            >
+              {fr ? 'Échangeons' : 'Let’s talk'} <ArrowUpRight size={16} />
+            </button>
           </div>
+        </Reveal>
+        <Reveal className="studio-bio-profile-card">
+          <p className="studio-eyebrow">{fr ? 'Profil en bref' : 'Profile at a glance'}</p>
+          <h2>
+            {fr ? 'Systèmes, sécurité et outils utiles.' : 'Systems, security and useful tools.'}
+          </h2>
+          <p>
+            {fr
+              ? 'Administration des systèmes, cybersécurité et automatisation au service des opérations.'
+              : 'Systems administration, cybersecurity and automation in support of real operations.'}
+          </p>
+          <dl>
+            <div>
+              <dt>{fr ? 'Actuellement' : 'Currently'}</dt>
+              <dd>Neemba Togo</dd>
+            </div>
+            <div>
+              <dt>{fr ? 'Basé à' : 'Based in'}</dt>
+              <dd>Lomé, Togo</dd>
+            </div>
+            <div>
+              <dt>{fr ? 'Domaines' : 'Focus'}</dt>
+              <dd>
+                {fr
+                  ? 'Infrastructure · Sécurité · Automatisation'
+                  : 'Infrastructure · Security · Automation'}
+              </dd>
+            </div>
+          </dl>
+        </Reveal>
+      </div>
+      <section className="studio-bio-section studio-bio-story">
+        <div className="studio-container studio-bio-story-grid">
+          <Reveal>
+            <p className="studio-eyebrow">
+              01 / {fr ? 'Le fil conducteur' : 'The connecting thread'}
+            </p>
+            <h2>{fr ? 'Comprendre avant de construire.' : 'Understand before building.'}</h2>
+          </Reveal>
+          <Reveal>
+            <p>
+              {fr
+                ? 'Mon parcours a commencé par le support et les services réseau, à la Clinique BIASA puis chez Orabank. Dans ces environnements, j’ai appris que la qualité technique se mesure aussi à la continuité du travail des équipes.'
+                : 'My path began with support and network services, at Clinique BIASA and then Orabank. These environments taught me that technical quality also means keeping people’s work moving.'}
+            </p>
+            <p>
+              {fr
+                ? 'Chez Neemba Togo, mes responsabilités réunissent aujourd’hui administration des systèmes, infrastructure, support avancé, sécurité et pilotage IT. J’aime particulièrement transformer une difficulté opérationnelle en outil concret : suivi du matériel, automatisation du reporting ou supervision de la sécurité.'
+                : 'At Neemba Togo, my responsibilities now combine systems administration, infrastructure, advanced support, security and IT coordination. I especially enjoy turning an operational problem into a practical tool: asset tracking, reporting automation or security monitoring.'}
+            </p>
+            <p>
+              {fr
+                ? 'L’open source, la cybersécurité et l’intelligence artificielle nourrissent ma curiosité. J’explore ces sujets par la pratique et par l’échange avec les communautés techniques.'
+                : 'Open source, cybersecurity and artificial intelligence fuel my curiosity. I explore these subjects through practice and exchange with technical communities.'}
+            </p>
+          </Reveal>
         </div>
       </section>
-
-      <section className="bio-stats">
-        <div className="bio-stat">
-          <span className="bio-stat-num">3+</span>
-          <span className="bio-stat-label">
-            Années d'expérience
-            <br />
-            Admin & Sécurité
-          </span>
-        </div>
-        <div className="bio-stat">
-          <span className="bio-stat-num">15+</span>
-          <span className="bio-stat-label">
-            Technologies
-            <br />
-            maîtrisées
-          </span>
-        </div>
-        <div className="bio-stat">
-          <span className="bio-stat-num">6</span>
-          <span className="bio-stat-label">
-            Projets techniques
-            <br />
-            livrés
-          </span>
-        </div>
-        <div className="bio-stat">
-          <span className="bio-stat-num bio-stat-text">Master II</span>
-          <span className="bio-stat-label">
-            Collège de Paris
-            <br />
-            Mention Bien
-          </span>
-        </div>
-      </section>
-
-      <section className="bio-story sec">
-        <div className="sec-hdr">
-          <span className="sec-num">01</span>
-          <h2 className="sec-ttl">Mon histoire.</h2>
-        </div>
-        <div className="bio-story-grid">
-          <div className="bio-story-main">
-            <p className="bio-story-lead">
-              Professionnel togolais de l'IT, je conçois des environnements numériques
-              fiables, utiles et lisibles, avec une approche orientée impact.
-            </p>
-            <p>
-              Spécialisé en{' '}
-              <strong>
-                Digital Workplace, support IT et optimisation des environnements de travail
-              </strong>
-              , j'évolue dans des contextes où la performance quotidienne compte autant que la
-              solidité technique. Mon fil conducteur reste le même : simplifier l'usage,
-              structurer les process et faire gagner du temps aux équipes.
-            </p>
-            <p>
-              Au-delà de l'administration courante, j'aime transformer un besoin métier en
-              solution concrète. J'ai notamment conçu une{' '}
-              <strong>application de gestion de matériel IT</strong> avec suivi des équipements,
-              affectations, restitutions et workflow de validation à trois niveaux, afin
-              d'apporter plus de traçabilité, de gouvernance et de lisibilité aux opérations
-              internes.
-            </p>
-            <p>
-              Mon passage chez <strong>Orabank</strong> a renforcé cette exigence. Dans un
-              environnement critique, j'ai consolidé mes bases sur Windows Server, Active
-              Directory, GPO et le support avancé, avec une logique de fiabilité, de sécurité et
-              de continuité de service qui guide encore aujourd'hui ma manière de travailler.
-            </p>
-            <p>
-              Je m'intéresse particulièrement à l'intersection entre{' '}
-              <strong>cybersécurité, open source et intelligence artificielle</strong>, avec un
-              attrait fort pour la détection, l'automatisation et les architectures évolutives.
-              Mon ambition est de faire converger ces trois dimensions dans des projets IT à forte
-              valeur, localement comme à l'international.
-            </p>
-          </div>
-          <div className="bio-story-side">
-            <div className="bio-milestone">
-              <span className="bio-milestone-year">2021</span>
-              <p>Stage Clinique BIASA — Services réseau Linux from scratch</p>
-            </div>
-            <div className="bio-milestone">
-              <span className="bio-milestone-year">2022</span>
-              <p>Stage Orabank — Contrôleur de domaine Windows Server</p>
-            </div>
-            <div className="bio-milestone">
-              <span className="bio-milestone-year">2023</span>
-              <p>Neemba Togo — Déploiement SIEM/XDR Wazuh</p>
-            </div>
-            <div className="bio-milestone active">
-              <span className="bio-milestone-year">2024</span>
-              <p>Admin Digital Workplace & Infrastructure</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bio-quote-section">
-        <blockquote className="bio-quote">
-          "Chaque défi surmonté est une occasion d'acquérir des compétences qui rendent les futurs
-          obstacles plus simples."
-        </blockquote>
-      </section>
-
-      <section className="bio-philosophy sec">
-        <div className="sec-hdr">
-          <span className="sec-num">02</span>
-          <h2 className="sec-ttl">Ma philosophie.</h2>
-        </div>
-        <div className="bio-philosophy-grid">
-          <div className="bio-philosophy-card">
-            <div className="bio-philosophy-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2L20 6V12C20 17 16 20 12 22C8 20 4 17 4 12V6L12 2Z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  fill="none"
-                />
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="3"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  fill="none"
-                />
-              </svg>
-            </div>
-            <h3>Anticiper, pas réagir</h3>
-            <p>
-              Chaque architecture que je conçois intègre la sécurité dès le départ. La détection
-              proactive est plus efficace qu'une réponse post-incident.
-            </p>
-          </div>
-          <div className="bio-philosophy-card">
-            <div className="bio-philosophy-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <polyline
-                  points="4,17 9,12 13,15 20,7"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  fill="none"
-                />
-                <circle cx="4" cy="17" r="1.5" fill="currentColor" />
-                <circle cx="20" cy="7" r="1.5" fill="currentColor" />
-              </svg>
-            </div>
-            <h3>Contrainte → Levier</h3>
-            <p>
-              Face aux imprévus — comme une panne critique — je reste maître du système. Chaque
-              incident est une opportunité de perfectionnement.
-            </p>
-          </div>
-          <div className="bio-philosophy-card">
-            <div className="bio-philosophy-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="9"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  fill="none"
-                />
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="5"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  fill="none"
-                />
-                <circle cx="12" cy="12" r="2" fill="currentColor" opacity=".6" />
-              </svg>
-            </div>
-            <h3>Amélioration continue</h3>
-            <p>
-              Je ne cesse d'apprendre et de me perfectionner. Élever son niveau au-dessus du défi,
-              c'est ma signature professionnelle.
-            </p>
-          </div>
-          <div className="bio-philosophy-card">
-            <div className="bio-philosophy-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M9 18V13a3 3 0 0 1 6 0v5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  fill="none"
-                />
-                <path d="M5 21h14" stroke="currentColor" strokeWidth="1.5" />
-                <circle
-                  cx="12"
-                  cy="7"
-                  r="4"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  fill="none"
-                />
-              </svg>
-            </div>
-            <h3>Tech + Créatif</h3>
-            <p>
-              Mon profil hybride — technique et artistique — me permet d'apporter une vision
-              unique, où rigueur et créativité se renforcent mutuellement.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="bio-expertise sec">
-        <div className="sec-hdr">
-          <span className="sec-num">03</span>
-          <h2 className="sec-ttl">Expertises clés.</h2>
-        </div>
-        <div className="bio-expertise-wrap">
-          {bioExpertiseItems.map((item) =>
-            item.href ? (
-              <a
-                key={item.label}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={item.className}
+      <section className="studio-section">
+        <div className="studio-container studio-journey-layout">
+          <Reveal className="studio-section-heading">
+            <p className="studio-eyebrow">02 / {fr ? 'Expérience' : 'Experience'}</p>
+            <h2>
+              {fr ? 'Un parcours,' : 'One journey,'}
+              <br />
+              <span>{fr ? 'plusieurs perspectives.' : 'many perspectives.'}</span>
+            </h2>
+          </Reveal>
+          <div className="studio-timeline">
+            {getTimelineData(lang).map((item) => (
+              <Reveal
+                className={'studio-timeline-item ' + (item.isCurrent ? 'is-current' : '')}
+                key={item.date}
               >
-                {item.icon}
-                {item.label}
-              </a>
-            ) : (
-              <span key={item.label} className={item.className}>
-                {item.label}
-              </span>
-            )
-          )}
+                <div className="studio-timeline-marker" aria-hidden="true" />
+                <p className="studio-timeline-meta">{item.date}</p>
+                <h3>{item.title}</h3>
+                <p className="studio-company">{item.company}</p>
+                <p>{item.desc}</p>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
-
-      <section className="bio-cta">
-        <a href={withBaseAsset(assetPaths.resume)} download className="kp-btn-dark bio-cta-btn">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          Télécharger mon CV
-        </a>
-        <button type="button" className="kp-btn-line" onClick={() => scrollToSection('contact')}>
-          Me contacter →
+      <section className="studio-section studio-education">
+        <div className="studio-container">
+          <Reveal className="studio-section-heading">
+            <p className="studio-eyebrow">03 / {fr ? 'Formation' : 'Education'}</p>
+            <h2>{fr ? 'Apprendre reste essentiel.' : 'Learning stays essential.'}</h2>
+          </Reveal>
+          <div className="studio-education-grid">
+            {getFormationData(lang).map((item) => (
+              <Reveal className="studio-education-card" key={item.title}>
+                <p className="studio-eyebrow">{item.year}</p>
+                <h3>{item.title}</h3>
+                <p dangerouslySetInnerHTML={{ __html: item.school }} />
+                {item.gradeNode}
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="studio-section">
+        <div className="studio-container">
+          <Reveal className="studio-section-heading">
+            <p className="studio-eyebrow">04 / {fr ? 'Boîte à outils' : 'Toolkit'}</p>
+            <h2>{fr ? 'Des compétences qui se complètent.' : 'Skills that work together.'}</h2>
+          </Reveal>
+          <div className="studio-bio-expertise">
+            {bioExpertiseItems.map((item) =>
+              item.href ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tag"
+                >
+                  {item.icon}
+                  {item.label}
+                  <ArrowUpRight size={14} />
+                </a>
+              ) : (
+                <span key={item.label} className="tag">
+                  {item.label}
+                </span>
+              ),
+            )}
+          </div>
+        </div>
+      </section>
+      <section className="studio-bio-contact">
+        <h2>{fr ? 'La suite se construit ensemble.' : 'Let’s build what comes next.'}</h2>
+        <button
+          className="studio-button studio-button-primary"
+          onClick={() => scrollToSection('contact')}
+        >
+          {fr ? 'Parlons de votre projet' : 'Tell me about your project'}
+          <ArrowUpRight size={17} />
         </button>
       </section>
+      <Footer lang={lang} onNavigate={scrollToSection} />
     </div>
   );
-};
-
-export default BiographyPage;
+}

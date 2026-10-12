@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react';
 
-const PortfolioRoot = React.lazy(() => import('./components/PortfolioRoot'));
+const SiteRoot = React.lazy(() => import('./site/SiteRoot'));
 
 function App() {
   return (
     <Suspense fallback={null}>
-      <PortfolioRoot />
+      <SiteRoot />
     </Suspense>
   );
 }

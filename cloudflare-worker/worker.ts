@@ -17,7 +17,7 @@ type WorkerEnv = {
       value: string,
       options?: {
         expirationTtl?: number;
-      }
+      },
     ): Promise<void>;
   };
 };
@@ -30,18 +30,25 @@ const ALLOWED_ORIGINS = new Set([
 
 const GEMINI_MODEL = 'gemini-2.5-flash';
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-const SYSTEM_PROMPT =
-  "Tu es l'assistant virtuel de Kafui Charbel Eklu, Administrateur Systeme, Reseaux et Digital Workplace. Reponds de maniere professionnelle, concise, utile et prioritairement en francais.";
+// The assistant only knows what is written here: it must not invent anything about Charbel.
+const SYSTEM_PROMPT = [
+  "Tu es l'assistant du portfolio de Kafui Charbel Eklu. Reponds de maniere professionnelle, concise, utile, en francais par defaut (en anglais si la question est en anglais).",
+  'Faits sur Charbel, seule source autorisee :',
+  '- Technicien informatique chez Neemba Togo (concessionnaire Caterpillar present dans 11 pays), a Lome, depuis mai 2023. Perimetre : Active Directory et droits d acces, reseau local, liaisons Internet et salle serveur, budget IT annuel et fournisseurs, reporting Power BI, relais infrastructure aupres de la DSI groupe (Cote d Ivoire, Senegal), encadrement d une stagiaire, support N2/N3.',
+  '- Realisations : deploiement complet d un SIEM/XDR Wazuh avec reponses automatiques ; portabilite de la flotte mobile Moov vers Togocom ; archivage numerique du site ; application interne Neemba Tracker ; flux Power Automate de reporting des sauvegardes Veeam ; tableau de bord Power BI Microsoft 365.',
+  '- Stages : Orabank Togo (2022, controleur de domaine Windows Server, VPN, Western Union, MoneyGram, RIA) ; Clinique BIASA (2021, services reseau Ubuntu).',
+  '- Formation : Master professionnel Reseaux et Systemes d Information, mention Bien (College de Paris Superieur, Lome, 2023-2025), memoire sur l integration d un modele d IA dans un SIEM ; titre de Manager Operationnel d Activites (Ascencia, 2025) evalue equivalent Master par WES (Canada, 2026) ; Ingenieur des Travaux Informatiques (IAI-Togo, 2020-2023, mention Assez Bien).',
+  '- Competences : cybersecurite (Wazuh, pare-feu, Veeam, ISO 27001, EBIOS, MEHARI), systemes (Windows Server, Linux, VMware ESXi, Hyper-V), reseaux (LAN, VPN, VSAT, GNS3, EVE-NG), cloud (Azure, Microsoft 365, notions AWS), automatisation et IA (Bash, PowerShell, Python, Power Automate, agents de developpement), pilotage (budget IT, infogerance, Matrix42, Power BI, COBIT, CAPM).',
+  '- Langues : francais C2 a l oral (TEF Canada 2026), anglais B2. Base : Lome, Togo, mobilite internationale. Cap : gouvernance et securite des systemes d information.',
+  '- Contact : charbelkafuieklu@gmail.com, LinkedIn kafui-charbel-eklu, GitHub kafuicharbeleklu.',
+  'Si une question sort de ces faits (vie privee, chiffres, avis), dis que tu ne sais pas et renvoie vers l email. Ne cite jamais de montant financier.',
+].join('\n');
 const RATE_LIMIT_WINDOW_SECONDS = 60 * 60;
 const RATE_LIMIT_MAX_REQUESTS = 10;
 const RATE_LIMIT_MESSAGE = 'Limite de messages atteinte, réessayez plus tard.';
 const memoryRateLimit = new Map<string, { count: number; expiresAt: number }>();
 
-const jsonResponse = (
-  payload: Record<string, unknown>,
-  status: number,
-  origin: string | null
-) =>
+const jsonResponse = (payload: Record<string, unknown>, status: number, origin: string | null) =>
   new Response(JSON.stringify(payload), {
     status,
     headers: {
@@ -168,9 +175,7 @@ export default {
     }
 
     const message = typeof body.message === 'string' ? body.message.trim() : '';
-    const history = Array.isArray(body.history)
-      ? body.history.filter(isChatHistoryItem)
-      : [];
+    const history = Array.isArray(body.history) ? body.history.filter(isChatHistoryItem) : [];
 
     if (!message) {
       return jsonResponse({ error: 'Message is required.' }, 400, origin);
@@ -194,7 +199,7 @@ export default {
               maxOutputTokens: 400,
             },
           }),
-        }
+        },
       );
 
       const payload = (await geminiResponse.json()) as {
@@ -214,7 +219,7 @@ export default {
             error: payload.error?.message || 'Gemini request failed.',
           },
           geminiResponse.status,
-          origin
+          origin,
         );
       }
 
@@ -230,11 +235,7 @@ export default {
 
       return jsonResponse({ reply }, 200, origin);
     } catch {
-      return jsonResponse(
-        { error: 'Unable to reach Gemini from the worker.' },
-        502,
-        origin
-      );
+      return jsonResponse({ error: 'Unable to reach Gemini from the worker.' }, 502, origin);
     }
   },
 };

@@ -33,7 +33,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
 
     const subject = encodeURIComponent(
       formData.subject.trim() ||
-        `${lang === 'FR' ? 'Contact portfolio' : 'Portfolio contact'} - ${formData.name.trim()}`
+        `${lang === 'FR' ? 'Contact portfolio' : 'Portfolio contact'} - ${formData.name.trim()}`,
     );
     const body = encodeURIComponent(
       [
@@ -41,7 +41,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
         `Email: ${formData.email.trim()}`,
         '',
         formData.message.trim(),
-      ].join('\n')
+      ].join('\n'),
     );
 
     window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
@@ -73,8 +73,8 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
           </h3>
           <p>
             {lang === 'FR'
-              ? "Disponible immédiatement pour des missions en administration systèmes, cybersécurité, support avancé ou gestion d’infrastructure IT, à Lomé comme à l’international."
-              : 'Available immediately for opportunities in systems administration, cybersecurity, advanced support, or IT infrastructure management, both in Lomé and internationally.'}
+              ? 'Une infrastructure à faire évoluer, un processus à simplifier ou une équipe à renforcer ? Parlons de vos besoins, à Lomé comme à l’international.'
+              : 'An infrastructure to improve, a process to simplify or a team to strengthen? Let’s discuss your needs, in Lomé or internationally.'}
           </p>
           <div className="contact-items">
             <a className="c-item c-item-link" href={`mailto:${contactEmail}`}>
@@ -167,7 +167,11 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
               </div>
               <div>
                 <small>{lang === 'FR' ? 'Localisation' : 'Location'}</small>
-                <p>{lang === 'FR' ? 'Lomé, Togo · Mobilité internationale' : 'Lomé, Togo · International mobility'}</p>
+                <p>
+                  {lang === 'FR'
+                    ? 'Lomé, Togo · Mobilité internationale'
+                    : 'Lomé, Togo · International mobility'}
+                </p>
               </div>
             </div>
           </div>
@@ -228,6 +232,11 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
           <button type="submit" className="btn-submit">
             {v.contact.formSubmit}
           </button>
+          <p className="studio-form-note">
+            {lang === 'FR'
+              ? 'Ce formulaire ouvre votre application de messagerie avec le message préparé.'
+              : 'This form opens your email app with your message ready to send.'}
+          </p>
         </form>
       </div>
     </section>

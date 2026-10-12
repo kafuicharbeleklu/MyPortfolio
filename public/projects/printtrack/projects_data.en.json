@@ -1,0 +1,70 @@
+[
+  {
+    "title": "PrintTrack",
+    "slug": "print-track",
+    "tagline": "Dashboard for managing printing consumables and costs by department.",
+    "description": "I developed PrintTrack to centralise purchases, allocations and stocks of toner and paper. It calculates costs and flags shortages; this MVP stores data locally without a connected backend.",
+    "category": "Dashboard",
+    "status": "MVP",
+    "duration": null,
+    "role": null,
+    "tech_stack": {
+      "frontend": [
+        "React 19",
+        "TypeScript 5",
+        "Vite 6",
+        "Tailwind CSS v4",
+        "Recharts 3",
+        "Motion",
+        "Lucide React",
+        "IBM Carbon Design System (implementation personnalisee)"
+      ],
+      "backend": [],
+      "database": [],
+      "devops": [],
+      "tools": [
+        "Sonner",
+        "@formkit/auto-animate",
+        "clsx",
+        "tailwind-merge",
+        "localStorage"
+      ]
+    },
+    "features": [
+      "Dashboard with KPIs, recent trends and consumption/cost charts.",
+      "CRUD management of toner and paper purchases with filters, pagination and search.",
+      "Allocation of consumables by department, blocked when available stock is insufficient.",
+      "Automatic calculation of weighted average cost, stock value and available levels per reference.",
+      "Manual stock adjustments with real-time low-stock and out-of-stock alerts.",
+      "Cost analysis by department and by channel (Mono, CMYK, Paper) with Recharts charts.",
+      "CSV export of purchases and allocations.",
+      "Local settings for organisation, currency, alert threshold, command palette and keyboard shortcuts."
+    ],
+    "challenges": "I brought toner and paper into a shared inventory model while handling their units and conversions. I also kept calculations, dashboards and exports consistent.",
+    "learnings": "I learned to turn business rules into reliable calculations. Local storage also helped me identify what a future multi-user version would require.",
+    "links": {
+      "github": null,
+      "live": null,
+      "demo": "https://ai.studio/apps/3b4110d8-43a1-4db6-850e-261512dc8141"
+    },
+    "assets": {
+      "screenshots": [],
+      "has_video": false
+    },
+    "keywords": [
+      "gestion de stock imprimantes",
+      "consommables impression",
+      "suivi toner",
+      "papier A4",
+      "dashboard inventaire",
+      "PMP",
+      "couts par departement",
+      "React",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "fr-FR",
+      "FCFA"
+    ]
+  }
+]

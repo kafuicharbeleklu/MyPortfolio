@@ -1,0 +1,3245 @@
+/* ==========================================================================
+   « Sur mesure » design system.
+   Palette and finishing details come from tailoring: sand ground, charcoal
+   mass, tobacco accent; dashed seams, pointed tab buttons, a pleat line.
+   ========================================================================== */
+
+:root {
+  --sm-sand: #e9e0d2;
+  --sm-sand-2: #ddd1bf;
+  --sm-char: #2f3033;
+  --sm-ink: #26272a;
+  --sm-off: #f7f3ea;
+  --sm-tab: #74472a;
+  /* text accent on the page ground (labels, italics, hovers); --sm-tab stays the surface colour */
+  --sm-accent: #74472a;
+  --sm-honey: #b98a3e;
+  /* lighter honey for small text on charcoal: 5.7:1 instead of 4.25:1 */
+  --sm-honey-text: #d0a35a;
+  --sm-mute: #5e564c;
+  --sm-mute-dark: #c9c1b3;
+  --sm-on-tab: #ebd3a5;
+  --sm-seam: rgba(38, 39, 42, 0.38);
+  --sm-seam-dark: rgba(247, 243, 234, 0.3);
+  /* role tokens: what a colour is for, so that the dark theme can give each its own value */
+  --sm-btn-bg: var(--sm-char);
+  --sm-btn-fg: var(--sm-off);
+  --sm-btn-hover: var(--sm-tab);
+  --sm-on-paper: #26272a;
+  --sm-panel: #f7f3ea;
+  --sm-field: #fff;
+  --sm-thread: #d2c4ad;
+  color-scheme: light;
+  --sm-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sm-body: 'Instrument Sans', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+  --sm-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  --sm-header: 76px;
+  /* spacing scale: every section, gutter and header gap comes from these three */
+  --sm-gutter: clamp(20px, 5vw, 72px);
+  --sm-section: clamp(56px, 8vw, 112px);
+  --sm-head-gap: clamp(28px, 4vw, 56px);
+}
+
+/* ---------- Background music ---------- */
+.sm-music {
+  display: flex;
+  flex: none;
+  align-items: center;
+  color: inherit;
+}
+
+.sm-music__toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  color: inherit;
+  opacity: 0.65;
+  transition:
+    opacity 0.3s,
+    background 0.3s;
+}
+
+.sm-music__toggle:hover,
+.sm-music__toggle[aria-pressed='true'] {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 7%, transparent);
+}
+
+.sm-music__disc {
+  animation: sm-record-spin 8s linear infinite;
+  animation-play-state: paused;
+}
+
+.sm-music__toggle[aria-pressed='true'] .sm-music__disc {
+  animation-play-state: running;
+}
+
+@keyframes sm-record-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sm-menu__music-credit {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--sm-mute-dark);
+}
+
+.sm-menu__music-credit a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  .sm .sm-header__tools {
+    gap: 8px;
+  }
+  .sm .sm-header__inner {
+    gap: 8px;
+  }
+  .sm-header__inner > .sm-brand {
+    min-width: 0;
+    flex-shrink: 1;
+  }
+  .sm-header__tools {
+    flex-shrink: 0;
+  }
+}
+
+/* ---------- Dark theme ----------
+   Set by `data-theme="dark"` on <html> (theme.ts, and the inline script of index.html
+   before first paint). Only the tokens that sit on the page ground change: charcoal masses,
+   the tobacco sections and the pale "paper" cards keep their own colours, so every pair of
+   text and surface used in the light theme stays valid. A new colour must come from a token
+   and, if it is drawn on the ground, be given a value here. */
+[data-theme='dark'] {
+  --sm-sand: #1c1d1f;
+  --sm-sand-2: #232428;
+  --sm-char: #323439;
+  --sm-ink: #efe8db;
+  --sm-mute: #b5ac9e;
+  --sm-accent: #d8a676;
+  --sm-seam: rgba(239, 232, 219, 0.3);
+  --sm-btn-bg: #efe8db;
+  --sm-btn-fg: #1c1d1f;
+  --sm-btn-hover: #d8a676;
+  --sm-panel: #26272b;
+  --sm-field: #1c1d1f;
+  --sm-thread: #2e3035;
+  color-scheme: dark;
+}
+
+/* the paper grain is dark specks multiplied onto sand; on a dark ground it turns into pale dust */
+[data-theme='dark'] .sm::before {
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.06;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--sm-sand);
+  color: var(--sm-ink);
+  font-family: var(--sm-body);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ---------- Scrollbars: a thin thread laid on the page ground ----------
+   `scrollbar-color` is the standard (Firefox, Chrome 121+); the ::-webkit-scrollbar rules cover
+   Safari and older Blink. Every colour is a token, so the dark theme is handled. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sm-mute) var(--sm-sand);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sm-sand);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sm-mute);
+  border: 3px solid var(--sm-sand);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sm-accent);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--sm-sand);
+}
+
+/* inner scrollers take the colour of their own surface */
+.sm-menu {
+  scrollbar-color: var(--sm-mute-dark) var(--sm-char);
+}
+
+.sm-menu::-webkit-scrollbar-track,
+.sm-menu::-webkit-scrollbar-thumb {
+  border-color: var(--sm-char);
+  background-color: var(--sm-char);
+}
+
+.sm-menu::-webkit-scrollbar-thumb {
+  background-color: var(--sm-mute-dark);
+}
+
+.sm-chat__log {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sm-mute) var(--sm-panel);
+}
+
+.sm-chat__log::-webkit-scrollbar-track {
+  background: var(--sm-panel);
+}
+
+.sm-chat__log::-webkit-scrollbar-thumb {
+  border-color: var(--sm-panel);
+}
+
+:where(.sm) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:where(.sm) button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sm :focus {
+  outline: none;
+}
+
+/* keyboard focus: a ring in the text colour, which reads on sand, charcoal and tobacco alike */
+.sm :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* headings and the page body receive focus on arrival (navigation.ts): they are not controls */
+.sm :is(h1, h2, main)[tabindex='-1']:focus-visible {
+  outline: none;
+}
+
+/* A restored list must have its final height before restoring the scroll position. */
+.sm-projects.is-restoring .sm-acc,
+.sm-projects.is-restoring .sm-acc__inner {
+  transition: none;
+}
+
+.sm-projects.is-restoring .sm-item--in {
+  animation: none;
+}
+
+/* Keep the conversation mounted to retain history, but hide it immediately with the menu. */
+.sm[data-menu-open] :is(.sm-chat, .sm-chat-toggle, .sm-brief-tab) {
+  display: none;
+}
+
+:where(.sm) :is(h1, h2, h3, p, ol, dl, dd) {
+  margin: 0;
+}
+
+:where(.sm) ol {
+  list-style: none;
+  padding: 0;
+}
+
+.sm section[id] {
+  scroll-margin-top: calc(var(--sm-header) + 8px);
+}
+
+.sm-wrap {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding-inline: var(--sm-gutter);
+}
+
+.sm-serif {
+  font-family: var(--sm-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  /* Cormorant defaults to old-style figures, which look uneven next to capitals */
+  font-variant-numeric: lining-nums;
+}
+
+/* headings break into even lines; running text avoids orphans */
+:where(.sm) :is(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+:where(.sm) :is(p, li, dd) {
+  text-wrap: pretty;
+}
+
+.sm-serif em {
+  font-weight: 500;
+}
+
+.sm-cap {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.sm-accent {
+  color: var(--sm-accent);
+}
+
+.sm-muted {
+  color: var(--sm-mute);
+}
+
+/* paper grain: one small noise tile, repeated, so it stays cheap on phones */
+.sm::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+}
+
+/* ---------- Motion: slow, like cloth falling into place ---------- */
+
+.sm-line {
+  display: block;
+  overflow-x: visible;
+  overflow-y: clip;
+  padding-bottom: 0.12em;
+}
+
+.sm-line > span {
+  display: block;
+  animation: sm-rise 1.5s var(--sm-ease) both;
+}
+
+.sm-fall {
+  animation: sm-fall 1.5s var(--sm-ease) both;
+}
+
+.sm-fall.is-quick {
+  animation-duration: 0.8s;
+}
+
+.sm-drape {
+  animation: sm-drape 1.7s var(--sm-ease) 0.35s both;
+}
+
+@keyframes sm-rise {
+  from {
+    transform: translateY(108%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes sm-fall {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sm-drape {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes sm-swap {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Finishing details ---------- */
+
+.sm-seam {
+  border: 0;
+  border-top: 1px dashed currentColor;
+  opacity: 0.38;
+  margin: 0;
+}
+
+.sm-twill {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.035) 0 1px,
+    transparent 1px 5px
+  );
+}
+
+.sm-patte {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 56px;
+  padding: 0 44px 0 24px;
+  background: var(--sm-btn-bg);
+  color: var(--sm-btn-fg);
+  font-weight: 500;
+  font-size: 16px;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+  transition:
+    padding 0.6s var(--sm-ease),
+    clip-path 0.25s var(--sm-ease),
+    background 0.4s;
+}
+
+.sm-patte::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--sm-honey);
+  flex: none;
+}
+
+.sm-patte:hover {
+  background: var(--sm-btn-hover);
+}
+
+.sm-patte::before {
+  transition: transform 0.3s var(--sm-ease);
+}
+
+.sm-patte:hover::before {
+  transform: translateX(4px);
+}
+
+.sm-patte.is-light {
+  background: var(--sm-off);
+  color: var(--sm-on-paper);
+}
+
+.sm-patte.is-light:hover {
+  background: var(--sm-honey);
+}
+
+.sm-stitch {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 500;
+  background: repeating-linear-gradient(90deg, currentColor 0 5px, transparent 5px 9px) 0
+    calc(100% - 8px) / 100% 1px no-repeat;
+  transition: color 0.35s;
+}
+
+.sm-stitch:hover {
+  color: var(--sm-accent);
+}
+
+.sm-stitch.is-on-dark:hover {
+  color: var(--sm-honey-text);
+}
+
+/* on the tobacco sections honey is unreadable (2.5:1): hover goes to the pale tone instead */
+.sm-contact .sm-stitch.is-on-dark:hover,
+.sm-end .sm-stitch.is-on-dark:hover {
+  color: var(--sm-on-tab);
+}
+
+.sm-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--sm-seam);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.sm-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- Header ---------- */
+
+.sm-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: color-mix(in srgb, var(--sm-sand) 90%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px dashed color-mix(in srgb, var(--sm-ink) 22%, transparent);
+}
+
+.sm-header__inner {
+  min-height: var(--sm-header);
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.sm-brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 24px;
+}
+
+.sm-nav {
+  display: flex;
+  gap: 30px;
+  margin-left: auto;
+}
+
+.sm-nav a {
+  font-size: 15px;
+  color: var(--sm-mute);
+  padding-bottom: 6px;
+  transition: color 0.3s;
+}
+
+.sm-nav a:hover,
+.sm-nav a.is-active {
+  color: var(--sm-ink);
+}
+
+.sm-nav a.is-active {
+  background: repeating-linear-gradient(90deg, currentColor 0 5px, transparent 5px 9px) 0 100% /
+    100% 1px no-repeat;
+}
+
+.sm-nav + .sm-header__tools {
+  margin-left: 0;
+}
+
+/* not enough room for five names beside the brand and the tools: the menu takes over */
+@media (max-width: 1100px) {
+  .sm-nav {
+    display: none;
+  }
+}
+
+.sm-lang {
+  display: flex;
+  margin-left: auto;
+}
+
+@media (min-width: 861px) {
+  .sm-nav + .sm-lang {
+    margin-left: 0;
+  }
+}
+
+.sm-lang button {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-grid;
+  place-items: center;
+  color: var(--sm-mute);
+  transition: color 0.3s;
+}
+
+.sm-lang button[aria-pressed='true'] {
+  color: var(--sm-ink);
+  background: repeating-linear-gradient(90deg, currentColor 0 5px, transparent 5px 9px) 50% 78% /
+    22px 1px no-repeat;
+}
+
+.sm-header__back {
+  margin-left: auto;
+  font-size: 15px;
+}
+
+/* ---------- Poster: the first screen ---------- */
+
+.sm-poster {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  /* exactly the first screen (the 1px is the header's seam), capped for very tall windows;
+     the poster is a page of its own, so it must fit without a scrollbar */
+  min-height: min(calc(100vh - var(--sm-header) - 1px), 1100px);
+  min-height: min(calc(100svh - var(--sm-header) - 1px), 1100px);
+}
+
+.sm-poster__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sm-poster__art path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: sm-draw 2.8s cubic-bezier(0.6, 0, 0.2, 1) 0.6s both;
+}
+
+.sm-poster__thread {
+  stroke: var(--sm-thread);
+  stroke-width: 15;
+}
+
+@keyframes sm-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.sm-poster__inner {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-block: clamp(16px, 3.2vh, 52px) clamp(16px, 2.8vh, 44px);
+  padding-block: clamp(16px, 3.2svh, 52px) clamp(16px, 2.8svh, 44px);
+}
+
+.sm-poster__title {
+  margin: auto 0;
+  padding-block: clamp(12px, 2.5vh, 24px);
+  font-family: 'Anton', 'Arial Narrow', Impact, sans-serif;
+  font-weight: 400;
+  font-size: clamp(44px, 12.3vw, 172px);
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.sm-poster__title .sm-line {
+  padding-top: 0.06em;
+}
+
+.sm-poster__title em {
+  font-family: var(--sm-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.46em;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--sm-accent);
+}
+
+.sm-poster__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px 48px;
+}
+
+.sm-poster__note {
+  max-width: 340px;
+  color: var(--sm-mute);
+}
+
+/* ---------- The door out of the poster ----------
+   Stacked labels in reverse, a countdown, and an arched door that swings open on hover. */
+
+/* the top row of the poster: the role on the left, the door on the right, like an exit sign */
+.sm-poster__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px 32px;
+}
+
+.sm-poster__head > .sm-cap {
+  max-width: 32em;
+  padding-top: 4px;
+}
+
+.sm-exit {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-left: auto;
+  color: var(--sm-ink);
+}
+
+/* Short windows (small laptops, landscape phones): the poster must still fit without scrolling,
+   and the title keeps its size; only the spacing around it gives way. */
+@media (max-height: 640px) {
+  .sm-poster__inner {
+    padding-block: 12px 14px;
+  }
+
+  .sm-poster__title {
+    padding-block: 8px;
+  }
+
+  /* no descender in the poster words: the clip room under each line can shrink */
+  .sm-poster__title .sm-line {
+    padding-bottom: 0.04em;
+  }
+
+  .sm-poster__note {
+    display: none;
+  }
+
+  .sm-poster__foot {
+    gap: 12px 40px;
+  }
+
+  .sm-exit__door {
+    width: 44px;
+    height: 60px;
+  }
+}
+
+.sm-exit__lines {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.sm-exit__line {
+  display: block;
+  padding: 0.5em 0.6em 0.4em 0.8em;
+  background: var(--sm-ink);
+  color: var(--sm-sand);
+  line-height: 1;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.sm-exit__time {
+  min-width: 5.6em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.sm-exit:hover .sm-exit__line,
+.sm-exit:focus-visible .sm-exit__line {
+  background: var(--sm-tab);
+  color: var(--sm-on-tab);
+}
+
+.sm-exit__door {
+  flex: none;
+  width: 56px;
+  height: 77px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.sm-exit__panel {
+  fill: var(--sm-ink);
+  stroke: none;
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform 0.7s cubic-bezier(0.45, 0.05, 0.25, 1);
+}
+
+.sm-exit__panel circle {
+  fill: var(--sm-sand);
+}
+
+/* the leaf turns on its hinge: narrower and slightly tilted, as seen from the front */
+.sm-exit:hover .sm-exit__panel,
+.sm-exit:focus-visible .sm-exit__panel {
+  transform: scaleX(0.3) skewY(-6deg);
+}
+
+/* ---------- Menu ---------- */
+
+.sm-header__tools {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-left: auto;
+}
+
+.sm-header__back + .sm-header__tools {
+  margin-left: 0;
+}
+
+.sm-header__tools .sm-lang {
+  margin-left: 0;
+}
+
+.sm-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  transition:
+    background 0.35s,
+    color 0.35s;
+}
+
+.sm-menu-btn:hover {
+  background: var(--sm-btn-bg);
+  border-color: var(--sm-btn-bg);
+  color: var(--sm-btn-fg);
+}
+
+.sm-header.is-dark .sm-menu-btn:hover {
+  background: var(--sm-off);
+  border-color: var(--sm-off);
+  color: var(--sm-on-paper);
+}
+
+.sm-menu-btn__icon {
+  width: 14px;
+  height: 7px;
+  border-top: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transition: height 0.4s var(--sm-ease);
+}
+
+.sm-menu-btn[aria-expanded='true'] .sm-menu-btn__icon {
+  height: 0;
+}
+
+.sm-menu {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  z-index: 28;
+  overflow-y: auto;
+  background-color: var(--sm-char);
+  color: var(--sm-off);
+}
+
+.sm-menu::backdrop {
+  background: var(--sm-char);
+}
+
+.sm-menu__toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  min-height: var(--sm-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--sm-char);
+  border-bottom: 1px dashed var(--sm-seam-dark);
+}
+
+.sm-menu .sm-menu-btn:hover {
+  background: var(--sm-off);
+  color: var(--sm-on-paper);
+}
+
+.sm-menu .sm-menu__lang {
+  display: flex;
+}
+
+.sm-menu__inner {
+  min-height: calc(100% - var(--sm-header));
+  padding-top: clamp(20px, 4vh, 48px);
+  padding-bottom: clamp(24px, 4vh, 48px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px 72px;
+}
+
+.sm-menu__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.sm-menu__list a {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  color: var(--sm-mute-dark);
+  transition:
+    color 0.25s,
+    transform 0.35s var(--sm-ease);
+}
+
+.sm-menu__list a:hover,
+.sm-menu__list a[aria-current='true'] {
+  color: var(--sm-off);
+  transform: translateX(12px);
+}
+
+.sm-menu__list .sm-cap {
+  width: 26px;
+  color: var(--sm-honey-text);
+}
+
+.sm-menu__list .sm-line {
+  padding-top: 0.14em;
+}
+
+.sm-menu__word {
+  font-family: 'Anton', 'Arial Narrow', Impact, sans-serif;
+  font-size: clamp(34px, min(9.4vh, 12.5vw), 92px);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.sm-menu__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding-bottom: 10px;
+}
+
+.sm-menu__mail {
+  font-size: clamp(22px, 2.4vw, 32px);
+  font-style: italic;
+  font-weight: 500;
+  margin-bottom: 12px;
+  overflow-wrap: anywhere;
+}
+
+.sm-menu__side > p.sm-cap {
+  margin-top: 18px;
+  color: var(--sm-mute-dark);
+}
+
+.sm-menu__lang {
+  display: none;
+  margin: 14px 0 0 -12px;
+}
+
+.sm-menu__lang button {
+  color: var(--sm-mute-dark);
+}
+
+.sm-menu__lang button[aria-pressed='true'] {
+  color: var(--sm-off);
+}
+
+/* ---------- Poster actions and the measurements card ---------- */
+
+.sm-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 36px;
+}
+
+/* the card sits under the portrait, in the left column of the profile scene */
+.sm-card {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 44px;
+  background-color: var(--sm-char);
+  color: var(--sm-off);
+  padding: clamp(22px, 3vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sm-card__kicker {
+  color: var(--sm-honey-text);
+}
+
+.sm-card__title {
+  font-size: 32px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-top: 6px;
+}
+
+.sm-card__row {
+  display: flex;
+  gap: 20px;
+  padding: 14px 0;
+  border-top: 1px dashed var(--sm-seam-dark);
+}
+
+.sm-card__row dt {
+  flex: 0 0 104px;
+  color: var(--sm-mute-dark);
+  padding-top: 4px;
+  letter-spacing: 0.14em;
+}
+
+.sm-card__row dd {
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+/* ---------- Sections ---------- */
+
+.sm-section {
+  padding-block: var(--sm-section);
+}
+
+.sm-section.is-alt {
+  background: var(--sm-sand-2);
+}
+
+.sm-section.is-dark {
+  background-color: var(--sm-char);
+  color: var(--sm-off);
+}
+
+/* A section is a scene: a poster-sized name on top, the content underneath. */
+.sm-split__aside {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: 10px 48px;
+  margin-bottom: var(--sm-head-gap);
+}
+
+.sm-split__aside > .sm-cap {
+  grid-column: 1 / -1;
+}
+
+.sm-split__aside > .sm-muted {
+  grid-column: 2;
+  max-width: 320px;
+  justify-self: end;
+  text-align: right;
+}
+
+.sm-scene__word {
+  font-family: 'Anton', 'Arial Narrow', Impact, sans-serif;
+  font-weight: 400;
+  font-size: clamp(40px, 6.6vw, 96px);
+  letter-spacing: 0.005em;
+  line-height: 0.96;
+  text-transform: uppercase;
+}
+
+/* the poster-sized word is kept for the one scene that is the proof: the selected work */
+.sm-scene__word.is-big {
+  font-size: clamp(44px, 9.4vw, 136px);
+}
+
+/* room for the accents of capitals such as É, which sit above the cap height */
+.sm-split__aside .sm-mask {
+  padding-top: 0.3em;
+  margin-top: -0.2em;
+}
+
+.sm-scene__line {
+  max-width: 320px;
+  padding-bottom: 0.5em;
+  text-align: right;
+  justify-self: end;
+  font-size: clamp(22px, 2.3vw, 30px);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.12;
+  color: var(--sm-accent);
+}
+
+.sm-section.is-dark .sm-scene__line {
+  color: var(--sm-honey-text);
+}
+
+.sm-section.is-dark .sm-scene__line em {
+  color: var(--sm-off);
+}
+
+.sm-split__main {
+  min-width: 0;
+}
+
+/* six domains on three columns at full width, two on tablets, one on phones */
+.sm-skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+  gap: 0 56px;
+}
+
+@media (max-width: 860px) {
+  .sm-split__aside {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sm-split__aside > .sm-muted {
+    grid-column: 1;
+  }
+
+  .sm-scene__line,
+  .sm-split__aside > .sm-muted {
+    text-align: left;
+    justify-self: start;
+  }
+}
+
+.sm-statement {
+  font-size: clamp(26px, 2.8vw, 40px);
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+  text-wrap: pretty;
+}
+
+.sm-statement em {
+  color: var(--sm-accent);
+}
+
+.sm-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* one reading column, at a comfortable measure, rather than a row of cards */
+.sm-profile__cols {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 44em;
+  color: var(--sm-mute);
+}
+
+/* Profile as a spread: the portrait on the left page, the statement and the columns on the right.
+   Below 1181px the portrait sits above the text. */
+.sm-profile {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 56px 80px;
+  align-items: start;
+}
+
+@media (min-width: 1181px) {
+  .sm-profile {
+    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+  }
+}
+
+.sm-profile__text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* A pattern piece: cloth cut to size, with its seam allowance drawn 14px outside the edge. */
+.sm-portrait {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  max-width: 420px;
+}
+
+.sm-portrait::before {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border: 1px dashed var(--sm-seam);
+  pointer-events: none;
+}
+
+.sm-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  /* the frame is landscape: keep the face and both hands, leave out the chair on the left */
+  object-position: 54% 10%;
+}
+
+.sm-portrait__caption {
+  margin-top: 28px;
+  color: var(--sm-mute);
+}
+
+/* the studio ground is sand-coloured: on the dark theme the photo is dimmed a little */
+[data-theme='dark'] .sm-portrait img {
+  filter: brightness(0.9);
+}
+
+/* ---------- Accordion rows (expertise, project list) ---------- */
+
+.sm-item {
+  border-top: 1px dashed var(--sm-seam);
+}
+
+.sm-row {
+  display: flex;
+  align-items: baseline;
+  gap: 28px;
+  width: 100%;
+  min-height: 80px;
+  padding: 22px 0 12px;
+  transition:
+    padding 0.6s var(--sm-ease),
+    color 0.35s;
+}
+
+.sm-row:hover {
+  color: var(--sm-accent);
+}
+
+.sm-row[aria-expanded='true'] {
+  color: var(--sm-accent);
+}
+
+.sm-row__num {
+  width: 30px;
+  flex: none;
+  color: var(--sm-mute);
+}
+
+.sm-row__title {
+  font-size: clamp(27px, 3.3vw, 46px);
+  line-height: 1.05;
+}
+
+.sm-row__mark {
+  margin-left: auto;
+  font-size: 30px;
+  line-height: 1;
+  transition: transform 0.6s var(--sm-ease);
+}
+
+.sm-row[aria-expanded='true'] .sm-row__mark {
+  transform: rotate(45deg);
+}
+
+.sm-acc {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s var(--sm-ease);
+}
+
+.sm-acc.is-open {
+  grid-template-rows: 1fr;
+}
+
+.sm-acc > div {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.sm-acc__inner {
+  padding: 0 0 18px 58px;
+  max-width: 720px;
+  color: var(--sm-mute);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition:
+    opacity 0.2s,
+    transform 0.28s var(--sm-ease);
+}
+
+.sm-acc.is-open .sm-acc__inner {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.05s;
+}
+
+.sm-item__tags {
+  padding: 0 0 26px;
+}
+
+.sm-skill__head {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  padding: 22px 0 8px;
+}
+
+.sm-skill__desc {
+  padding: 0 0 14px;
+  max-width: 720px;
+  font-size: 16px;
+  color: var(--sm-mute);
+  text-wrap: pretty;
+}
+
+/* ---------- Featured work ---------- */
+
+.sm-work {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.sm-work__kicker {
+  color: var(--sm-honey-text);
+}
+
+.sm-work__title {
+  font-size: clamp(36px, 5.2vw, 76px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-top: 18px;
+}
+
+.sm-work__title em {
+  color: var(--sm-honey);
+}
+
+.sm-work__body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px 80px;
+  align-items: flex-start;
+}
+
+.sm-work__list {
+  flex: 1 1 320px;
+  max-width: 420px;
+}
+
+.sm-case {
+  position: relative;
+  border-top: 1px dashed var(--sm-seam-dark);
+}
+
+.sm-case__tab {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 22px 0;
+  color: var(--sm-mute-dark);
+  transition:
+    color 0.4s,
+    padding 0.6s var(--sm-ease);
+}
+
+.sm-case__tab:hover {
+  color: var(--sm-off);
+}
+
+.sm-case__tab[aria-expanded='true'] {
+  color: var(--sm-off);
+  padding-left: 22px;
+}
+
+.sm-case__tab::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 26px;
+  height: 44px;
+  width: 2px;
+  background: var(--sm-honey);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.6s var(--sm-ease);
+}
+
+.sm-case__tab[aria-expanded='true']::before {
+  transform: none;
+}
+
+.sm-case__name {
+  font-size: 29px;
+  line-height: 1.12;
+}
+
+.sm-case__org {
+  font-size: 14px;
+}
+
+.sm-case__inline {
+  display: none;
+  padding: 4px 0 28px;
+}
+
+.sm-work__panel {
+  flex: 999 1 520px;
+  min-width: 0;
+  min-height: 500px;
+}
+
+.sm-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.sm-detail__label {
+  color: var(--sm-honey-text);
+  margin-bottom: 10px;
+}
+
+.sm-detail__context {
+  font-size: clamp(23px, 2.4vw, 33px);
+  line-height: 1.24;
+  font-weight: 500;
+  text-wrap: pretty;
+}
+
+.sm-detail__step {
+  display: flex;
+  gap: 20px;
+  padding: 13px 0;
+  border-bottom: 1px dashed rgba(247, 243, 234, 0.25);
+  color: #e4ded2;
+}
+
+.sm-detail__step > span:first-child {
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--sm-honey-text);
+  width: 24px;
+  flex: none;
+}
+
+.sm-detail__result {
+  background: var(--sm-off);
+  color: var(--sm-on-paper);
+  padding: 26px 28px;
+}
+
+.sm-detail__result .sm-cap {
+  color: var(--sm-tab);
+  margin-bottom: 8px;
+}
+
+.sm-detail__result p:last-child {
+  font-size: 18px;
+  font-weight: 500;
+  text-wrap: pretty;
+}
+
+.sm-work__more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 32px;
+  color: var(--sm-mute-dark);
+}
+
+/* ---------- Round badge: the invitation runs around a tailor's button ---------- */
+
+.sm-badge {
+  display: block;
+  flex: none;
+  width: clamp(120px, 12vw, 160px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: var(--sm-on-paper);
+  /* leans towards the pointer (ProjectsBadge.tsx sets the two angles) and settles back */
+  transform: perspective(520px) rotateX(var(--sm-tilt-x, 0deg)) rotateY(var(--sm-tilt-y, 0deg));
+  transition: transform 0.45s var(--sm-ease);
+  will-change: transform;
+}
+
+.sm-badge:hover {
+  transition-duration: 0.12s;
+}
+
+.sm-badge svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.sm-badge__disc {
+  fill: var(--sm-off);
+  transition: fill 0.35s;
+}
+
+.sm-badge:hover .sm-badge__disc,
+.sm-badge:focus-visible .sm-badge__disc {
+  fill: var(--sm-honey);
+}
+
+.sm-badge__text {
+  font-family: var(--sm-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  fill: currentColor;
+  transform-box: view-box;
+  transform-origin: 80px 80px;
+  animation: sm-spin 18s linear infinite;
+}
+
+@keyframes sm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sm-badge__button circle:first-child {
+  fill: var(--sm-char);
+}
+
+.sm-badge__button circle:not(:first-child) {
+  fill: var(--sm-off);
+}
+
+.sm-badge__button path {
+  fill: none;
+  stroke: var(--sm-honey);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+/* ---------- Experience and education: one scene, two columns ---------- */
+
+.sm-path {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 48px 72px;
+  align-items: start;
+}
+
+@media (min-width: 1000px) {
+  .sm-path {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+}
+
+.sm-path__jobs {
+  position: relative;
+  padding-left: 38px;
+}
+
+.sm-path__rail,
+.sm-path__pli {
+  position: absolute;
+  left: 4px;
+  top: 12px;
+  bottom: 12px;
+}
+
+.sm-path__rail {
+  border-left: 1px dashed var(--sm-seam);
+}
+
+.sm-path__pli {
+  width: 1px;
+  background: var(--sm-accent);
+  transform-origin: top;
+}
+
+.sm-path__list {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.sm-job {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 44px;
+}
+
+.sm-job::before {
+  content: '';
+  position: absolute;
+  left: -38px;
+  top: 10px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--sm-honey);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.18);
+}
+
+.sm-job__date {
+  flex: 0 0 190px;
+  padding-top: 10px;
+  color: var(--sm-mute);
+}
+
+.sm-job__body {
+  flex: 1 1 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sm-job__title {
+  font-size: clamp(26px, 2.8vw, 36px);
+  line-height: 1.08;
+}
+
+.sm-job__org {
+  font-weight: 600;
+  color: var(--sm-accent);
+}
+
+.sm-job__desc {
+  margin-top: 8px;
+  color: var(--sm-mute);
+  max-width: 640px;
+  text-wrap: pretty;
+}
+
+/* education and languages: the right-hand column of the path scene */
+.sm-edu {
+  display: flex;
+  flex-direction: column;
+}
+
+.sm-edu__kicker {
+  margin-bottom: 6px;
+}
+
+.sm-edu__item {
+  padding: 20px 0 22px;
+  border-top: 1px dashed var(--sm-seam);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sm-edu__title {
+  font-size: 26px;
+  line-height: 1.12;
+}
+
+.sm-edu__school {
+  color: var(--sm-mute);
+  font-size: 16px;
+}
+
+.sm-edu__grade {
+  font-weight: 600;
+  color: var(--sm-accent);
+  font-size: 16px;
+}
+
+/* ---------- References, folded into the contact grid ---------- */
+
+.sm-contact__refs {
+  grid-column: 1 / -1;
+}
+
+.sm-refs summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  font-weight: 500;
+}
+
+.sm-refs summary::-webkit-details-marker {
+  display: none;
+}
+
+.sm-refs__mark {
+  font-size: 26px;
+  line-height: 1;
+  transition: transform 0.28s var(--sm-ease);
+}
+
+.sm-refs[open] .sm-refs__mark {
+  transform: rotate(45deg);
+}
+
+.sm-refs__note {
+  color: var(--sm-on-tab);
+  font-size: 15px;
+}
+
+.sm-refs__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 14px 40px;
+  padding-top: 14px;
+}
+
+.sm-refs__list li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 15px;
+  color: var(--sm-on-tab);
+}
+
+.sm-refs__list .sm-serif {
+  font-size: 21px;
+  line-height: 1.15;
+  color: var(--sm-off);
+}
+
+/* ---------- Contact ---------- */
+
+.sm-contact {
+  background: var(--sm-tab);
+  color: var(--sm-off);
+  padding-top: clamp(80px, 9vw, 136px);
+  padding-bottom: 36px;
+}
+
+.sm-contact__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+}
+
+.sm-contact .sm-cap {
+  color: var(--sm-on-tab);
+}
+
+.sm-contact__title {
+  font-size: clamp(40px, 7.6vw, 116px);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.sm-contact__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px 44px;
+}
+
+.sm-contact__mail {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  font-size: clamp(22px, 3vw, 40px);
+  font-style: italic;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  transition: color 0.4s;
+}
+
+.sm-contact__mail:hover {
+  color: var(--sm-on-tab);
+}
+
+.sm-contact__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+  gap: 24px;
+}
+
+.sm-contact__grid > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.sm-contact__grid > div > span:last-child {
+  font-weight: 500;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sm-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+/* only the way back up: no site map and no copyright line under the contact grid */
+.sm-footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 72px;
+}
+
+.sm-footer a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ---------- Projects page ---------- */
+
+.sm-projects {
+  padding-top: clamp(40px, 6vw, 88px);
+  padding-bottom: clamp(80px, 9vw, 136px);
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+}
+
+.sm-projects__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px 56px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.sm-projects__title {
+  font-size: clamp(36px, 6vw, 92px);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  max-width: 980px;
+  margin-top: 18px;
+}
+
+.sm-projects__title em {
+  color: var(--sm-accent);
+}
+
+.sm-projects__sub {
+  margin-top: 26px;
+  max-width: 560px;
+  font-size: 19px;
+  color: var(--sm-mute);
+}
+
+.sm-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sm-filters__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sm-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--sm-seam);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--sm-mute);
+  transition:
+    background 0.4s,
+    color 0.4s,
+    border-color 0.4s;
+}
+
+.sm-chip:hover {
+  border-color: var(--sm-ink);
+  color: var(--sm-ink);
+}
+
+.sm-chip[aria-pressed='true'] {
+  background: var(--sm-btn-bg);
+  border-color: var(--sm-btn-bg);
+  color: var(--sm-btn-fg);
+}
+
+.sm-projects__list {
+  border-bottom: 1px dashed var(--sm-seam);
+}
+
+.sm-prow {
+  min-height: 88px;
+  padding: 18px 0;
+  align-items: center;
+}
+
+.sm-prow__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.sm-prow__title {
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1.08;
+}
+
+.sm-prow__org {
+  font-size: 14px;
+  color: var(--sm-mute);
+}
+
+a.sm-prow__title {
+  align-self: flex-start;
+  transition: color 0.25s;
+}
+
+a.sm-prow__title:hover {
+  color: var(--sm-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+
+.sm-prow:hover {
+  color: inherit;
+}
+
+.sm-prow__toggle {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  margin-left: 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transition:
+    background 0.25s,
+    color 0.25s;
+}
+
+.sm-prow__toggle:hover {
+  background: var(--sm-btn-bg);
+  color: var(--sm-btn-fg);
+}
+
+.sm-prow .sm-prow__toggle .sm-row__mark {
+  margin-left: 0;
+  transition: transform 0.28s var(--sm-ease);
+}
+
+.sm-prow__toggle[aria-expanded='true'] .sm-row__mark {
+  transform: rotate(45deg);
+}
+
+.sm-prow__org strong {
+  font-weight: 600;
+  color: var(--sm-accent);
+}
+
+.sm-prow__cat {
+  margin-left: auto;
+  text-align: right;
+  color: var(--sm-mute);
+  flex: none;
+}
+
+.sm-prow .sm-row__mark {
+  margin-left: 24px;
+}
+
+.sm-prow__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 30px;
+  max-width: 760px;
+}
+
+.sm-end {
+  background: var(--sm-tab);
+  color: var(--sm-off);
+  padding-block: clamp(64px, 7vw, 104px) clamp(56px, 6vw, 88px);
+}
+
+.sm-end__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px 56px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.sm-end__title {
+  font-size: clamp(32px, 4.8vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.sm-end__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 32px;
+}
+
+/* Short pages: the closing band sits at the bottom of the window, not mid-screen. */
+.sm {
+  min-height: 100vh;
+  /* the small viewport height, so that the poster page never scrolls behind a phone's URL bar */
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sm > main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* auto side margins would otherwise shrink a centred wrapper to its content */
+.sm > main.sm-wrap,
+.sm > main > .sm-wrap {
+  width: 100%;
+}
+
+.sm-end {
+  margin-top: auto;
+}
+
+/* ---------- Project page ---------- */
+
+.sm-loading {
+  min-height: 60vh;
+}
+
+.sm-detail > .sm-stitch {
+  align-self: flex-start;
+}
+
+.sm-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 0 48px;
+}
+
+.sm-facts > div {
+  padding: 20px 0 24px;
+  border-top: 1px dashed var(--sm-seam);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sm-facts__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+}
+
+.sm-section.is-dark .sm-detail > * {
+  max-width: 920px;
+}
+
+.sm-notes {
+  padding-block: clamp(64px, 8vw, 112px);
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.sm-notes > * {
+  max-width: 920px;
+}
+
+/* no case study above: the notes follow the page header directly */
+.sm-projects + .sm-notes {
+  padding-top: 0;
+}
+
+.sm-block {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sm-block > p:not(.sm-cap) {
+  color: var(--sm-mute);
+  max-width: 760px;
+  text-wrap: pretty;
+}
+
+.sm-step {
+  display: flex;
+  gap: 20px;
+  padding: 13px 0;
+  border-bottom: 1px dashed var(--sm-seam);
+}
+
+.sm-step > span:first-child {
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--sm-accent);
+  width: 24px;
+  flex: none;
+}
+
+.sm-stack {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 24px 48px;
+}
+
+.sm-stack > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sm-note-row {
+  min-height: 72px;
+  padding: 18px 0;
+  align-items: center;
+}
+
+.sm-note-row__title {
+  font-size: clamp(24px, 2.4vw, 30px);
+  line-height: 1.1;
+}
+
+.sm-note-row__text {
+  padding-left: 0;
+  padding-bottom: 26px;
+}
+
+.sm-pager {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: 0 56px;
+  padding-bottom: clamp(64px, 8vw, 112px);
+}
+
+.sm-pager a {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 0;
+  border-top: 1px dashed var(--sm-seam);
+  transition:
+    color 0.35s,
+    padding 0.6s var(--sm-ease);
+}
+
+.sm-pager a:last-child {
+  text-align: right;
+}
+
+.sm-pager a:hover {
+  color: var(--sm-accent);
+}
+
+.sm-pager .sm-serif {
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1.08;
+}
+
+/* ---------- Substance: figures, principles, mission facts, timeline, results, related ---------- */
+
+.sm-figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin-top: -12px;
+}
+
+.sm-approach {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 8px;
+}
+
+.sm-approach__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 20px 32px;
+}
+
+.sm-approach__list li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--sm-seam);
+}
+
+.sm-approach__list h3 {
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.sm-approach__list p {
+  font-size: 15px;
+  color: var(--sm-mute);
+}
+
+.sm-detail__facts {
+  color: var(--sm-mute-dark);
+}
+
+.sm-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 14px 28px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--sm-seam);
+}
+
+.sm-metrics div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm-metrics dt {
+  color: var(--sm-mute);
+}
+
+.sm-metrics dd {
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.sm-metrics small {
+  font-size: 14px;
+  color: var(--sm-mute);
+}
+
+.sm-timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.sm-timeline li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  padding: 12px 0;
+  border-bottom: 1px dashed rgba(247, 243, 234, 0.25);
+}
+
+.sm-timeline .sm-cap {
+  flex: 0 0 110px;
+  color: var(--sm-honey-text);
+  padding-top: 3px;
+}
+
+.sm-prow__year {
+  flex: none;
+  margin-left: auto;
+  color: var(--sm-mute);
+}
+
+.sm-prow__year + .sm-prow__cat {
+  margin-left: 24px;
+}
+
+@media (max-width: 860px) {
+  .sm-prow__year {
+    margin-left: 12px;
+  }
+}
+
+/* ---------- Theme switch ---------- */
+
+.sm-theme {
+  position: relative;
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(2, 24px);
+  place-items: center;
+  height: 32px;
+  padding: 0 3px;
+  border: 1px solid rgba(247, 243, 234, 0.4);
+  border-radius: 999px;
+  /* same in both themes: a charcoal pill with a pale ring reads on sand, charcoal and tobacco */
+  background: color-mix(in srgb, #2f3033 82%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--sm-off);
+  box-shadow: 0 10px 30px rgba(38, 39, 42, 0.22);
+  transition:
+    opacity 0.3s,
+    visibility 0s,
+    border-color 0.3s;
+}
+
+/* The switch floats in the bottom-left corner, on the same line as the assistant button, and
+   always inside the page margin. Wide margin: a horizontal pill, 12px short of the text column
+   and never more than 32px from the edge of the window. */
+.sm-theme.is-floating {
+  position: fixed;
+  left: clamp(8px, calc(max(0px, (100vw - 1360px) / 2) + var(--sm-gutter) - 68px), 32px);
+  bottom: calc(clamp(16px, 3vw, 32px) + 12px);
+  z-index: 40;
+}
+
+/* widens the touch target to 44px high without enlarging the pill */
+.sm-theme::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+.sm-theme:hover {
+  border-color: var(--sm-off);
+}
+
+/* a pale ring inside a dark one: visible on sand, charcoal and tobacco alike */
+.sm .sm-theme:focus-visible {
+  outline: 2px solid var(--sm-off);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--sm-on-paper);
+}
+
+.sm-theme.is-tucked,
+.sm[data-menu-open] .sm-theme.is-floating {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s,
+    visibility 0s 0.3s;
+}
+
+.sm-theme__knob {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--sm-off);
+  transition: transform 0.4s var(--sm-ease);
+}
+
+.sm-theme[aria-checked='true'] .sm-theme__knob {
+  transform: translateX(24px);
+}
+
+.sm-theme__icon {
+  position: relative;
+  opacity: 0.75;
+  transform: rotate(-60deg) scale(0.85);
+  transition:
+    color 0.3s,
+    opacity 0.3s,
+    transform 0.5s var(--sm-ease);
+}
+
+/* a crescent turned too far reads as a bowl: the resting moon only leans a little */
+.sm-theme__icon.is-moon {
+  transform: rotate(14deg) scale(0.85);
+}
+
+.sm-theme[aria-checked='false'] .sm-theme__icon.is-sun,
+.sm-theme[aria-checked='true'] .sm-theme__icon.is-moon {
+  color: var(--sm-on-paper);
+  opacity: 1;
+  transform: none;
+}
+
+/* Narrower margin: the pill stands upright so that it still fits beside the text column, as
+   tall as the assistant button facing it. */
+@media (min-width: 861px) and (max-width: 1399px) {
+  .sm-theme.is-floating {
+    grid-template-columns: 24px;
+    grid-template-rows: repeat(2, 24px);
+    width: 32px;
+    height: 56px;
+    padding: 3px;
+    left: calc((max(0px, (100vw - 1360px) / 2) + var(--sm-gutter) - 32px) / 2);
+    bottom: clamp(16px, 3vw, 32px);
+  }
+
+  .sm-theme.is-floating[aria-checked='true'] .sm-theme__knob {
+    transform: translateY(24px);
+  }
+}
+
+/* Small screens: no margin to stand in, so the switch lives in the menu with the languages. */
+.sm-menu__theme {
+  display: none;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  color: var(--sm-mute-dark);
+}
+
+@media (max-width: 860px) {
+  .sm-theme.is-floating {
+    display: none;
+  }
+
+  .sm-menu__theme {
+    display: flex;
+  }
+}
+
+/* While the theme changes, every colour eases to its new value instead of snapping. The class
+   is put on <html> for half a second by theme.ts, and never under reduced motion. */
+html.sm-theme-fade body,
+html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *),
+html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::before,
+html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
+  transition:
+    background-color 0.45s ease,
+    color 0.45s ease,
+    border-color 0.45s ease,
+    stroke 0.45s ease,
+    box-shadow 0.45s ease !important;
+}
+
+/* ---------- "En bref": a tab sewn to the right edge, and the drawer it opens ---------- */
+
+.sm-brief-tab {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 44px;
+  padding: 16px 0 18px;
+  transform: translateY(-50%);
+  /* paper tab on every ground, like the pale cards: constant in both themes */
+  background: var(--sm-off);
+  color: var(--sm-on-paper);
+  border: 1px dashed var(--sm-seam);
+  border-right: 0;
+  box-shadow: 0 10px 30px rgba(38, 39, 42, 0.18);
+  transition: background 0.35s;
+}
+
+.sm-brief-tab:hover {
+  background: var(--sm-honey);
+}
+
+.sm-brief-tab__button {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.sm-brief-tab__button circle:first-child {
+  fill: var(--sm-char);
+  stroke: none;
+}
+
+.sm-brief-tab__button circle:not(:first-child) {
+  fill: var(--sm-off);
+  stroke: none;
+}
+
+.sm-brief-tab__button path {
+  stroke: var(--sm-honey);
+}
+
+/* reads from the bottom up, like a label sewn along a seam */
+.sm-brief-tab__label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: 0.22em;
+}
+
+.sm-brief {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(440px, 100vw);
+  height: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow-y: auto;
+  background-color: var(--sm-char);
+  color: var(--sm-off);
+  box-shadow: -24px 0 60px rgba(38, 39, 42, 0.3);
+}
+
+.sm-brief::backdrop {
+  background: rgba(47, 48, 51, 0.45);
+}
+
+.sm-brief__inner {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px clamp(22px, 4vw, 40px) 40px;
+}
+
+.sm-brief__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sm-brief .sm-menu-btn:hover {
+  background: var(--sm-off);
+  border-color: var(--sm-off);
+  color: var(--sm-on-paper);
+}
+
+.sm-brief__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+@media (max-width: 520px) {
+  .sm-brief-tab {
+    width: 38px;
+    gap: 10px;
+    padding: 12px 0 14px;
+  }
+}
+
+/* ---------- Invitations: the door and the "En bref" tab show that they can be used ----------
+   Long cycles, one unhurried gesture each time, eased in and out so nothing snaps; the gesture
+   stops under the pointer or the focus, and the reduced-motion block below switches it off (the
+   chevron stays as a still cue). */
+
+/* the leaf swings ajar, rests a moment, then closes again */
+@keyframes sm-door-ajar {
+  0%,
+  64%,
+  100% {
+    transform: none;
+  }
+  74%,
+  86% {
+    transform: scaleX(0.5) skewY(-4deg);
+  }
+}
+
+.sm-exit__panel {
+  animation: sm-door-ajar 7s cubic-bezier(0.45, 0.05, 0.25, 1) 2.5s infinite;
+}
+
+/* the labels light up tobacco while the door is ajar */
+@keyframes sm-strip-glow {
+  0%,
+  64%,
+  100% {
+    background-color: var(--sm-ink);
+    color: var(--sm-sand);
+  }
+  74%,
+  88% {
+    background-color: var(--sm-tab);
+    color: var(--sm-on-tab);
+  }
+}
+
+.sm-exit__line {
+  animation: sm-strip-glow 7s cubic-bezier(0.45, 0.05, 0.25, 1) 2.5s infinite;
+}
+
+.sm-exit:hover .sm-exit__panel,
+.sm-exit:focus-visible .sm-exit__panel,
+.sm-exit:hover .sm-exit__line,
+.sm-exit:focus-visible .sm-exit__line {
+  animation: none;
+}
+
+/* the tab pulls out a little, holds, and slides back, like a drawer handle asking to be pulled */
+@keyframes sm-tab-pull {
+  0%,
+  68%,
+  100% {
+    transform: translateY(-50%);
+  }
+  78%,
+  88% {
+    transform: translate(-9px, -50%);
+  }
+}
+
+.sm-brief-tab {
+  animation: sm-tab-pull 6s cubic-bezier(0.45, 0.05, 0.25, 1) 4s infinite;
+  transition:
+    background 0.35s,
+    transform 0.5s cubic-bezier(0.45, 0.05, 0.25, 1);
+}
+
+.sm-brief-tab:hover,
+.sm-brief-tab:focus-visible {
+  animation: none;
+  transform: translate(-6px, -50%);
+}
+
+/* a small chevron under the label points the way the drawer opens */
+.sm-brief-tab__hint {
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: sm-hint 3s cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
+}
+
+@keyframes sm-hint {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(-3px);
+    opacity: 1;
+  }
+}
+
+/* ---------- Assistant ---------- */
+
+.sm-chat-toggle {
+  position: fixed;
+  right: clamp(16px, 3vw, 32px);
+  bottom: clamp(16px, 3vw, 32px);
+  z-index: 40;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--sm-char);
+  color: var(--sm-off);
+  /* the light ring keeps the button visible over the charcoal sections */
+  border: 1px solid rgba(247, 243, 234, 0.4);
+  box-shadow: 0 10px 30px rgba(38, 39, 42, 0.28);
+  transition:
+    background 0.4s,
+    transform 0.6s var(--sm-ease);
+}
+
+.sm-chat-toggle:hover {
+  background: var(--sm-tab);
+  transform: translateY(-3px);
+}
+
+.sm-chat {
+  position: fixed;
+  right: clamp(16px, 3vw, 32px);
+  bottom: calc(clamp(16px, 3vw, 32px) + 72px);
+  z-index: 40;
+  width: min(400px, calc(100vw - 32px));
+  max-height: min(600px, calc(100vh - 140px));
+  display: flex;
+  flex-direction: column;
+  background: var(--sm-panel);
+  color: var(--sm-ink);
+  box-shadow: 0 24px 60px rgba(38, 39, 42, 0.3);
+}
+
+.sm-chat__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 12px 16px 22px;
+  background-color: var(--sm-char);
+  color: var(--sm-off);
+}
+
+.sm-chat__head h3 {
+  font-size: 24px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.sm-chat__head button {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+}
+
+.sm-chat__log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sm-chat__bubble {
+  align-self: flex-start;
+  max-width: 88%;
+  padding: 12px 16px;
+  background: var(--sm-sand);
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.sm-chat__bubble.is-user {
+  align-self: flex-end;
+  background: var(--sm-char);
+  color: var(--sm-off);
+}
+
+.sm-chat__status {
+  font-size: 13px;
+  color: var(--sm-mute);
+}
+
+.sm-chat__form {
+  padding: 14px 22px 4px;
+  border-top: 1px dashed var(--sm-seam);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sm-chat__field {
+  display: flex;
+  gap: 8px;
+}
+
+.sm-chat__field input {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--sm-ink);
+  background: var(--sm-field);
+  border: 1px solid var(--sm-seam);
+  border-radius: 0;
+}
+
+.sm-chat__field button {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  background: var(--sm-char);
+  color: var(--sm-off);
+  transition: background 0.35s;
+}
+
+.sm-chat__field button:hover:not(:disabled) {
+  background: var(--sm-tab);
+}
+
+.sm-chat__field button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sm-chat__mail {
+  margin: 4px 22px 14px;
+  align-self: flex-start;
+  font-size: 15px;
+}
+
+/* the project list stays in view while its detail is read */
+@media (min-width: 861px) {
+  .sm-work__list {
+    position: sticky;
+    top: calc(var(--sm-header) + 28px);
+  }
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 520px) {
+  :root {
+    --sm-header: 64px;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  .sm-header__inner {
+    gap: 12px;
+  }
+
+  .sm-brand {
+    font-size: 20px;
+  }
+
+  /* the language switch moves into the menu, where there is room for it */
+  .sm-header__tools .sm-lang {
+    display: none;
+  }
+
+  .sm-menu-btn {
+    padding: 0 14px;
+  }
+
+  .sm-scene__line,
+  .sm-split__aside > .sm-muted {
+    text-align: left;
+    justify-self: start;
+    max-width: none;
+  }
+
+  .sm-card__row {
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 0;
+  }
+
+  .sm-card__row dt {
+    flex-basis: auto;
+    padding-top: 0;
+  }
+
+  .sm-patte {
+    min-height: 52px;
+    padding: 0 38px 0 20px;
+  }
+
+  .sm-detail__result {
+    padding: 20px;
+  }
+
+  .sm-contact__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sm-footer__base {
+    padding-right: 64px;
+  }
+
+  .sm-menu__lang {
+    display: flex;
+  }
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 860px) {
+  .sm-nav {
+    display: none;
+  }
+
+  .sm-prow__cat {
+    display: none;
+  }
+
+  .sm-prow__toggle {
+    margin-left: auto;
+  }
+
+  /* the detail opens under the tapped project instead of in a side panel */
+  .sm-work__panel {
+    display: none;
+  }
+
+  .sm-case__tab[aria-expanded='true'] + .sm-case__inline {
+    display: block;
+  }
+
+  .sm-acc__inner,
+  .sm-item__tags,
+  .sm-skill__desc {
+    padding-left: 0;
+  }
+
+  .sm-job__date {
+    flex-basis: 100%;
+    padding-top: 0;
+  }
+}
+
+/* ==========================================================================
+   Motion layer: page transitions, seams, opening curtain, header states.
+   Everything here is switched off in the reduced-motion block below.
+   ========================================================================== */
+
+/* ---------- Page and language transitions (View Transitions API) ---------- */
+
+.sm-header {
+  view-transition-name: sm-header;
+}
+
+.sm-chat-toggle {
+  view-transition-name: sm-chat-toggle;
+}
+
+.sm-brief-tab {
+  view-transition-name: sm-brief-tab;
+}
+
+.sm-theme.is-floating {
+  view-transition-name: sm-theme;
+}
+
+/* The old page is cut away along a diagonal, like cloth under the shears, the blade sweeping from
+   the right edge to the left one; the new page is already in place underneath and settles by a
+   few pixels. The UA cross-fade (plus-lighter blending) is switched off for the root pair. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+  animation: sm-cut-away 0.8s cubic-bezier(0.7, 0, 0.2, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: sm-cut-in 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+}
+
+@keyframes sm-cut-away {
+  from {
+    clip-path: polygon(0 0, 200% 0, 100% 100%, 0 100%);
+  }
+  to {
+    clip-path: polygon(0 0, 0 0, -100% 100%, 0 100%);
+  }
+}
+
+@keyframes sm-cut-in {
+  from {
+    transform: translate(14px, 10px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Leaving the poster: an iris opens from the click and reveals the destination, while the poster
+   steps back a little and darkens. html[data-transition='iris'] and the --sm-iris-* custom
+   properties (origin and radius) are set by leaveCover for that one transition. */
+html[data-transition='iris']::view-transition-old(root),
+html[data-transition='iris']::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+html[data-transition='iris']::view-transition-old(root) {
+  z-index: auto;
+  animation: sm-iris-under 0.85s cubic-bezier(0.65, 0, 0.25, 1) both;
+}
+
+html[data-transition='iris']::view-transition-new(root) {
+  z-index: 1;
+  animation: sm-iris-open 0.85s cubic-bezier(0.7, 0, 0.3, 1) both;
+}
+
+@keyframes sm-iris-open {
+  from {
+    clip-path: circle(0px at var(--sm-iris-x, 50%) var(--sm-iris-y, 50%));
+  }
+  to {
+    clip-path: circle(var(--sm-iris-r, 150vmax) at var(--sm-iris-x, 50%) var(--sm-iris-y, 50%));
+  }
+}
+
+@keyframes sm-iris-under {
+  to {
+    transform: scale(0.96);
+    filter: brightness(0.75);
+  }
+}
+
+/* ---------- Opening curtain ---------- */
+
+.sm-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background-color: var(--sm-char);
+  animation: sm-curtain 1.15s cubic-bezier(0.7, 0, 0.2, 1) 0.1s both;
+}
+
+@keyframes sm-curtain {
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+/* ---------- Titles rising from behind a mask ---------- */
+
+.sm-mask {
+  overflow-x: visible;
+  overflow-y: clip;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+/* ---------- Seams that sew themselves ---------- */
+
+.sm-item,
+.sm-case,
+.sm-edu__item,
+.sm-ref,
+.sm-facts > div,
+.sm-strengths a,
+.sm-pager a {
+  position: relative;
+  border-top-color: transparent;
+}
+
+.sm-item::before,
+.sm-case::before,
+.sm-edu__item::before,
+.sm-ref::before,
+.sm-facts > div::before,
+.sm-strengths a::before,
+.sm-pager a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 1px;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--sm-seam-color, var(--sm-seam)) 0 4px,
+    transparent 4px 7px
+  );
+}
+
+.sm-case {
+  --sm-seam-color: var(--sm-seam-dark);
+}
+
+@keyframes sm-sew {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes sm-unroll {
+  to {
+    transform: scaleY(0);
+  }
+}
+
+/* Scroll-driven: where unsupported, seams are simply drawn and the flap never exists. */
+@supports (animation-timeline: view()) {
+  .sm-item::before,
+  .sm-case::before,
+  .sm-edu__item::before,
+  .sm-ref::before,
+  .sm-facts > div::before,
+  .sm-strengths a::before,
+  .sm-pager a::before,
+  .sm-seam {
+    animation: sm-sew linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 28%;
+  }
+
+  /* the charcoal section arrives like cloth unrolling over the page */
+  .sm-section.is-dark {
+    position: relative;
+  }
+
+  .sm-section.is-dark::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 160px;
+    pointer-events: none;
+    background: var(--sm-sand);
+    transform-origin: top;
+    animation: sm-unroll linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 42%;
+  }
+}
+
+/* ---------- Lists arriving in sequence ---------- */
+
+.sm-item--in {
+  animation: sm-settle 0.9s var(--sm-ease) both;
+  animation-delay: calc(0.3s + var(--sm-i, 0) * 45ms);
+}
+
+@keyframes sm-settle {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+
+/* ---------- Letters that swap in place ---------- */
+
+.sm-swap__letter {
+  position: relative;
+  display: inline-block;
+  /* clips sideways only, so tall capitals and accents are never cut */
+  clip-path: inset(-30% 0);
+}
+
+.sm-swap__letter > span {
+  display: inline-block;
+}
+
+/* The twin that slides in is a pseudo-element: it never enters the page text, so copying or
+   reading the title gives each letter once. */
+.sm-swap__letter::after {
+  content: attr(data-char);
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateX(-112%);
+}
+
+/* ---------- Hover and press details ---------- */
+
+.sm-prow__title,
+.sm-case__name {
+  transition: letter-spacing 0.5s var(--sm-ease);
+}
+
+.sm-patte:active {
+  clip-path: polygon(0 0, calc(100% - 11px) 0, 100% 50%, calc(100% - 11px) 100%, 0 100%);
+}
+
+.sm-pager .sm-serif {
+  transition: transform 0.6s var(--sm-ease);
+}
+
+.sm-pager a:first-child:hover .sm-serif {
+  transform: translateX(-10px);
+}
+
+.sm-pager a:last-child:hover .sm-serif {
+  transform: translateX(10px);
+}
+
+/* ---------- Header: reading progress and charcoal state ---------- */
+
+.sm-header {
+  transition:
+    background 0.5s,
+    color 0.5s,
+    border-color 0.5s;
+}
+
+.sm-header__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--sm-accent);
+  transform-origin: left;
+}
+
+.sm-header.is-dark {
+  background: color-mix(in srgb, var(--sm-char) 92%, transparent);
+  color: var(--sm-off);
+  border-bottom-color: var(--sm-seam-dark);
+}
+
+/* on the cover and the home page the header sits on the scene without a seam */
+.sm-header.is-seamless,
+.sm-header.is-seamless.is-dark {
+  border-bottom-color: transparent;
+}
+
+.sm-header.is-dark .sm-nav a,
+.sm-header.is-dark .sm-lang button {
+  color: var(--sm-mute-dark);
+}
+
+.sm-header.is-dark .sm-nav a:hover,
+.sm-header.is-dark .sm-nav a.is-active,
+.sm-header.is-dark .sm-lang button[aria-pressed='true'] {
+  color: var(--sm-off);
+}
+
+.sm-header.is-dark .sm-header__progress {
+  background: var(--sm-honey);
+}
+
+.sm-header.is-dark .sm-stitch:hover {
+  color: var(--sm-honey);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .sm *,
+  .sm *::before,
+  .sm *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .sm-curtain,
+  .sm-section.is-dark::before {
+    display: none;
+  }
+
+  .sm-poster__art path {
+    stroke-dashoffset: 0;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

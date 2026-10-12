@@ -2,12 +2,12 @@
   {
     "title": "PostgreSQL SSL/TLS sur Windows Server",
     "slug": "postgresql-ssl-windows-server",
-    "tagline": "Mise en place d'un chiffrement SSL/TLS auto-signe pour securiser les connexions PostgreSQL.",
-    "description": "Ce projet personnel documente l'activation de SSL/TLS sur PostgreSQL sous Windows Server 2022 avec un certificat auto-signe. Il couvre l'installation d'OpenSSL, la generation des certificats serveur, l'activation de SSL dans postgresql.conf et le durcissement des acces dans pg_hba.conf avec hostssl. L'objectif etait de chiffrer les communications entre la base et les clients tout en maitrisant les contraintes specifiques de permissions et de chemins sur Windows.",
+    "tagline": "Mise en place d'un chiffrement SSL/TLS auto-signé pour sécuriser les connexions PostgreSQL.",
+    "description": "J’ai documenté le chiffrement des connexions PostgreSQL sous Windows Server 2022. Le guide couvre le certificat auto-signé, l’activation de SSL/TLS et les règles d’accès hostssl.",
     "category": "Infrastructure",
-    "status": "Termine",
+    "status": "Terminé",
     "duration": null,
-    "role": "Configuration systeme, certificats et documentation",
+    "role": "Configuration système, certificats et documentation",
     "primary_language": "PowerShell",
     "tech_stack": {
       "frontend": [],
@@ -29,14 +29,14 @@
       ]
     },
     "features": [
-      "Installation d'OpenSSL et generation d'un certificat serveur auto-signe.",
+      "Installation d'OpenSSL et génération d'un certificat serveur auto-signé.",
       "Activation de SSL dans PostgreSQL avec prise en charge des chemins Windows.",
-      "Mise a jour de pg_hba.conf avec hostssl pour imposer le chiffrement sur les connexions cibles.",
-      "Verification des permissions du certificat prive pour un fonctionnement correct du service PostgreSQL.",
+      "Mise à jour de pg_hba.conf avec hostssl pour imposer le chiffrement sur les connexions ciblées.",
+      "Vérification des permissions du certificat privé pour un fonctionnement correct du service PostgreSQL.",
       "Tests de connexion client avec sslmode=require pour valider le chiffrement de bout en bout."
     ],
-    "challenges": "Le point le plus delicat etait la gestion des particularites Windows: chemins de fichiers, droits sur la cle privee et rechargement propre du service PostgreSQL apres modification des fichiers de configuration. Il fallait aussi s'assurer que le certificat etait correctement reconnu par le moteur et que les clients utilisaient bien une connexion chiffree.",
-    "learnings": "Ce projet a consolide la maitrise de PostgreSQL cote administration systeme, de la mise en oeuvre de SSL/TLS sur Windows et des bonnes pratiques de durcissement pour une base de donnees exposee a plusieurs clients ou environnements de test.",
+    "challenges": "J’ai dû gérer les chemins Windows, les droits sur la clé privée et le rechargement du service. J’ai ensuite vérifié la reconnaissance du certificat et le chiffrement des connexions clientes.",
+    "learnings": "J’ai renforcé mes connaissances en administration PostgreSQL et en configuration SSL/TLS sous Windows.",
     "links": {
       "github": null,
       "live": null,

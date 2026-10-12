@@ -2,10 +2,10 @@
   {
     "title": "Active Directory sur Ubuntu avec Samba",
     "slug": "active-directory-ubuntu-samba",
-    "tagline": "Mise en place pas a pas d'un controleur de domaine Samba/LDAP sur Ubuntu.",
-    "description": "Ce projet personnel detaille la configuration d'un service de type Active Directory sur Ubuntu avec Samba, Kerberos, DNS et gestion des clients. Le dossier couvre la preparation de l'environnement, le provisionnement du domaine, la configuration de Kerberos, la verification DNS et l'ajout de machines Windows ou Linux au domaine. L'ensemble vise a demontrer qu'une pile open source peut fournir une gestion centralisee fiable des utilisateurs, groupes et politiques reseau.",
+    "tagline": "Mise en place pas à pas d'un contrôleur de domaine Samba/LDAP sur Ubuntu.",
+    "description": "J’ai rédigé un guide pour créer un domaine Samba sur Ubuntu, avec Kerberos et DNS. Je détaille la préparation du serveur et l’intégration des clients Windows et Linux.",
     "category": "Linux",
-    "status": "Termine",
+    "status": "Terminé",
     "duration": null,
     "role": "Conception, configuration et documentation",
     "primary_language": "Bash",
@@ -28,15 +28,15 @@
       ]
     },
     "features": [
-      "Preparation de l'environnement Ubuntu avec IP statique, hostname et resolv.conf.",
-      "Installation des dependances Samba AD, Kerberos et Winbind.",
+      "Préparation de l'environnement Ubuntu avec IP statique, hostname et resolv.conf.",
+      "Installation des dépendances Samba AD, Kerberos et Winbind.",
       "Provisionnement du domaine avec samba-tool et activation du service samba-ad-dc.",
-      "Configuration Kerberos et verification des enregistrements DNS du domaine.",
-      "Procedure d'ajout de postes Windows et Linux dans le domaine.",
-      "Base de documentation pour la gestion ulterieure des utilisateurs et groupes."
+      "Configuration Kerberos et vérification des enregistrements DNS du domaine.",
+      "Procédure d'ajout de postes Windows et Linux dans le domaine.",
+      "Base de documentation pour la gestion ultérieure des utilisateurs et groupes."
     ],
-    "challenges": "Le sujet combine plusieurs briques fortement dependantes: resolution DNS, Kerberos, Samba et jointure machine. Le defi principal est de garder une configuration coherente de bout en bout, notamment sur le nom de domaine, les enregistrements DNS et l'ordre de mise en service des services.",
-    "learnings": "Le projet consolide la maitrise de Samba AD sur Ubuntu, des mecanismes Kerberos, de la preparation reseau d'un controleur de domaine et de la documentation de procedures systemes repetables.",
+    "challenges": "Je devais garder Samba, Kerberos et DNS cohérents. J’ai porté une attention particulière au nom de domaine, aux enregistrements DNS et à l’ordre de configuration.",
+    "learnings": "J’ai approfondi le fonctionnement d’un domaine Samba et appris à documenter une configuration système reproductible.",
     "links": {
       "github": null,
       "live": null,

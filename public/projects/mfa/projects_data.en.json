@@ -1,0 +1,70 @@
+[
+  {
+    "title": "MFA on Ubuntu with Google Authenticator",
+    "slug": "ubuntu-mfa-google-authenticator",
+    "tagline": "Technical guide to enabling multi-factor authentication on Ubuntu, including for SSH.",
+    "description": "I wrote a guide to enable MFA on Ubuntu with Google Authenticator and PAM, including SSH. It covers preparation, configuration and testing.",
+    "category": "Cybersecurity",
+    "status": "Completed",
+    "duration": null,
+    "role": "Technical documentation and implementation",
+    "primary_language": "Bash",
+    "tech_stack": {
+      "frontend": [],
+      "backend": [
+        "Ubuntu 22.04+",
+        "PAM",
+        "OpenSSH"
+      ],
+      "database": [],
+      "devops": [],
+      "tools": [
+        "Google Authenticator",
+        "libpam-google-authenticator",
+        "timedatectl",
+        "nano"
+      ]
+    },
+    "features": [
+      "Preparing and updating the Ubuntu system before configuring MFA.",
+      "Generating a TOTP secret per user with Google Authenticator.",
+      "Integrating the pam_google_authenticator.so module into common-auth.",
+      "Enabling MFA for SSH connections by adjusting sshd_config.",
+      "Troubleshooting and recovery advice when a code is rejected or the clock drifts."
+    ],
+    "challenges": "I needed to secure access without locking myself out of the server. I planned a backup, local tests and a rollback before enabling MFA for SSH.",
+    "learnings": "I deepened my knowledge of PAM and SSH security while learning to document a clear, repeatable procedure.",
+    "links": {
+      "github": null,
+      "live": null,
+      "demo": null
+    },
+    "assets": {
+      "screenshots": [
+        "projects/mfa/screens/1735932674793.jpg",
+        "projects/mfa/screens/1735932674946.jpg",
+        "projects/mfa/screens/1735932677531.jpg",
+        "projects/mfa/screens/1735932677664.jpg",
+        "projects/mfa/screens/1735932678148.jpg",
+        "projects/mfa/screens/1735932678438.jpg",
+        "projects/mfa/screens/1735932678786.jpg",
+        "projects/mfa/screens/1735932679103.jpg",
+        "projects/mfa/screens/1735932680438.jpg",
+        "projects/mfa/screens/1735932680833.jpg",
+        "projects/mfa/screens/1735932681449.jpg",
+        "projects/mfa/screens/1735932682000.jpg",
+        "projects/mfa/screens/1735932683878.jpg"
+      ],
+      "has_video": false
+    },
+    "keywords": [
+      "ubuntu",
+      "mfa",
+      "google authenticator",
+      "pam",
+      "ssh",
+      "totp",
+      "linux security"
+    ]
+  }
+]

@@ -34,7 +34,9 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
     <div className={`page ${isActive ? 'active' : ''}`} id={`page-${pageId}`}>
       <nav className="nav">
         <button type="button" className="nav-logo nav-control-btn" onClick={onNavigateHome}>
-          K · E
+          <span className="studio-monogram">
+            ce<span>.</span>
+          </span>
         </button>
         <button type="button" className="nav-back nav-control-btn" onClick={onBack}>
           {backLabel}
@@ -81,7 +83,7 @@ export const ProjectDetailLightbox: React.FC<ProjectDetailLightboxProps> = ({
   const updateTransformOrigin = (
     currentTarget: EventTarget & HTMLButtonElement,
     clientX: number,
-    clientY: number
+    clientY: number,
   ) => {
     const rect = currentTarget.getBoundingClientRect();
     const x = ((clientX - rect.left) / rect.width) * 100;
@@ -170,10 +172,7 @@ export const ProjectDetailLightbox: React.FC<ProjectDetailLightboxProps> = ({
       aria-label="Project image preview"
       onClick={onClose}
     >
-      <div
-        className="project-image-lightbox-dialog"
-        onClick={(event) => event.stopPropagation()}
-      >
+      <div className="project-image-lightbox-dialog" onClick={(event) => event.stopPropagation()}>
         <button
           type="button"
           className="project-image-lightbox-close"
@@ -258,11 +257,7 @@ export const ProjectDetailLightbox: React.FC<ProjectDetailLightboxProps> = ({
               <p className="project-image-lightbox-project-name">{displayCaption}</p>
             )}
           </div>
-          <button
-            type="button"
-            className="project-image-lightbox-link"
-            onClick={onClose}
-          >
+          <button type="button" className="project-image-lightbox-link" onClick={onClose}>
             Voir le détail →
           </button>
         </div>

@@ -1,4 +1,7 @@
 import React from 'react';
+import { ChevronDown } from 'lucide-react';
+import Reveal from '../components/Reveal';
+import ExpertiseExplorer from '../components/ExpertiseExplorer';
 import BackToTop from '../components/BackToTop';
 import MobileNav from '../components/MobileNav';
 import Hero from '../components/sections/Hero';
@@ -99,28 +102,6 @@ interface HomePageProps {
   educationCarousel: MobileDotsController;
 }
 
-const renderReferenceCard = (reference: ReferenceContact) => (
-  <div className="ref-card mobile-peek-item" key={reference.name}>
-    <div className="ref-card-head">
-      <div className="ref-av">{reference.initials}</div>
-      <div className="ref-card-meta">
-        <p className="ref-name">{reference.name}</p>
-        <p className="ref-org">{reference.organization}</p>
-      </div>
-    </div>
-    <div className="ref-card-body">
-      <p className="ref-role">{reference.role}</p>
-      <div className="ref-contact ref-contact-links">
-        {reference.phones.map((phone) => (
-          <a key={phone.href} className="ref-contact-link" href={phone.href}>
-            {phone.display}
-          </a>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
 const HomePage: React.FC<HomePageProps> = ({
   lang,
   v,
@@ -132,58 +113,69 @@ const HomePage: React.FC<HomePageProps> = ({
   onViewProjects,
   onViewBiography,
   skillsSectionSubtitle,
-  educationSection,
-  referencesSection,
   sortedSkillsData,
   sortedTimelineData,
   sortedFormationData,
   sortedReferencesData,
-  desktopReferencePages,
-  desktopReferencePage,
-  setDesktopReferencePage,
-  referenceCarouselRef,
-  referenceCarouselIndex,
-  referenceCarouselOffset,
-  handleCarouselTouchStart,
-  handleReferenceCarouselTouchEnd,
-  goToReferenceCard,
   featuredMainProject,
   recentMainProjects,
   onProjectClick,
   onViewAllProjects,
-  skillsCarousel,
-  educationCarousel,
 }) => {
+  const fr = lang === 'FR';
+  const navigation = [
+    ['about', v.nav.about],
+    ['projets', v.nav.projects],
+    ['skills', v.nav.skills],
+    ['parcours', v.nav.experience],
+    ['contact', v.nav.contact],
+  ];
   return (
-    <main className="page active" id="page-main">
-      <nav className="nav">
-        <button type="button" className="nav-logo nav-control-btn" onClick={() => scrollToSection('hero')}>
-          K · E
+    <main className="page active studio-home" id="page-main">
+      <nav className="nav studio-nav" aria-label={fr ? 'Navigation principale' : 'Main navigation'}>
+        <button
+          type="button"
+          className="nav-logo nav-control-btn"
+          onClick={() => scrollToSection('hero')}
+        >
+          <span className="studio-monogram">
+            ce<span>.</span>
+          </span>
+          <span className="studio-nav-name">Charbel Eklu</span>
         </button>
+        <ul className="nav-links">
+          {navigation.map(([id, label]) => (
+            <li key={id}>
+              <a
+                href={'#' + id}
+                className={activeSection === id ? 'active' : ''}
+                aria-current={activeSection === id ? 'location' : undefined}
+                onClick={(event) => {
+                  event.preventDefault();
+                  scrollToSection(id);
+                }}
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
         <button
           type="button"
           className="hamburger nav-control-btn"
           onClick={toggleMobileMenu}
           aria-expanded={isMobileMenuOpen}
           aria-controls="mobile-menu"
-          aria-label={lang === 'FR' ? 'Ouvrir le menu' : 'Open menu'}
+          aria-label={fr ? 'Ouvrir le menu' : 'Open menu'}
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          <span />
+          <span />
+          <span />
         </button>
-        <ul className="nav-links">
-          <li><a href="#about" className={activeSection === 'about' ? 'active' : ''} aria-current={activeSection === 'about' ? 'page' : undefined} onClick={(e) => { e.preventDefault(); scrollToSection('about'); }}>{v.nav.about}</a></li>
-          <li><a href="#skills" className={activeSection === 'skills' ? 'active' : ''} aria-current={activeSection === 'skills' ? 'page' : undefined} onClick={(e) => { e.preventDefault(); scrollToSection('skills'); }}>{v.nav.skills}</a></li>
-          <li><a href="#parcours" className={activeSection === 'parcours' ? 'active' : ''} aria-current={activeSection === 'parcours' ? 'page' : undefined} onClick={(e) => { e.preventDefault(); scrollToSection('parcours'); }}>{v.nav.experience}</a></li>
-          <li><a href="#formation" className={activeSection === 'formation' ? 'active' : ''} aria-current={activeSection === 'formation' ? 'page' : undefined} onClick={(e) => { e.preventDefault(); scrollToSection('formation'); }}>{v.nav.education}</a></li>
-          <li><a href="#projets" className={activeSection === 'projets' ? 'active' : ''} aria-current={activeSection === 'projets' ? 'page' : undefined} onClick={(e) => { e.preventDefault(); scrollToSection('projets'); }}>{v.nav.projects}</a></li>
-          <li><a href="#refs" className={activeSection === 'refs' ? 'active' : ''} aria-current={activeSection === 'refs' ? 'page' : undefined} onClick={(e) => { e.preventDefault(); scrollToSection('refs'); }}>{v.nav.references}</a></li>
-          <li><a href="#contact" className={activeSection === 'contact' ? 'active' : ''} aria-current={activeSection === 'contact' ? 'page' : undefined} onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }}>{v.nav.contact}</a></li>
-        </ul>
-        <div className="nav-tag">{lang === 'FR' ? 'Lomé, Togo' : 'Lome, Togo'}</div>
+        <div className="nav-tag">
+          <span className="studio-status-dot" /> Lomé, Togo
+        </div>
       </nav>
-
       <MobileNav
         lang={lang}
         isMobileMenuOpen={isMobileMenuOpen}
@@ -191,112 +183,14 @@ const HomePage: React.FC<HomePageProps> = ({
         toggleMobileMenu={toggleMobileMenu}
         scrollToSection={scrollToSection}
       />
-
       <Hero
         lang={lang}
         onDiscoverProfile={onDiscoverProfile}
         onViewProjects={onViewProjects}
         onViewBiography={onViewBiography}
+        onNavigateSection={scrollToSection}
       />
-
       <About lang={lang} onReadMore={onViewBiography} />
-
-      <section className="sec" id="skills" style={{ background: '#EEEAE3' }}>
-        <div className="sec-hdr">
-          <span className="sec-num">{v.skills.num}</span>
-          <h2 className="sec-ttl">{v.skills.title}.</h2>
-          <span className="sec-sub">{skillsSectionSubtitle}</span>
-        </div>
-        <div className="skills-grid" ref={skillsCarousel.containerRef}>
-          {sortedSkillsData.map((skill, index) => (
-            <div
-              className="skill-card"
-              key={index}
-              ref={(node) => skillsCarousel.registerItem(index, node)}
-              data-carousel-index={index}
-            >
-              <div className="skill-icon" style={{ background: skill.bg }}>
-                {skill.icon}
-              </div>
-              <h3>{skill.title}</h3>
-              <p>{skill.desc}</p>
-            </div>
-          ))}
-        </div>
-        {sortedSkillsData.length > 1 ? (
-          <div className="carousel-dots mobile-scroll-dots" aria-label={lang === 'FR' ? 'Position dans les compétences' : 'Skills position'}>
-            {sortedSkillsData.map((skill, index) => (
-              <button
-                key={`skill-dot-${skill.title}`}
-                type="button"
-                className={`carousel-dot ${skillsCarousel.activeIndex === index ? 'active' : ''}`}
-                onClick={() => skillsCarousel.scrollToIndex(index)}
-                aria-label={lang === 'FR' ? `Voir la compétence ${index + 1}` : `View skill ${index + 1}`}
-                aria-current={skillsCarousel.activeIndex === index ? 'true' : undefined}
-              />
-            ))}
-          </div>
-        ) : null}
-      </section>
-
-      <section className="sec" id="parcours">
-        <div className="sec-hdr">
-          <span className="sec-num">{v.experience.num}</span>
-          <h2 className="sec-ttl">{v.experience.title}.</h2>
-          <span className="sec-sub">{v.experience.subtitle ?? v.experience.sub}</span>
-        </div>
-        <div className="timeline">
-          {sortedTimelineData.map((item, index) => (
-            <div className={`tl-item ${item.isCurrent ? 'current' : ''}`} key={index}>
-              <div className="tl-date-row">
-                <p className="tl-date">{item.date}</p>
-                <span className="tl-duration">{item.duration}</span>
-              </div>
-              <h3 className="tl-title">{item.title}</h3>
-              <p className="tl-co">{item.company}</p>
-              <p className="tl-desc">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="sec" id="formation" style={{ background: '#EEEAE3' }}>
-        <div className="sec-hdr">
-          <span className="sec-num">{educationSection.num}</span>
-          <h2 className="sec-ttl">{educationSection.title}.</h2>
-          <span className="sec-sub">{educationSection.subtitle}</span>
-        </div>
-        <div className="edu-grid" ref={educationCarousel.containerRef}>
-          {sortedFormationData.map((item, index) => (
-            <div
-              className="edu-card"
-              key={index}
-              ref={(node) => educationCarousel.registerItem(index, node)}
-              data-carousel-index={index}
-            >
-              <p className="edu-year">{item.year}</p>
-              <h3 className="edu-title">{item.title}</h3>
-              <p className="edu-school" dangerouslySetInnerHTML={{ __html: item.school }} />
-              {item.gradeNode}
-            </div>
-          ))}
-        </div>
-        {sortedFormationData.length > 1 ? (
-          <div className="carousel-dots mobile-scroll-dots" aria-label={lang === 'FR' ? 'Position dans la formation' : 'Education position'}>
-            {sortedFormationData.map((item, index) => (
-              <button
-                key={`education-dot-${item.title}`}
-                type="button"
-                className={`carousel-dot ${educationCarousel.activeIndex === index ? 'active' : ''}`}
-                onClick={() => educationCarousel.scrollToIndex(index)}
-                aria-label={lang === 'FR' ? `Voir la formation ${index + 1}` : `View education entry ${index + 1}`}
-                aria-current={educationCarousel.activeIndex === index ? 'true' : undefined}
-              />
-            ))}
-          </div>
-        ) : null}
-      </section>
-
       <Projects
         lang={lang}
         featuredProject={featuredMainProject}
@@ -304,62 +198,127 @@ const HomePage: React.FC<HomePageProps> = ({
         onProjectClick={onProjectClick}
         onViewAll={onViewAllProjects}
       />
-
-      <section className="sec" id="refs" style={{ background: '#EEEAE3' }}>
-        <div className="sec-hdr">
-          <span className="sec-num">{referencesSection.num}</span>
-          <h2 className="sec-ttl">{referencesSection.title}.</h2>
-          <span className="sec-sub">{referencesSection.subtitle}</span>
-        </div>
-        <div className="ref-desktop-carousel">
-          <div className="ref-desktop-track" style={{ transform: `translateX(-${desktopReferencePage * 100}%)` }}>
-            {desktopReferencePages.map((page, pageIndex) => (
-              <div className="ref-desktop-page" key={`ref-page-${pageIndex}`}>
-                <div className="ref-grid ref-desktop-grid">
-                  {page.map((reference) => renderReferenceCard(reference))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        {desktopReferencePages.length > 1 ? (
-          <div className="carousel-dots ref-desktop-dots" aria-label={lang === 'FR' ? 'Pages des references' : 'Reference pages'}>
-            {desktopReferencePages.map((_, index) => (
-              <button
-                key={`ref-page-dot-${index}`}
-                type="button"
-                className={`carousel-dot ${desktopReferencePage === index ? 'active' : ''}`}
-                onClick={() => setDesktopReferencePage(index)}
-                aria-label={lang === 'FR' ? `Voir la page ${index + 1} des references` : `View reference page ${index + 1}`}
-                aria-current={desktopReferencePage === index ? 'true' : undefined}
-              />
-            ))}
-          </div>
-        ) : null}
-        <div className="ref-carousel-shell ref-mobile-carousel" ref={referenceCarouselRef} onTouchStart={handleCarouselTouchStart('references')} onTouchEnd={handleReferenceCarouselTouchEnd}>
-          <div className="ref-grid mobile-peek-track" style={{ transform: `translateX(-${referenceCarouselOffset}px)` }}>
-            {sortedReferencesData.map((reference) => renderReferenceCard(reference))}
-          </div>
-        </div>
-        <div className="carousel-dots ref-carousel-dots" aria-label={lang === 'FR' ? 'Position dans les references' : 'Reference position'}>
-          {sortedReferencesData.map((reference, index) => (
-            <button
-              key={`ref-dot-${reference.name}`}
-              type="button"
-              className={`carousel-dot ${referenceCarouselIndex === index ? 'active' : ''}`}
-              onClick={() => goToReferenceCard(index)}
-              aria-label={lang === 'FR' ? `Voir la reference ${index + 1}` : `View reference ${index + 1}`}
-              aria-current={referenceCarouselIndex === index ? 'true' : undefined}
-            />
-          ))}
+      <section className="studio-section studio-expertise" id="skills">
+        <div className="studio-container">
+          <Reveal className="studio-section-heading">
+            <p className="studio-eyebrow">03 / {fr ? 'Expertises' : 'Expertise'}</p>
+            <h2>
+              {fr ? 'Une vision d’ensemble.' : 'The whole picture.'}
+              <br />
+              <span>{fr ? 'Le sens du détail.' : 'An eye for detail.'}</span>
+            </h2>
+            <p>{skillsSectionSubtitle}</p>
+          </Reveal>
+          <ExpertiseExplorer skills={sortedSkillsData} lang={lang} onProject={onProjectClick} />
         </div>
       </section>
-
-      <Contact lang={lang} />
-      <BackToTop />
+      <section className="studio-section studio-journey" id="parcours">
+        <div className="studio-container studio-journey-layout">
+          <Reveal className="studio-section-heading">
+            <p className="studio-eyebrow">04 / {fr ? 'Parcours' : 'Experience'}</p>
+            <h2>
+              {fr ? 'Apprendre.' : 'Learn.'}
+              <br />
+              {fr ? 'Prendre le relais.' : 'Take ownership.'}
+              <br />
+              <span>{fr ? 'Faire avancer.' : 'Move things forward.'}</span>
+            </h2>
+            <p>
+              {fr
+                ? 'Du support de proximité au pilotage des infrastructures : une progression ancrée dans la pratique.'
+                : 'From hands-on support to infrastructure ownership: progress grounded in real work.'}
+            </p>
+          </Reveal>
+          <div className="studio-timeline">
+            {sortedTimelineData.map((item, index) => (
+              <Reveal
+                className={'studio-timeline-item ' + (item.isCurrent ? 'is-current' : '')}
+                key={item.date}
+                delay={index * 0.04}
+              >
+                <div className="studio-timeline-marker" aria-hidden="true" />
+                <div className="studio-timeline-meta">
+                  <span>{item.date}</span>
+                  {item.isCurrent && (
+                    <span className="studio-current">{fr ? 'Aujourd’hui' : 'Now'}</span>
+                  )}
+                </div>
+                <h3>{item.title}</h3>
+                <p className="studio-company">{item.company}</p>
+                <p>{item.desc}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="studio-section studio-education" id="formation">
+        <div className="studio-container">
+          <Reveal className="studio-section-heading studio-heading-inline">
+            <div>
+              <p className="studio-eyebrow">05 / {fr ? 'Formation' : 'Education'}</p>
+              <h2>{fr ? 'Des bases solides.' : 'Strong foundations.'}</h2>
+            </div>
+            <p>
+              {fr
+                ? 'La curiosité comme moteur. La formation comme point d’appui.'
+                : 'Driven by curiosity. Grounded in education.'}
+            </p>
+          </Reveal>
+          <div className="studio-education-grid">
+            {sortedFormationData.map((item, index) => (
+              <Reveal className="studio-education-card" key={item.title} delay={index * 0.08}>
+                <p className="studio-eyebrow">{item.year}</p>
+                <h3>{item.title}</h3>
+                <p dangerouslySetInnerHTML={{ __html: item.school }} />
+                {item.gradeNode}
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="studio-section studio-references" id="refs">
+        <div className="studio-container">
+          <Reveal className="studio-section-heading studio-heading-inline">
+            <div>
+              <p className="studio-eyebrow">06 / {fr ? 'Références' : 'References'}</p>
+              <h2>{fr ? 'Le travail se construit ensemble.' : 'Good work is a shared effort.'}</h2>
+            </div>
+            <p>
+              {fr
+                ? 'Les professionnels qui connaissent mon travail sur le terrain.'
+                : 'Professionals who know my work first-hand.'}
+            </p>
+          </Reveal>
+          <div className="studio-reference-grid">
+            {sortedReferencesData.map((reference) => (
+              <details className="studio-reference" key={reference.name}>
+                <summary>
+                  <span className="studio-reference-avatar">{reference.initials}</span>
+                  <span>
+                    <strong>{reference.name}</strong>
+                    <small>{reference.organization}</small>
+                  </span>
+                  <ChevronDown size={18} />
+                </summary>
+                <div className="studio-reference-content">
+                  <p>{reference.role}</p>
+                  {reference.phones.map((phone) => (
+                    <a key={phone.href} href={phone.href}>
+                      {phone.display}
+                    </a>
+                  ))}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+      <Reveal>
+        <Contact lang={lang} />
+      </Reveal>
+      <BackToTop lang={lang} />
       <Footer lang={lang} onNavigate={scrollToSection} />
     </main>
   );
 };
-
 export default HomePage;

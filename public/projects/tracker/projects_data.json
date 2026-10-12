@@ -2,8 +2,8 @@
   {
     "title": "Neemba Tracker",
     "slug": "neemba-tracker",
-    "tagline": "Dashboard interne de suivi du parc IT, des audits et des d\u00e9penses.",
-    "description": "Neemba Tracker est une SPA m\u00e9tier destin\u00e9e au pilotage d'un parc informatique et flotte interne, avec des modules pour l'inventaire, les utilisateurs, les approbations, les audits, les emplacements et la finance. Le projet centralise les workflows d'affectation et de retour, le reporting PDF/CSV, ainsi qu'un portail d'administration avec RBAC et authentification Azure AD via MSAL. Le d\u00e9p\u00f4t contient aussi une API Node.js l\u00e9g\u00e8re pour les check-ins machines et des scripts PowerShell de d\u00e9ploiement terrain. Le code principal est majoritairement en TypeScript et montre une forte attention \u00e0 la qualit\u00e9 UI via Material Design 3, audits d'accessibilit\u00e9, tests multi-device et r\u00e9gression visuelle.",
+    "tagline": "Dashboard interne de suivi du parc IT, des audits et des dépenses.",
+    "description": "Je développe Neemba Tracker pour gérer le parc informatique, les affectations, les approbations et les audits. L’application intègre Azure AD, des droits par rôle, des exports PDF/CSV et une API Node.js pour les remontées des machines.",
     "category": "Dashboard",
     "status": "En cours",
     "duration": "2 semaines",
@@ -43,17 +43,17 @@
       ]
     },
     "features": [
-      "Tableau de bord KPI avec activit\u00e9 r\u00e9cente, indicateurs d'\u00e9tat et vision financi\u00e8re du parc.",
-      "Gestion d'inventaire compl\u00e8te avec fiches \u00e9quipement, filtres, pagination, import/export CSV et suppression s\u00e9curis\u00e9e.",
-      "Workflows d'affectation, de retour et de validation manager/IT/dotation pour les demandes d'\u00e9quipement.",
-      "Gestion des utilisateurs avec statuts, r\u00f4les, r\u00e9initialisation de mot de passe/PIN et contr\u00f4les RBAC.",
-      "Module finance avec budgets, journal de d\u00e9penses, pr\u00e9visualisation des pi\u00e8ces et extraction automatique de factures PDF/image.",
-      "Audit physique et collecte machine via QR/check-ins, avec API de r\u00e9ception, anti-doublon et import batch.",
-      "Reporting op\u00e9rationnel et exports PDF/CSV pour l'inventaire et les donn\u00e9es utilisateurs.",
-      "Interface responsive MD3 contr\u00f4l\u00e9e par audits multi-device, a11y et visual regression."
+      "Tableau de bord KPI avec activité récente, indicateurs d'état et vision financière du parc.",
+      "Gestion d'inventaire complète avec fiches équipement, filtres, pagination, import/export CSV et suppression sécurisée.",
+      "Workflows d'affectation, de retour et de validation manager/IT/dotation pour les demandes d'équipement.",
+      "Gestion des utilisateurs avec statuts, rôles, réinitialisation de mot de passe/PIN et contrôles RBAC.",
+      "Module finance avec budgets, journal de dépenses, prévisualisation des pièces et extraction automatique de factures PDF/image.",
+      "Audit physique et collecte machine via QR/check-ins, avec API de réception, anti-doublon et import batch.",
+      "Reporting opérationnel et exports PDF/CSV pour l'inventaire et les données utilisateurs.",
+      "Interface responsive MD3 contrôlée par audits multi-device, a11y et visual regression."
     ],
-    "challenges": "Le principal d\u00e9fi visible dans le d\u00e9p\u00f4t est la gestion d'une SPA m\u00e9tier dense, avec beaucoup de domaines fonctionnels et une architecture initialement tr\u00e8s centralis\u00e9e autour d'un store monolithique. Le projet ajoute en plus des contraintes fortes de s\u00e9curit\u00e9 et de gouvernance, notamment Azure AD, des permissions RBAC d\u00e9taill\u00e9es et des workflows d'approbation multi-\u00e9tapes. C\u00f4t\u00e9 donn\u00e9es, l'extraction hybride PDF/OCR des factures et la collecte machine via check-ins ont n\u00e9cessit\u00e9 des m\u00e9canismes de validation, de d\u00e9duplication et de relecture manuelle. Les solutions visibles passent par une s\u00e9paration progressive des contexts, des r\u00e8gles m\u00e9tier centralis\u00e9es, du chunk splitting Vite et une batterie d'audits techniques automatis\u00e9s.",
-    "learnings": "Ce projet montre un apprentissage fort sur la conception d'applications m\u00e9tier riches: mod\u00e9liser les permissions au-del\u00e0 de l'UI, fiabiliser les workflows et garder une UX coh\u00e9rente sur mobile comme sur desktop. Il a aussi permis d'approfondir l'int\u00e9gration Azure AD, l'ingestion documentaire avec OCR, l'export de rapports et l'industrialisation de la QA front via accessibilit\u00e9, multi-device et visual regression.",
+    "challenges": "Je structure les modules pour garder une application lisible et des règles d’accès cohérentes. Les imports de factures et les remontées des machines demandent aussi des validations et un contrôle des doublons.",
+    "learnings": "Ce projet m’apprend à concevoir des workflows métier, à gérer les permissions et à maintenir une interface cohérente sur ordinateur comme sur mobile.",
     "links": {
       "github": "https://github.com/kafuicharbeleklu/Tracker",
       "live": null,

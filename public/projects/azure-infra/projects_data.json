@@ -3,9 +3,9 @@
     "title": "M365 Power BI Dashboard",
     "slug": "m365-power-bi-dashboard",
     "tagline": "Dashboard Power BI pour piloter l'usage, les licences et les risques Microsoft 365.",
-    "description": "Ce projet est un dashboard Power BI au format PBIP concu pour suivre l'activite des utilisateurs Microsoft 365, la consommation de licences et les risques de capacite sur un tenant Azure AD. Le modele semantique interroge Microsoft Graph API via OAuth2 Client Credentials, consolide les donnees utilisateurs, produits, affectations et usage applicatif, puis les expose dans un schema en etoile. Le rapport couvre la vue d'ensemble, l'analyse des licences, l'analyse utilisateur et un drillthrough de detail utilisateur. La valeur ajoutee du projet est de transformer des donnees M365 brutes en indicateurs directement exploitables pour la gouvernance, le nettoyage des comptes et l'optimisation des couts de licences.",
+    "description": "J’ai construit un tableau de bord Power BI pour suivre les utilisateurs, l’activité et les licences Microsoft 365. Je collecte les données via Microsoft Graph et les organise pour faciliter le nettoyage des comptes et le suivi des coûts.",
     "category": "Dashboard",
-    "status": "Termine",
+    "status": "Terminé",
     "duration": null,
     "role": null,
     "tech_stack": {
@@ -28,15 +28,15 @@
       ]
     },
     "features": [
-      "Vue d'ensemble avec KPI globaux sur les comptes, les licences et l'activite M365",
+      "Vue d'ensemble avec KPI globaux sur les comptes, les licences et l'activité M365",
       "Analyse des licences avec stock disponible, sur-allocation, alertes critiques et niveau de risque",
-      "Segmentation des utilisateurs entre actifs, inactifs, jamais connectes, comptes techniques et comptes desactives",
-      "Fiche detail utilisateur en drillthrough avec profil 360, dates clefs, score d'utilisation et licences affectees",
+      "Segmentation des utilisateurs entre actifs, inactifs, jamais connectés, comptes techniques et comptes désactivés",
+      "Fiche détail utilisateur en drillthrough avec profil 360, dates clés, score d'utilisation et licences affectées",
       "Mesures DAX pour suivre l'adoption applicative sur Outlook, Teams, Word, Excel, PowerPoint et OneNote",
-      "Tooltips metier et bandeaux UX pour contextualiser les indicateurs et prioriser les actions de nettoyage"
+      "Tooltips métier et bandeaux UX pour contextualiser les indicateurs et prioriser les actions de nettoyage"
     ],
-    "challenges": "Les principaux defis techniques ont ete la gestion des valeurs nulles dans Azure AD, les doublons de comptage provoques par le fanout du modele, et la distinction entre authentification Azure AD et activite reelle M365. Ces points ont ete resolus par des colonnes DAX plus defensives (COALESCE, SWITCH), un DISTINCTCOUNT sur l'identifiant d'affectation pour fiabiliser les KPI de licences, et une logique de classification qui combine les donnees de connexion et les rapports d'usage Graph. Le projet a aussi demande un travail de modelisation pour conserver une granularite correcte entre utilisateurs, activite et affectations, tout en maintenant des pages de drillthrough et des tooltips coherents.",
-    "learnings": "Ce projet m'a permis d'approfondir la construction d'un modele semantique Power BI en source control, l'integration de Microsoft Graph API en Power Query M avec pagination et OAuth2, ainsi que la maitrise du contexte de filtre DAX sur un schema en etoile. Il m'a aussi appris a concevoir un dashboard d'administration oriente decision, ou la qualite des classifications et la lisibilite des indicateurs sont aussi importantes que la justesse technique.",
+    "challenges": "J’ai corrigé les valeurs manquantes et les doubles comptages dans le modèle. J’ai aussi distingué les connexions Azure AD de l’usage réel des services Microsoft 365.",
+    "learnings": "J’ai approfondi Microsoft Graph, Power Query et DAX. Ce travail m’a appris à privilégier des indicateurs fiables et faciles à interpréter.",
     "links": {
       "github": "https://github.com/kafuicharbeleklu/M365.git",
       "live": null,
