@@ -49,6 +49,7 @@ function MusicPlayer({ lang }: { lang: Language }) {
     };
     // Browsers that block audible autoplay allow it on the first click or key press.
     document.addEventListener('click', interaction);
+    document.addEventListener('touchend', interaction, { passive: true });
     document.addEventListener('keydown', interaction);
     void startPlayback();
     return () => {
@@ -56,6 +57,7 @@ function MusicPlayer({ lang }: { lang: Language }) {
       playAttempt.current += 1;
       wantsPlayback.current = false;
       document.removeEventListener('click', interaction);
+      document.removeEventListener('touchend', interaction);
       document.removeEventListener('keydown', interaction);
       audio?.pause();
     };
@@ -100,12 +102,14 @@ function MusicPlayer({ lang }: { lang: Language }) {
         ref={audioRef}
         src={withBaseAsset(assetPaths.backgroundMusic)}
         preload="auto"
+        autoPlay
         loop
         onPlaying={() => {
-          if (!wantsPlayback.current) {
+          if (manuallyPaused.current) {
             audioRef.current?.pause();
             return;
           }
+          wantsPlayback.current = true;
           setPlaying(true);
           setLoading(false);
         }}
