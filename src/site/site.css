@@ -2528,9 +2528,16 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
 }
 
 /* the focus ring follows his body, not the canvas box */
+/* no browser ring on him: the keyboard ring is drawn below, around his body */
+.sm-buddy:focus,
 .sm-buddy:focus-visible {
   outline: none;
   box-shadow: none;
+}
+
+.sm-buddy__canvas,
+.sm-brief__buddy {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .sm-buddy:focus-visible::after {
@@ -2553,6 +2560,8 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
   height: 180px;
   transform: translateY(-50%);
   cursor: pointer;
+  user-select: none;
+  outline: none;
 }
 
 @media (max-width: 860px) {

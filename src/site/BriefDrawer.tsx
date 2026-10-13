@@ -160,7 +160,7 @@ type BriefPanelProps = {
   /** true while the panel slides out: the backdrop fades with it */
   closing: boolean;
   resumeHref: string;
-  onClose: () => void;
+  onClose: (byPointer?: boolean) => void;
   onPoke: () => void;
   attach: (canvas: HTMLCanvasElement | null) => (() => void) | undefined;
 };
@@ -202,7 +202,7 @@ function BriefPanel({
       aria-label={ui.cardTitle[lang]}
       onCancel={(event) => {
         event.preventDefault();
-        onClose();
+        onClose(false);
       }}
       onClick={(event) => {
         // a click on the backdrop reaches the dialog element itself
@@ -225,7 +225,7 @@ function BriefPanel({
           <button
             type="button"
             className="sm-menu-btn sm-cap"
-            onClick={onClose}
+            onClick={() => onClose()}
             aria-label={ui.close[lang]}
           >
             <span className="sm-menu-btn__label">{ui.close[lang]}</span>
@@ -251,7 +251,7 @@ function BriefPanel({
           >
             {ui.cv[lang]}
           </a>
-          <a className="sm-stitch is-on-dark" href="#contact" onClick={onClose}>
+          <a className="sm-stitch is-on-dark" href="#contact" onClick={() => onClose()}>
             {ui.contactMe[lang]}
           </a>
         </div>
@@ -265,6 +265,8 @@ function BriefDrawer({ lang }: { lang: Language }) {
   const [closing, setClosing] = useState(false);
   const reduced = usePrefersReducedMotion();
   const pokes = useRef<number[]>([]);
+  // a close by touch or mouse must not leave the browser's focus ring on him afterwards
+  const pointerClose = useRef(false);
   const resumeHref = withBaseAsset(assetPaths.resumes[lang]);
   const { engine, tabRef, attach } = useCompanion(reduced, open);
   // on phones the drawer is a sheet that rises from the bottom
@@ -278,7 +280,8 @@ function BriefDrawer({ lang }: { lang: Language }) {
     setClosing(false);
     setOpen(true);
   };
-  const closeDrawer = () => {
+  const closeDrawer = (byPointer = true) => {
+    pointerClose.current = byPointer;
     engine.wink();
     setClosing(true);
     setOpen(false);
@@ -322,7 +325,15 @@ function BriefDrawer({ lang }: { lang: Language }) {
         </svg>
         <canvas ref={attach} className="sm-buddy__canvas" aria-hidden="true" />
       </button>
-      <AnimatePresence onExitComplete={() => setClosing(false)}>
+      <AnimatePresence
+        onExitComplete={() => {
+          setClosing(false);
+          // the dialog gives focus back to the tab as it closes; after a pointer close, let it go
+          if (pointerClose.current) {
+            window.setTimeout(() => tabRef.current?.blur(), 0);
+          }
+        }}
+      >
         {open && (
           <BriefPanel
             key="brief"
