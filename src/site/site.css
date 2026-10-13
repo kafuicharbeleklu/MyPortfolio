@@ -3013,8 +3013,7 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
   }
 
   .sm[data-menu-open] .sm-scenebar,
-  .sm[data-page='cover'] .sm-scenebar,
-  .sm[data-page='cover'] .sm-buddy {
+  .sm[data-page='cover'] .sm-scenebar {
     display: none;
   }
 
@@ -3036,38 +3035,34 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
     box-shadow: 0 0 0 5px var(--sm-honey);
   }
 
-  /* the chat lives in the header on phones, a bare icon beside the music and the menu;
-     the bottom corners stay for the companion and the thumb */
-  /* the tools keep a slot free on their left for it */
   .sm .sm-header__tools {
     gap: 8px;
-    padding-left: 52px;
   }
 
-  .sm-chat-toggle {
-    top: calc((var(--sm-header) - 44px) / 2 + env(safe-area-inset-top, 0px));
-    right: calc(var(--sm-gutter) + 92px);
-    bottom: auto;
-    z-index: 31;
-    width: 44px;
-    height: 44px;
-    background: transparent;
-    color: var(--sm-ink);
-    border: 0;
-    box-shadow: none;
+  /* the chat bubble sits in the left corner above the bar; the right corner is the companion's */
+  .sm:not([data-page='cover']) .sm-chat-toggle {
+    left: 16px;
+    right: auto;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 68px);
   }
 
-  .sm:has(.sm-header.is-dark) .sm-chat-toggle {
-    color: var(--sm-off);
-  }
-
-  .sm-chat {
-    top: calc(var(--sm-header) + 8px + env(safe-area-inset-top, 0px));
-    right: 12px;
+  .sm:not([data-page='cover']) .sm-chat {
     left: 12px;
-    bottom: auto;
+    right: 12px;
     width: auto;
-    max-height: calc(100dvh - var(--sm-header) - 24px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 136px);
+    max-height: min(600px, calc(100dvh - 190px));
+  }
+
+  /* on the poster the door takes the bottom: the chat waits inside the site, and the companion
+     stands by the door, at the right */
+  .sm[data-page='cover'] .sm-chat-toggle,
+  .sm[data-page='cover'] .sm-chat {
+    display: none;
+  }
+
+  .sm[data-page='cover'] .sm-buddy {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
   }
 
   /* the menu button is a bare hamburger flush with the right edge; "close" is a bare cross */
@@ -3205,6 +3200,11 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
 
   .sm-exit__panel circle {
     fill: var(--sm-tab);
+  }
+
+  /* above the door bar, at the right, next to the arch */
+  .sm[data-page='cover'] .sm-buddy {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
   }
 
   /* the scene words fill the width, as on the poster */

@@ -122,6 +122,7 @@ export class Companion {
   private wobbleUntil = 0;
   private waveUntil = 0;
   private last = performance.now();
+  private tiltSide = 1;
 
   constructor({
     R = COMPANION_CANVAS.R,
@@ -218,6 +219,21 @@ export class Companion {
     this.tween('sy', [
       [1.05, 200, EASE.out],
       [1, 420, EASE.out],
+    ]);
+  }
+
+  /** a poke: he tilts his head, curious, eyes wide, one side then the other */
+  tilt() {
+    this.show('wide', 900);
+    if (this.reduced) {
+      return;
+    }
+    this.tiltSide = -this.tiltSide;
+    const side = this.tiltSide * 0.2;
+    this.tween('lean', [
+      [side, 220, EASE.out],
+      [side, 360, EASE.linear],
+      [0, 420, EASE.inOut],
     ]);
   }
 

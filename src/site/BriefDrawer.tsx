@@ -82,7 +82,7 @@ function useCompanion(reduced: boolean, open: boolean) {
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick);
       const tab = tabRef.current;
-      if (!tab || document.hidden || (coarse && now - lastDraw < 32)) {
+      if (!tab || (coarse && now - lastDraw < 32)) {
         return;
       }
       lastDraw = now;
@@ -278,8 +278,8 @@ function BriefDrawer({ lang }: { lang: Language }) {
     setOpen(false);
   };
   /**
-   * Taps on him inside the open drawer, where a click no longer has to open anything: one is a
-   * wink, a second within half a second a stretch, a third gives him spiral eyes.
+   * Taps on him inside the open drawer, where a click no longer has to open anything: one tilts
+   * his head, a second within half a second stretches him, a third gives him spiral eyes.
    */
   const poke = () => {
     const now = performance.now();
@@ -291,7 +291,7 @@ function BriefDrawer({ lang }: { lang: Language }) {
     } else if (count === 2) {
       engine.stretch();
     } else {
-      engine.wink();
+      engine.tilt();
     }
   };
 

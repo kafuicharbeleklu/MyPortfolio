@@ -66,7 +66,8 @@ npm run preview      # serve dist/ locally
   superellipse body, a face that slides to follow the pointer, eyes that change shape for each mood,
   a lean toward the panel when he opens the side `<dialog>` (the user rejected the jump), a wink on
   close while the panel slides out (AnimatePresence exit, backdrop fading); inside the open drawer a
-  poke winks, two make him stretch, three quick ones give spiral eyes; asleep after 15 s without a pointer). He is the site's own character, not a
+  poke tilts his head (the user disliked the wink there), two make him stretch, three quick ones
+  give spiral eyes; asleep after 15 s without a pointer). He is the site's own character, not a
   copy of Coucou's Mochi, whose name and design are reserved: paper, stitched seam, honey blush, no
   state colours. His label "En bref" turns around him as a ring of text. He has no name yet), Expertise (six domains on three columns), Réalisations
   (three featured cases, the only poster-sized opener, `.sm-scene__word.is-big`, plus the
@@ -88,8 +89,9 @@ npm run preview      # serve dist/ locally
   motion layer): `SceneBar.tsx` is a bottom bar with the five scenes (the active one shows its
   name, the others their number; hidden on the cover and under the open menu), and the companion
   sits on its right end at two thirds of his size, without his ring; `.sm[data-page]` on the root
-  drives these rules. On phones the chat toggle is a bare icon in the header, in a slot kept free on the
-  left of the music and menu icons (the user found a floating bubble too close to the companion). "En bref" rises as a bottom sheet (`BriefDrawer` switches the motion axis with
+  drives these rules. On phones the chat bubble sits in the bottom-left corner above the bar, opposite the
+  companion (the user refused it in the header and too close to him); on the cover it is hidden and
+  the companion stands at the right above the door bar. "En bref" rises as a bottom sheet (`BriefDrawer` switches the motion axis with
   `useMediaQuery`); the poster title is cut on four lines (`ui.posterTitleSplit`: INFRA- /
   STRUCTURE / fiable / ET SÉCURISÉE) and the door becomes a full-width bar at the bottom of the
   poster; the scene words fill the width; the portrait sits right with the statement on a paper
