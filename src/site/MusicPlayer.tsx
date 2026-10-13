@@ -101,7 +101,7 @@ function MusicPlayer({ lang }: { lang: Language }) {
       <audio
         ref={audioRef}
         src={withBaseAsset(assetPaths.backgroundMusic)}
-        preload="auto"
+        preload="none"
         autoPlay
         loop
         onPlaying={() => {

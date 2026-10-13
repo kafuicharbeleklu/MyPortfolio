@@ -4,6 +4,7 @@ import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion';
 import type { Language } from '../translations';
 import PosterThread from './PosterThread';
 import SwapText from './SwapText';
+import { NARROW_QUERY, useMediaQuery } from './useMediaQuery';
 import { ui } from './content';
 import { clickPoint, type Point } from './navigation';
 
@@ -78,6 +79,9 @@ function EnterDoor({ lang, onExit }: CoverPageProps) {
 function CoverPage({ lang, onExit }: CoverPageProps) {
   const resumeHref = withBaseAsset(assetPaths.resumes[lang]);
   const [posterA, posterB, posterC] = ui.posterTitle[lang];
+  const [splitA, splitB] = ui.posterTitleSplit[lang];
+  // on a phone the first word cannot fit on one line at poster size: it is cut once
+  const narrow = useMediaQuery(NARROW_QUERY);
 
   return (
     <main>
@@ -94,16 +98,43 @@ function CoverPage({ lang, onExit }: CoverPageProps) {
           </div>
           {/* the letters below are decorative copies: the heading is named once, here */}
           <h1 className="sm-poster__title" aria-label={ui.posterTitle[lang].join(' ')}>
-            <span className="sm-line">
-              <span style={{ animationDelay: '0.2s' }}>
-                <SwapText text={posterA} />
-              </span>
-            </span>
-            <span className="sm-line">
-              <span style={{ animationDelay: '0.35s' }}>
-                <em aria-hidden="true">{posterB}</em> <SwapText text={posterC} />
-              </span>
-            </span>
+            {narrow ? (
+              <>
+                <span className="sm-line is-wide">
+                  <span style={{ animationDelay: '0.2s' }}>
+                    <SwapText text={splitA} />
+                  </span>
+                </span>
+                <span className="sm-line is-wide">
+                  <span style={{ animationDelay: '0.28s' }}>
+                    <SwapText text={splitB} />
+                  </span>
+                </span>
+                <span className="sm-line is-em">
+                  <span style={{ animationDelay: '0.35s' }}>
+                    <em aria-hidden="true">{posterB}</em>
+                  </span>
+                </span>
+                <span className="sm-line">
+                  <span style={{ animationDelay: '0.42s' }}>
+                    <SwapText text={posterC} />
+                  </span>
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="sm-line">
+                  <span style={{ animationDelay: '0.2s' }}>
+                    <SwapText text={posterA} />
+                  </span>
+                </span>
+                <span className="sm-line">
+                  <span style={{ animationDelay: '0.35s' }}>
+                    <em aria-hidden="true">{posterB}</em> <SwapText text={posterC} />
+                  </span>
+                </span>
+              </>
+            )}
           </h1>
           <div className="sm-poster__foot sm-fall is-quick" style={{ animationDelay: '0.3s' }}>
             <p className="sm-poster__note">{ui.posterNote[lang]}</p>

@@ -3,6 +3,7 @@ import { flushSync } from 'react-dom';
 import { MotionConfig } from 'motion/react';
 import type { Language } from '../translations';
 import BriefDrawer from './BriefDrawer';
+import SceneBar from './SceneBar';
 import CoverPage from './CoverPage';
 import HomePage from './HomePage';
 import SiteHeader from './SiteHeader';
@@ -290,6 +291,7 @@ function SiteRoot() {
         className="sm"
         id="top"
         data-menu-open={menuOpen || undefined}
+        data-page={route.page}
         onClickCapture={interceptCoverLinks}
       >
         <SiteHeader
@@ -318,6 +320,7 @@ function SiteRoot() {
         </Suspense>
         <ThemeToggle lang={lang} floating />
         <BriefDrawer lang={lang} />
+        {route.page !== 'cover' && <SceneBar lang={lang} activeSection={activeSection} />}
         <Suspense fallback={null}>
           <Chatbot lang={lang} suspended={menuOpen} />
         </Suspense>

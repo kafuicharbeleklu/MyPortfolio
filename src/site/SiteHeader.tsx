@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, useScroll } from 'motion/react';
+import { ArrowLeft } from 'lucide-react';
 import type { Language } from '../translations';
 import SiteMenu from './SiteMenu';
 import MusicPlayer from './MusicPlayer';
 import { sectionIds, ui, type SectionId } from './content';
 import { focusDestination } from './navigation';
+import { NARROW_QUERY, useMediaQuery } from './useMediaQuery';
 
 type SiteHeaderProps = {
   lang: Language;
@@ -30,6 +32,9 @@ function SiteHeader({
   const { scrollYProgress } = useScroll();
   const [onDark, setOnDark] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const narrow = useMediaQuery(NARROW_QUERY);
+  // on a phone the inner pages have a back link too: the name gives way to its initials
+  const compact = narrow && (page === 'projects' || page === 'project');
 
   const closeMenu = useCallback(
     (destination?: string) => {
@@ -86,8 +91,12 @@ function SiteHeader({
           .join(' ')}
       >
         <header className="sm-wrap sm-header__inner sm-fall is-quick">
-          <a className="sm-brand sm-serif" href="#top">
-            Kafui Charbel Eklu
+          <a
+            className="sm-brand sm-serif"
+            href="#top"
+            aria-label={compact ? 'Kafui Charbel Eklu' : undefined}
+          >
+            {compact ? 'K. C. Eklu' : 'Kafui Charbel Eklu'}
           </a>
           {/* the five scenes, one click away on wide screens; the menu covers the rest */}
           {(page === 'home' || page === 'cover') && !menuOpen && (
@@ -105,13 +114,21 @@ function SiteHeader({
             </nav>
           )}
           {page === 'projects' && !menuOpen && (
-            <a className="sm-stitch sm-header__back" href="#realisations">
-              {ui.back[lang]}
+            <a
+              className={narrow ? 'sm-stitch sm-header__back is-icon' : 'sm-stitch sm-header__back'}
+              href="#realisations"
+              aria-label={narrow ? ui.back[lang] : undefined}
+            >
+              {narrow ? <ArrowLeft size={20} aria-hidden="true" /> : ui.back[lang]}
             </a>
           )}
           {page === 'project' && !menuOpen && (
-            <a className="sm-stitch sm-header__back" href="#/realisations">
-              {ui.backToProjects[lang]}
+            <a
+              className={narrow ? 'sm-stitch sm-header__back is-icon' : 'sm-stitch sm-header__back'}
+              href="#/realisations"
+              aria-label={narrow ? ui.backToProjects[lang] : undefined}
+            >
+              {narrow ? <ArrowLeft size={20} aria-hidden="true" /> : ui.backToProjects[lang]}
             </a>
           )}
           <div className="sm-header__tools">
@@ -135,9 +152,12 @@ function SiteHeader({
               aria-expanded={menuOpen}
               aria-controls="site-menu"
               onClick={() => onMenuChange(true)}
+              aria-label={menuOpen ? ui.close[lang] : ui.menu[lang]}
             >
               <span className="sm-menu-btn__icon" aria-hidden="true" />
-              {menuOpen ? ui.close[lang] : ui.menu[lang]}
+              <span className="sm-menu-btn__label">
+                {menuOpen ? ui.close[lang] : ui.menu[lang]}
+              </span>
             </button>
           </div>
         </header>
@@ -150,6 +170,7 @@ function SiteHeader({
       {menuOpen && (
         <SiteMenu
           lang={lang}
+          onLangChange={onLangChange}
           activeSection={activeSection}
           onClose={closeMenu}
         />

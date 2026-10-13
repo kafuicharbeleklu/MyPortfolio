@@ -3,9 +3,11 @@ import { motion } from 'motion/react';
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion';
 import type { Language } from '../translations';
 import { sectionIds, ui, type SectionId } from './content';
+import ThemeToggle from './ThemeToggle';
 
 type SiteMenuProps = {
   lang: Language;
+  onLangChange: (lang: Language) => void;
   activeSection: SectionId | '';
   onClose: (destination?: string) => void;
 };
@@ -13,7 +15,9 @@ type SiteMenuProps = {
 const ease = [0.19, 1, 0.22, 1] as const;
 
 /** Full-screen navigation that drops over the page like a length of cloth. */
-function SiteMenu({ lang, activeSection, onClose }: SiteMenuProps) {
+const languages: Language[] = ['FR', 'EN'];
+
+function SiteMenu({ lang, onLangChange, activeSection, onClose }: SiteMenuProps) {
   const reduced = usePrefersReducedMotion();
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const menuRef = useRef<HTMLDialogElement>(null);
@@ -55,8 +59,16 @@ function SiteMenu({ lang, activeSection, onClose }: SiteMenuProps) {
     >
       <div className="sm-wrap sm-menu__toolbar">
         <span className="sm-serif sm-brand">Kafui Charbel Eklu</span>
-        <button type="button" className="sm-menu-btn sm-cap" onClick={() => onClose()}>
-          {ui.close[lang]} <span aria-hidden="true">×</span>
+        <button
+          type="button"
+          className="sm-menu-btn sm-cap"
+          onClick={() => onClose()}
+          aria-label={ui.close[lang]}
+        >
+          <span className="sm-menu-btn__label">{ui.close[lang]}</span>
+          <span className="sm-menu-btn__x" aria-hidden="true">
+            ×
+          </span>
         </button>
       </div>
       <div className="sm-wrap sm-menu__inner">
@@ -90,6 +102,23 @@ function SiteMenu({ lang, activeSection, onClose }: SiteMenuProps) {
         </nav>
         <div className="sm-menu__side sm-fall is-quick" style={{ animationDelay: '0.2s' }}>
           <p className="sm-cap">{ui.basedValue[lang]}</p>
+          {/* on small screens the header has no room for these two: they live here */}
+          <div className="sm-menu__lang sm-cap" role="group" aria-label={ui.languageGroup[lang]}>
+            {languages.map((code) => (
+              <button
+                key={code}
+                type="button"
+                aria-pressed={lang === code}
+                onClick={() => onLangChange(code)}
+              >
+                {code === 'FR' ? 'Français' : 'English'}
+              </button>
+            ))}
+          </div>
+          <div className="sm-menu__theme">
+            <ThemeToggle lang={lang} />
+            <span className="sm-cap">{ui.darkTheme[lang]}</span>
+          </div>
           <p className="sm-menu__music-credit">
             <a
               href="https://commons.wikimedia.org/wiki/File:PMM-Delibes-Flower-Duet-MASTER_V1.ogg"

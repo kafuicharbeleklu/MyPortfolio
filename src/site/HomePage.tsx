@@ -137,6 +137,14 @@ function HomePage({ lang }: PageProps) {
                 <em>{statementB}</em>
                 {statementC}
               </p>
+              <hr className="sm-seam" />
+              <div className="sm-profile__cols">
+                {ui.profile[lang].map((paragraph, index) => (
+                  <Settle key={paragraph} delay={index * 0.1}>
+                    <p>{paragraph}</p>
+                  </Settle>
+                ))}
+              </div>
               <p className="sm-cap sm-muted sm-figures">
                 <span>
                   {yearsSince('2023-05')} {lang === 'FR' ? 'ans' : 'years'}{' '}
@@ -150,14 +158,6 @@ function HomePage({ lang }: PageProps) {
                   {references.length} {ui.figures.references[lang]}
                 </span>
               </p>
-              <hr className="sm-seam" />
-              <div className="sm-profile__cols">
-                {ui.profile[lang].map((paragraph, index) => (
-                  <Settle key={paragraph} delay={index * 0.1}>
-                    <p>{paragraph}</p>
-                  </Settle>
-                ))}
-              </div>
               <Settle className="sm-approach">
                 <p className="sm-cap sm-accent">{ui.approachTitle[lang]}</p>
                 <ul className="sm-approach__list">

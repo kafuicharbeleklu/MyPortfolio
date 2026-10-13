@@ -264,7 +264,7 @@ html {
 }
 
 /* Keep the conversation mounted to retain history, but hide it immediately with the menu. */
-.sm[data-menu-open] :is(.sm-chat, .sm-chat-toggle, .sm-brief-tab) {
+.sm[data-menu-open] :is(.sm-chat, .sm-chat-toggle, .sm-buddy) {
   display: none;
 }
 
@@ -564,6 +564,11 @@ html {
   .sm-nav {
     display: none;
   }
+
+  /* with the names gone, the tools go back to the right edge */
+  .sm-nav + .sm-header__tools {
+    margin-left: auto;
+  }
 }
 
 .sm-lang {
@@ -792,9 +797,14 @@ html {
 }
 
 /* the leaf turns on its hinge: narrower and slightly tilted, as seen from the front */
-.sm-exit:hover .sm-exit__panel,
 .sm-exit:focus-visible .sm-exit__panel {
   transform: scaleX(0.3) skewY(-6deg);
+}
+
+@media (hover: hover) {
+  .sm-exit:hover .sm-exit__panel {
+    transform: scaleX(0.3) skewY(-6deg);
+  }
 }
 
 /* ---------- Menu ---------- */
@@ -920,10 +930,19 @@ html {
     transform 0.35s var(--sm-ease);
 }
 
-.sm-menu__list a:hover,
 .sm-menu__list a[aria-current='true'] {
   color: var(--sm-off);
   transform: translateX(12px);
+}
+
+@media (hover: hover) {
+  .sm-menu__list a:hover {
+    color: var(--sm-off);
+    transform: translateX(12px);
+  }
+}
+
+.sm-menu__list a[aria-current='true'] {
 }
 
 .sm-menu__list .sm-cap {
@@ -965,11 +984,19 @@ html {
 
 .sm-menu__lang {
   display: none;
+  gap: 4px;
   margin: 14px 0 0 -12px;
 }
 
 .sm-menu__lang button {
+  min-height: 44px;
+  padding: 0 12px;
   color: var(--sm-mute-dark);
+}
+
+.sm-menu__music-credit a {
+  display: inline-block;
+  padding: 6px 0;
 }
 
 .sm-menu__lang button[aria-pressed='true'] {
@@ -2173,11 +2200,12 @@ a.sm-prow__title:hover {
 
 /* ---------- Substance: figures, principles, mission facts, timeline, results, related ---------- */
 
+/* the key figures close the paragraphs, just before the principles */
 .sm-figures {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 28px;
-  margin-top: -12px;
+  margin-top: -8px;
 }
 
 .sm-approach {
@@ -2430,59 +2458,103 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
 
 /* ---------- "En bref": a tab sewn to the right edge, and the drawer it opens ---------- */
 
-.sm-brief-tab {
+/* The companion: a paper character drawn on canvas (companion.ts), sewn to the right edge and
+   half hidden in it until someone comes near. --sm-peek is how far he hides; BriefDrawer sets it
+   every frame, the registered property makes the change glide. */
+@property --sm-peek {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 54px;
+}
+
+.sm-buddy {
   position: fixed;
   right: 0;
   top: 50%;
   z-index: 40;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  width: 44px;
-  padding: 16px 0 18px;
+  width: 150px;
+  height: 180px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sm-mute);
+  cursor: pointer;
+  --sm-peek: 54px;
+  transform: translate(var(--sm-peek), -50%);
+  transition: --sm-peek 0.6s var(--sm-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* while the drawer is open he sits on its edge instead (.sm-brief__buddy) */
+.sm-buddy[aria-expanded='true'] {
+  visibility: hidden;
+}
+
+.sm-buddy__canvas {
+  position: relative;
+  display: block;
+  width: 150px;
+  height: 180px;
+}
+
+/* his job turns around him, a slow ring of text behind the canvas: readable even half hidden */
+.sm-buddy__ring {
+  position: absolute;
+  inset: 0;
+  width: 150px;
+  height: 180px;
+  overflow: visible;
+}
+
+.sm-buddy__text {
+  font-family: var(--sm-body);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  fill: currentColor;
+  transform-box: view-box;
+  transform-origin: 94px 102.4px;
+  animation: sm-spin 26s linear infinite;
+}
+
+/* the focus ring follows his body, not the canvas box */
+.sm-buddy:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.sm-buddy:focus-visible::after {
+  content: '';
+  position: absolute;
+  left: 44px;
+  top: 60px;
+  width: 100px;
+  height: 86px;
+  border-radius: 42%;
+  box-shadow: 0 0 0 3px var(--sm-honey);
+}
+
+/* inside the open drawer, against the panel's edge, in the top layer with it */
+.sm-brief__buddy {
+  position: absolute;
+  left: -136px;
+  top: 50%;
+  width: 150px;
+  height: 180px;
   transform: translateY(-50%);
-  /* paper tab on every ground, like the pale cards: constant in both themes */
-  background: var(--sm-off);
-  color: var(--sm-on-paper);
-  border: 1px dashed var(--sm-seam);
-  border-right: 0;
-  box-shadow: 0 10px 30px rgba(38, 39, 42, 0.18);
-  transition: background 0.35s;
+  cursor: pointer;
 }
 
-.sm-brief-tab:hover {
-  background: var(--sm-honey);
-}
-
-.sm-brief-tab__button {
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-}
-
-.sm-brief-tab__button circle:first-child {
-  fill: var(--sm-char);
-  stroke: none;
-}
-
-.sm-brief-tab__button circle:not(:first-child) {
-  fill: var(--sm-off);
-  stroke: none;
-}
-
-.sm-brief-tab__button path {
-  stroke: var(--sm-honey);
-}
-
-/* reads from the bottom up, like a label sewn along a seam */
-.sm-brief-tab__label {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  letter-spacing: 0.22em;
+@media (max-width: 860px) {
+  /* on the sheet he sits on its top edge, at the right, two thirds of his size */
+  .sm-brief__buddy {
+    left: auto;
+    right: 10px;
+    top: auto;
+    bottom: calc(100% - 32px);
+    transform: scale(0.6);
+    transform-origin: 100% 100%;
+  }
 }
 
 .sm-brief {
@@ -2496,7 +2568,7 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
   margin: 0;
   padding: 0;
   border: 0;
-  overflow-y: auto;
+  overflow: visible;
   background-color: var(--sm-char);
   color: var(--sm-off);
   box-shadow: -24px 0 60px rgba(38, 39, 42, 0.3);
@@ -2507,7 +2579,8 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
 }
 
 .sm-brief__inner {
-  min-height: 100%;
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -2533,14 +2606,6 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
   gap: 8px 28px;
   margin-top: auto;
   padding-top: 12px;
-}
-
-@media (max-width: 520px) {
-  .sm-brief-tab {
-    width: 38px;
-    gap: 10px;
-    padding: 12px 0 14px;
-  }
 }
 
 /* ---------- Invitations: the door and the "En bref" tab show that they can be used ----------
@@ -2591,56 +2656,6 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
   animation: none;
 }
 
-/* the tab pulls out a little, holds, and slides back, like a drawer handle asking to be pulled */
-@keyframes sm-tab-pull {
-  0%,
-  68%,
-  100% {
-    transform: translateY(-50%);
-  }
-  78%,
-  88% {
-    transform: translate(-9px, -50%);
-  }
-}
-
-.sm-brief-tab {
-  animation: sm-tab-pull 6s cubic-bezier(0.45, 0.05, 0.25, 1) 4s infinite;
-  transition:
-    background 0.35s,
-    transform 0.5s cubic-bezier(0.45, 0.05, 0.25, 1);
-}
-
-.sm-brief-tab:hover,
-.sm-brief-tab:focus-visible {
-  animation: none;
-  transform: translate(-6px, -50%);
-}
-
-/* a small chevron under the label points the way the drawer opens */
-.sm-brief-tab__hint {
-  width: 10px;
-  height: 10px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  animation: sm-hint 3s cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
-}
-
-@keyframes sm-hint {
-  0%,
-  100% {
-    transform: translateX(0);
-    opacity: 0.7;
-  }
-  50% {
-    transform: translateX(-3px);
-    opacity: 1;
-  }
-}
-
 /* ---------- Assistant ---------- */
 
 .sm-chat-toggle {
@@ -2663,9 +2678,11 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
     transform 0.6s var(--sm-ease);
 }
 
-.sm-chat-toggle:hover {
-  background: var(--sm-tab);
-  transform: translateY(-3px);
+@media (hover: hover) {
+  .sm-chat-toggle:hover {
+    background: var(--sm-tab);
+    transform: translateY(-3px);
+  }
 }
 
 .sm-chat {
@@ -2675,6 +2692,7 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
   z-index: 40;
   width: min(400px, calc(100vw - 32px));
   max-height: min(600px, calc(100vh - 140px));
+  max-height: min(600px, calc(100dvh - 140px));
   display: flex;
   flex-direction: column;
   background: var(--sm-panel);
@@ -2902,6 +2920,384 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
 }
 
 /* ==========================================================================
+   Phones: the scene bar, the companion's seat, the poster on four lines, "En bref" as a sheet.
+   ========================================================================== */
+
+.sm-scenebar {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  /* room for the bar under every page but the poster */
+  .sm:not([data-page='cover']) main {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* the five scenes, one tap away; the active one shows its name, the others their number */
+  .sm-scenebar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 41;
+    display: flex;
+    align-items: stretch;
+    min-height: 56px;
+    padding: 0 76px env(safe-area-inset-bottom, 0px) 6px;
+    background: color-mix(in srgb, var(--sm-sand) 92%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px dashed var(--sm-seam);
+  }
+
+  .sm-scenebar__list {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sm-scenebar__list li {
+    display: flex;
+  }
+
+  .sm-scenebar__list a {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 44px;
+    min-height: 56px;
+    padding: 0 7px;
+    color: var(--sm-mute);
+    text-decoration: none;
+  }
+
+  .sm-scenebar__num {
+    color: var(--sm-accent);
+  }
+
+  .sm-scenebar__word {
+    display: none;
+    padding-top: 2px;
+    font-family: 'Anton', 'Arial Narrow', Impact, sans-serif;
+    font-size: 15px;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--sm-ink);
+  }
+
+  .sm-scenebar__list a.is-active .sm-scenebar__word {
+    display: inline;
+  }
+
+  /* his name tag, under the seat at the right end of the bar */
+  .sm-scenebar__seat {
+    position: absolute;
+    right: 8px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 7px);
+    width: 68px;
+    text-align: center;
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    color: var(--sm-mute);
+  }
+
+  .sm[data-menu-open] .sm-scenebar,
+  .sm[data-page='cover'] .sm-scenebar,
+  .sm[data-page='cover'] .sm-buddy {
+    display: none;
+  }
+
+  /* the companion sits on the bar, two thirds of his size, his ring put away */
+  .sm-buddy {
+    top: auto;
+    right: 4px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
+    transform: scale(0.6);
+    transform-origin: 100% 100%;
+    transition: none;
+  }
+
+  .sm-buddy__ring {
+    display: none;
+  }
+
+  .sm-buddy:focus-visible::after {
+    box-shadow: 0 0 0 5px var(--sm-honey);
+  }
+
+  /* the chat lives in the header on phones, a bare icon beside the music and the menu;
+     the bottom corners stay for the companion and the thumb */
+  /* the tools keep a slot free on their left for it */
+  .sm .sm-header__tools {
+    gap: 8px;
+    padding-left: 52px;
+  }
+
+  .sm-chat-toggle {
+    top: calc((var(--sm-header) - 44px) / 2 + env(safe-area-inset-top, 0px));
+    right: calc(var(--sm-gutter) + 92px);
+    bottom: auto;
+    z-index: 31;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    color: var(--sm-ink);
+    border: 0;
+    box-shadow: none;
+  }
+
+  .sm:has(.sm-header.is-dark) .sm-chat-toggle {
+    color: var(--sm-off);
+  }
+
+  .sm-chat {
+    top: calc(var(--sm-header) + 8px + env(safe-area-inset-top, 0px));
+    right: 12px;
+    left: 12px;
+    bottom: auto;
+    width: auto;
+    max-height: calc(100dvh - var(--sm-header) - 24px);
+  }
+
+  /* the menu button is a bare hamburger flush with the right edge; "close" is a bare cross */
+  .sm-header .sm-menu-btn,
+  .sm-menu__toolbar .sm-menu-btn,
+  .sm-brief__head .sm-menu-btn {
+    min-width: 44px;
+    padding: 0;
+    margin-right: -12px;
+    justify-content: center;
+    border-color: transparent;
+    background: transparent;
+  }
+
+  .sm-menu-btn__label {
+    display: none;
+  }
+
+  .sm-menu-btn__icon {
+    width: 22px;
+    height: 10px;
+    border-top-width: 1.5px;
+    border-bottom-width: 1.5px;
+    /* the middle line of the three */
+    background: linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat;
+  }
+
+  .sm-menu-btn__x {
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 400;
+  }
+
+  /* "En bref" rises from the bottom as a sheet, a handle on its edge */
+  .sm-brief {
+    inset: auto 0 0 0;
+    width: 100%;
+    height: min(72dvh, 640px);
+    border-radius: 18px 18px 0 0;
+    box-shadow: 0 -24px 60px rgba(38, 39, 42, 0.35);
+  }
+
+  .sm-brief::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    width: 40px;
+    height: 4px;
+    margin-left: -20px;
+    border-radius: 2px;
+    background: rgba(247, 243, 234, 0.5);
+  }
+
+  .sm-brief__inner {
+    padding-top: 30px;
+    padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 520px) {
+  /* the poster on four lines: the first word cut once, both halves at poster size */
+  .sm-poster__title {
+    font-size: clamp(40px, 15vw, 72px);
+  }
+
+  .sm-poster__title .sm-line.is-wide {
+    font-size: 1.32em;
+  }
+
+  .sm-poster__title .sm-line.is-em {
+    padding-top: 0.1em;
+    padding-bottom: 0.08em;
+  }
+
+  .sm-poster__title .sm-line.is-em em {
+    display: block;
+    font-size: 0.62em;
+    line-height: 1;
+  }
+
+  .sm-poster__note {
+    font-size: 15px;
+  }
+
+  /* on the cover, the two text links live in the menu; the CV stays */
+  .sm-poster .sm-hero__actions .sm-stitch {
+    display: none;
+  }
+
+  /* the door becomes a bar along the bottom of the poster, under the thumb */
+  .sm-poster__inner {
+    padding-bottom: 104px;
+  }
+
+  .sm-poster__head > div {
+    animation: none;
+    transform: none;
+  }
+
+  .sm-exit {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 12px var(--sm-gutter) calc(12px + env(safe-area-inset-bottom, 0px));
+    background: var(--sm-tab);
+    color: var(--sm-on-tab);
+  }
+
+  .sm-exit__lines {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 6px;
+  }
+
+  .sm-exit__time {
+    min-width: 0;
+  }
+
+  .sm-exit__door {
+    width: 40px;
+    height: 55px;
+  }
+
+  .sm-exit__panel {
+    fill: var(--sm-on-tab);
+  }
+
+  .sm-exit__panel circle {
+    fill: var(--sm-tab);
+  }
+
+  /* the scene words fill the width, as on the poster */
+  .sm-scene__word,
+  .sm-scene__word.is-big {
+    font-size: clamp(40px, 15vw, 96px);
+  }
+
+  /* Profil as a poster: the portrait to the right, the statement on a paper card over its corner */
+  .sm-profile {
+    gap: 0;
+  }
+
+  .sm-profile__side {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .sm-portrait {
+    width: 64%;
+    max-width: none;
+  }
+
+  .sm-portrait::before {
+    inset: -10px;
+  }
+
+  .sm-portrait__caption {
+    display: none;
+  }
+
+  .sm-profile__text {
+    gap: 40px;
+    margin-top: -64px;
+  }
+
+  .sm-statement {
+    position: relative;
+    z-index: 1;
+    width: 84%;
+    padding: 16px 18px;
+    background: var(--sm-off);
+    color: var(--sm-on-paper);
+    border: 1px dashed var(--sm-seam);
+    font-size: 24px;
+  }
+
+  .sm-statement em {
+    color: var(--sm-tab);
+  }
+
+  /* the project list: the title on its own line, the facts under it, the toggle at the right */
+  .sm-prow {
+    position: relative;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    padding-right: 56px;
+  }
+
+  .sm-prow__text {
+    order: -1;
+    flex: 1 1 100%;
+  }
+
+  .sm-prow__cat {
+    display: inline;
+  }
+
+  .sm-prow__year {
+    margin-left: 0;
+  }
+
+  .sm-prow__toggle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-left: 0;
+    transform: translateY(-50%);
+  }
+
+  /* the back link of the inner pages is an arrow */
+  .sm-header__back.is-icon {
+    min-width: 44px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .sm-header__back.is-icon {
+    background: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .sm-contact__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ==========================================================================
    Motion layer: page transitions, seams, opening curtain, header states.
    Everything here is switched off in the reduced-motion block below.
    ========================================================================== */
@@ -2916,8 +3312,8 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
   view-transition-name: sm-chat-toggle;
 }
 
-.sm-brief-tab {
-  view-transition-name: sm-brief-tab;
+.sm-buddy {
+  view-transition-name: sm-buddy;
 }
 
 .sm-theme.is-floating {
@@ -3217,6 +3613,14 @@ html[data-transition='iris']::view-transition-new(root) {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .sm-buddy {
+    transition: none;
+  }
+
+  .sm-buddy__text {
+    animation: none;
+  }
+
   html {
     scroll-behavior: auto;
   }
