@@ -3039,19 +3039,18 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
     gap: 8px;
   }
 
-  /* the chat bubble sits in the left corner above the bar; the right corner is the companion's */
+  /* the chat bubble floats above the companion, in the same corner, a clear gap between the two */
   .sm:not([data-page='cover']) .sm-chat-toggle {
-    left: 16px;
-    right: auto;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 68px);
+    right: 10px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 158px);
   }
 
   .sm:not([data-page='cover']) .sm-chat {
     left: 12px;
     right: 12px;
     width: auto;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 136px);
-    max-height: min(600px, calc(100dvh - 190px));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 226px);
+    max-height: min(600px, calc(100dvh - 280px));
   }
 
   /* on the poster the door takes the bottom: the chat waits inside the site, and the companion

@@ -5,6 +5,7 @@ import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion';
 import type { Language } from '../translations';
 import { COMPANION_CENTRE, Companion } from './companion';
 import { measurements, ui } from './content';
+import { useTheme } from './theme';
 import { PHONE_QUERY, useMediaQuery } from './useMediaQuery';
 
 const ease = [0.19, 1, 0.22, 1] as const;
@@ -41,6 +42,11 @@ function useCompanion(reduced: boolean, open: boolean) {
   useEffect(() => {
     engine.reduced = reduced;
   }, [engine, reduced]);
+
+  const theme = useTheme();
+  useEffect(() => {
+    engine.theme = theme;
+  }, [engine, theme]);
 
   // he can be drawn on the tab and, while the drawer is open, on its edge: same engine, two canvases
   const attach = useCallback(

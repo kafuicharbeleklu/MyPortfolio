@@ -71,6 +71,18 @@ const PAPER_TOP: RGB = [250, 246, 238];
 const PAPER_BOTTOM: RGB = [219, 206, 184];
 const HONEY: RGB = [185, 138, 62];
 const INK: RGB = [38, 39, 42];
+/* The paper follows the theme, gently: a little dimmer on the dark ground (as the portrait is), a
+   firmer seam and shadow on the sand so that he stands out from it. */
+const PALETTES = {
+  light: { top: PAPER_TOP, bottom: PAPER_BOTTOM, seam: 0.36, shadow: 0.2, highlight: 0.62 },
+  dark: {
+    top: [236, 229, 216] as RGB,
+    bottom: [203, 190, 168] as RGB,
+    seam: 0.26,
+    shadow: 0.1,
+    highlight: 0.5,
+  },
+};
 const SEGMENTS = 72;
 /** superellipse exponent 2.7, the soft "mochi" outline */
 const EXPONENT = 2 / 2.7;
@@ -90,6 +102,8 @@ export class Companion {
   readonly cx: number;
   readonly baseY: number;
   reduced: boolean;
+  /** the site theme: the drawer sets it, the paper takes its shade from it */
+  theme: 'light' | 'dark' = 'dark';
 
   /** what he aims for: the face turns toward `yaw`/`pitch`, the body leans by `roll` */
   readonly tg = { yaw: 0, pitch: 0, roll: 0 };
@@ -532,7 +546,8 @@ export class Companion {
 
     // the shadow on the ground, lighter while he is in the air
     const lift = clamp(1 + s.oy / 36, 0.3, 1);
-    ctx.fillStyle = rgba(INK, 0.16 * lift);
+    const palette = PALETTES[this.theme];
+    ctx.fillStyle = rgba(INK, palette.shadow * lift);
     ctx.beginPath();
     ctx.ellipse(cx, baseY + 5, R * 0.78 * s.sx * (0.7 + 0.3 * lift), R * 0.11, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -545,8 +560,8 @@ export class Companion {
     ctx.translate(0, -ry);
 
     // the paper body: a gradient, a highlight that follows the turn, a shade at the bottom
-    const top = mix(PAPER_TOP, HONEY, s.tint * 0.5);
-    const bottom = mix(PAPER_BOTTOM, HONEY, s.tint * 0.7);
+    const top = mix(palette.top, HONEY, s.tint * 0.5);
+    const bottom = mix(palette.bottom, HONEY, s.tint * 0.7);
     const fill = ctx.createLinearGradient(0, -ry, 0, ry);
     fill.addColorStop(0, rgba(top));
     fill.addColorStop(1, rgba(bottom));
@@ -560,7 +575,7 @@ export class Companion {
     const hx = -rx * 0.35 + s.yaw * rx * 0.12;
     const hy = -ry * 0.45;
     const highlight = ctx.createRadialGradient(hx, hy, 0, hx, hy, R * 0.9);
-    highlight.addColorStop(0, 'rgba(255,255,255,0.62)');
+    highlight.addColorStop(0, `rgba(255,255,255,${palette.highlight})`);
     highlight.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.fillStyle = highlight;
     ctx.fillRect(-rx, -ry, rx * 2, ry * 2);
@@ -578,7 +593,7 @@ export class Companion {
     ctx.restore();
     ctx.setLineDash([2.5, 3]);
     ctx.lineWidth = 1;
-    ctx.strokeStyle = rgba(INK, 0.28);
+    ctx.strokeStyle = rgba(INK, palette.seam);
     ctx.stroke();
     ctx.setLineDash([]);
 

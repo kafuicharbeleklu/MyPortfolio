@@ -89,9 +89,10 @@ npm run preview      # serve dist/ locally
   motion layer): `SceneBar.tsx` is a bottom bar with the five scenes (the active one shows its
   name, the others their number; hidden on the cover and under the open menu), and the companion
   sits on its right end at two thirds of his size, without his ring; `.sm[data-page]` on the root
-  drives these rules. On phones the chat bubble sits in the bottom-left corner above the bar, opposite the
-  companion (the user refused it in the header and too close to him); on the cover it is hidden and
-  the companion stands at the right above the door bar. "En bref" rises as a bottom sheet (`BriefDrawer` switches the motion axis with
+  drives these rules. On phones the chat bubble floats above the companion in the right corner, with a clear gap
+  (the user refused it in the header, in the left corner, and too close to him); on the cover it is
+  hidden and the companion stands at the right above the door bar. His paper follows the theme
+  gently (`PALETTES` in companion.ts, set through `engine.theme` by the drawer). "En bref" rises as a bottom sheet (`BriefDrawer` switches the motion axis with
   `useMediaQuery`); the poster title is cut on four lines (`ui.posterTitleSplit`: INFRA- /
   STRUCTURE / fiable / ET SÉCURISÉE) and the door becomes a full-width bar at the bottom of the
   poster; the scene words fill the width; the portrait sits right with the statement on a paper
