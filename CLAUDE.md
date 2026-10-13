@@ -74,7 +74,7 @@ npm run preview      # serve dist/ locally
   starts with the same opener, built from `.sm-split__aside`: a number, the scene name as a word
   (`.sm-scene__word`) and one italic line. From 1101px the header lists the five scenes
   (`.sm-nav`, active one underlined); `SiteMenu.tsx`, the full-screen overlay, covers the rest. On the cover,
-  every link into the site (header, menu, poster, drawer) goes through the curtain too
+  every link into the site (header, menu, poster, drawer) goes through the iris too
   (`interceptCoverLinks` in `SiteRoot`) and lands on its destination; the header has no seam on the
   cover and the home page (`.sm-header.is-seamless`).
 - Project cards carry no status labels (the user removed "en cours", "MVP", "Livré"); names are
@@ -118,7 +118,7 @@ npm run preview      # serve dist/ locally
   effect.
 - Motion is split in two. React side: `SiteRoot` wraps page changes in
   `document.startViewTransition` (the old page is cut away along a diagonal, `sm-cut-away`) (project titles share a `view-transition-name` between the list
-  and the project page) and plays the opening curtain once per session. CSS side: the "Motion
+  and the project page). There is no opening curtain: the user rejected the veil that lifted on load. CSS side: the "Motion
   layer" block at the end of `site.css` holds the scroll-driven effects (`animation-timeline:
 view()`, inside `@supports`, so unsupported browsers get the static result). Anything added
   there must also be neutralised in the reduced-motion block that follows it.

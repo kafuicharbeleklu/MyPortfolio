@@ -26,7 +26,6 @@ const Chatbot = React.lazy(() => import('./Chatbot'));
 export type { Route } from './navigation';
 
 const LANG_KEY = 'portfolio_lang';
-const OPENED_KEY = 'sm_opened';
 // `data-transition` on <html> picks the page transition in site.css: the diagonal cut by default,
 // the iris opening from the click when leaving the poster
 const IRIS = 'iris';
@@ -110,19 +109,6 @@ const withTransition = (update: () => void) => {
 const isSameView = (a: Route, b: Route) =>
   a.page === b.page && (a.page !== 'project' || b.page !== 'project' || a.id === b.id);
 
-// The opening curtain plays once per browser session.
-const shouldOpen = () => {
-  if (typeof window === 'undefined' || prefersReducedMotion()) {
-    return false;
-  }
-
-  try {
-    return window.sessionStorage.getItem(OPENED_KEY) === null;
-  } catch {
-    return false;
-  }
-};
-
 // Inside Suspense: this commits only when the requested page has actually mounted.
 function PageArrival({
   hash,
@@ -143,7 +129,6 @@ function SiteRoot() {
   const [lang, setLang] = useState<Language>(getInitialLang);
   const [route, setRoute] = useState<Route>(getRoute);
   const [activeSection, setActiveSection] = useState<SectionId | ''>('');
-  const [curtain, setCurtain] = useState(shouldOpen);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hash, setHash] = useState(() => window.location.hash);
   const [backFromProject, setBackFromProject] = useState(false);
@@ -156,21 +141,7 @@ function SiteRoot() {
     routeRef.current = route;
   }, [route]);
 
-  // if the lifted curtain never reports the end of its animation, drop it from the tree anyway
   useEffect(() => {
-    if (!curtain) {
-      return undefined;
-    }
-    const id = window.setTimeout(() => setCurtain(false), 1800);
-    return () => window.clearTimeout(id);
-  }, [curtain]);
-
-  useEffect(() => {
-    try {
-      window.sessionStorage.setItem(OPENED_KEY, '1');
-    } catch {
-      // ignore: the curtain will simply play again next time
-    }
     // warm the other pages so a transition never lands on an empty screen
     void import('./ProjectsPage').catch(() => undefined);
     void import('./ProjectPage').catch(() => undefined);
@@ -324,13 +295,6 @@ function SiteRoot() {
         <Suspense fallback={null}>
           <Chatbot lang={lang} suspended={menuOpen} />
         </Suspense>
-        {curtain && (
-          <div
-            className="sm-curtain sm-twill"
-            aria-hidden="true"
-            onAnimationEnd={() => setCurtain(false)}
-          />
-        )}
       </div>
     </MotionConfig>
   );

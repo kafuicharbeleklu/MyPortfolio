@@ -3298,7 +3298,7 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
 }
 
 /* ==========================================================================
-   Motion layer: page transitions, seams, opening curtain, header states.
+   Motion layer: page transitions, seams, header states.
    Everything here is switched off in the reduced-motion block below.
    ========================================================================== */
 
@@ -3386,23 +3386,6 @@ html[data-transition='iris']::view-transition-new(root) {
   to {
     transform: scale(0.96);
     filter: brightness(0.75);
-  }
-}
-
-/* ---------- Opening curtain ---------- */
-
-.sm-curtain {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  background-color: var(--sm-char);
-  animation: sm-curtain 1.15s cubic-bezier(0.7, 0, 0.2, 1) 0.1s both;
-}
-
-@keyframes sm-curtain {
-  to {
-    transform: translateY(-100%);
   }
 }
 
@@ -3632,7 +3615,6 @@ html[data-transition='iris']::view-transition-new(root) {
     transition: none !important;
   }
 
-  .sm-curtain,
   .sm-section.is-dark::before {
     display: none;
   }
