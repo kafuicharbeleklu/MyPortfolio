@@ -2423,13 +2423,23 @@ a.sm-prow__title:hover {
   }
 }
 
-/* Small screens: no margin to stand in, so the switch lives in the menu with the languages. */
-.sm-menu__theme {
+/* Small screens: no margin to stand in, so the switch is a bare sun or moon in the header tools. */
+.sm-theme-icon {
   display: none;
-  align-items: center;
-  gap: 14px;
-  margin-top: 18px;
-  color: var(--sm-mute-dark);
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  place-items: center;
+  opacity: 0.85;
+}
+
+.sm-theme-icon:focus-visible {
+  outline: 2px solid var(--sm-honey);
+  outline-offset: 2px;
 }
 
 @media (max-width: 860px) {
@@ -2437,8 +2447,8 @@ a.sm-prow__title:hover {
     display: none;
   }
 
-  .sm-menu__theme {
-    display: flex;
+  .sm-theme-icon {
+    display: grid;
   }
 }
 

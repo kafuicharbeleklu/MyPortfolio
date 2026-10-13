@@ -3,7 +3,6 @@ import { motion } from 'motion/react';
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion';
 import type { Language } from '../translations';
 import { sectionIds, ui, type SectionId } from './content';
-import ThemeToggle from './ThemeToggle';
 
 type SiteMenuProps = {
   lang: Language;
@@ -114,10 +113,6 @@ function SiteMenu({ lang, onLangChange, activeSection, onClose }: SiteMenuProps)
                 {code === 'FR' ? 'Français' : 'English'}
               </button>
             ))}
-          </div>
-          <div className="sm-menu__theme">
-            <ThemeToggle lang={lang} />
-            <span className="sm-cap">{ui.darkTheme[lang]}</span>
           </div>
           <p className="sm-menu__music-credit">
             <a

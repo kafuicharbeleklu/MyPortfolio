@@ -9,13 +9,15 @@ type ThemeToggleProps = {
   lang: Language;
   /** Fixed in the bottom-left corner of the window instead of sitting in the page flow. */
   floating?: boolean;
+  /** A bare sun or moon icon, for the header tools on phones (site.css shows it below 861px). */
+  compact?: boolean;
 };
 
 // Distance from the end of the page under which the floating switch steps aside for the footer.
 const FOOTER_CLEARANCE = 96;
 
 /** Light / dark switch. Every instance reads and writes the same theme. */
-function ThemeToggle({ lang, floating = false }: ThemeToggleProps) {
+function ThemeToggle({ lang, floating = false, compact = false }: ThemeToggleProps) {
   const theme = useTheme();
   const [tucked, setTucked] = useState(false);
   const reduced = usePrefersReducedMotion();
@@ -55,6 +57,25 @@ function ThemeToggle({ lang, floating = false }: ThemeToggleProps) {
       observer?.disconnect();
     };
   }, [floating]);
+
+  if (compact) {
+    return (
+      <button
+        type="button"
+        role="switch"
+        aria-checked={theme === 'dark'}
+        aria-label={ui.darkTheme[lang]}
+        className="sm-theme-icon"
+        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark', !reduced)}
+      >
+        {theme === 'dark' ? (
+          <Sun size={20} aria-hidden="true" />
+        ) : (
+          <Moon size={20} aria-hidden="true" />
+        )}
+      </button>
+    );
+  }
 
   const className = ['sm-theme', floating && 'is-floating', tucked && 'is-tucked']
     .filter(Boolean)

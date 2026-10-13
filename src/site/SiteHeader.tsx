@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import type { Language } from '../translations';
 import SiteMenu from './SiteMenu';
 import MusicPlayer from './MusicPlayer';
+import ThemeToggle from './ThemeToggle';
 import { sectionIds, ui, type SectionId } from './content';
 import { focusDestination } from './navigation';
 import { NARROW_QUERY, useMediaQuery } from './useMediaQuery';
@@ -132,6 +133,7 @@ function SiteHeader({
             </a>
           )}
           <div className="sm-header__tools">
+            <ThemeToggle lang={lang} compact />
             <MusicPlayer lang={lang} />
             <div className="sm-lang sm-cap" role="group" aria-label={ui.languageGroup[lang]}>
               {languages.map((code) => (

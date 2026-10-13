@@ -98,8 +98,9 @@ npm run preview      # serve dist/ locally
   poster; the scene words fill the width; the portrait sits right with the statement on a paper
   card over its corner; project rows stack. The menu button is a bare three-line icon flush with
   the right edge and "close" a bare cross (`.sm-menu-btn__label` hidden). Under 521px the inner
-  pages show "K. C. Eklu" and an arrow as back link. The menu carries the language and theme rows
-  (`.sm-menu__lang`, `.sm-menu__theme`), since the header hides them on small screens.
+  pages show "K. C. Eklu" and an arrow as back link. The menu carries the language row (`.sm-menu__lang`) and the
+  theme switch is a bare sun or moon icon in the header tools (`ThemeToggle compact`,
+  `.sm-theme-icon`), since the floating pill is hidden on small screens.
   Hover-only transforms are gated by `@media (hover: hover)`; the audio element is
   `preload="none"`.
 - Typography: the Anton titles are approved as they are. The open point is the other family,
