@@ -143,6 +143,8 @@ export const ui = {
     EN: 'I’m Kafui Charbel EKLU, an IT technician at Neemba Togo. I administer systems and networks, and look after their security.',
   },
   // the door out of the poster: stacked labels above the Lomé clock
+  /** the first poster word on a phone, cut once so that it can fill the width */
+  posterTitleSplit: { FR: ['Infra-', 'structure'], EN: ['Infra-', 'structure'] },
   enterLines: {
     FR: ['Entrer', 'dans le site'],
     EN: ['Enter', 'the site'],
@@ -593,6 +595,7 @@ const guideOrg: LS = {
 };
 const guideCat: LS = { FR: 'Guide technique', EN: 'Technical guide' };
 const businessApp: LS = { FR: 'Application métier', EN: 'Business application' };
+const dataCat: LS = { FR: 'Données & reporting', EN: 'Data & reporting' };
 const same = (value: string): LS => ({ FR: value, EN: value });
 
 export const projects: {
@@ -678,33 +681,17 @@ export const projects: {
     tags: ['Cisco', 'GNS3'],
   },
   {
-    id: 'archivage',
-    family: 'infra',
-    year: 2026,
-    title: { FR: 'Archivage numérique du site', EN: 'Digital archiving of the site' },
-    org: { FR: 'Neemba Togo · en cours', EN: 'Neemba Togo · in progress' },
-    category: { FR: 'Gestion documentaire', EN: 'Document management' },
-    desc: {
-      FR: 'Je mène la numérisation et le classement des archives du site pour faciliter leur consultation et leur protection.',
-      EN: 'I’m leading the digitisation and filing of the site’s archives to make them easier to access and protect.',
-    },
-    tags: ['Gestion documentaire', 'Microsoft 365'],
-  },
-  {
     id: 'tracker',
     family: 'apps',
     year: 2026,
-    title: same('Neemba Tracker'),
-    org: {
-      FR: 'Application interne\u00a0· en cours',
-      EN: 'Internal application\u00a0· in progress',
-    },
+    title: same('Tracker'),
+    org: { FR: 'Application interne', EN: 'Internal application' },
     category: businessApp,
     desc: {
-      FR: 'Je développe Neemba Tracker pour réunir le suivi du parc IT, les demandes, les approbations et les audits.',
-      EN: 'I’m developing Neemba Tracker to bring IT asset tracking, requests, approvals and audits together.',
+      FR: 'Je développe Tracker, l’application de gestion du parc IT et de la flotte\u00a0: inventaire, affectations avec validations, audit par scan, budgets et amortissements, droits par rôle.',
+      EN: 'I’m developing Tracker, the IT asset and fleet management application: inventory, assignments with approvals, audit by scan, budgets and depreciation, role-based rights.',
     },
-    tags: ['React', 'TypeScript', 'Azure AD / MSAL', 'Node.js'],
+    tags: ['React', 'TypeScript', 'Azure AD / MSAL', 'Node.js', 'Python'],
   },
   {
     id: 'wisignal',
@@ -724,7 +711,7 @@ export const projects: {
     family: 'apps',
     year: 2026,
     title: same('PrintTrack'),
-    org: { FR: 'Application interne\u00a0· MVP', EN: 'Internal application\u00a0· MVP' },
+    org: { FR: 'Application interne', EN: 'Internal application' },
     category: businessApp,
     desc: {
       FR: 'J’ai développé PrintTrack pour suivre les achats, les affectations et les stocks de consommables d’impression.',
@@ -736,8 +723,8 @@ export const projects: {
     id: 'smartprocure',
     family: 'apps',
     year: 2026,
-    title: same('SmartProcure AI'),
-    org: { FR: 'Projet personnel\u00a0· MVP', EN: 'Personal project\u00a0· MVP' },
+    title: same('SmartProcure'),
+    org: { FR: 'Projet personnel', EN: 'Personal project' },
     category: { FR: 'Application & IA', EN: 'Application & AI' },
     desc: {
       FR: 'J’ai créé un outil qui extrait les données des devis avec l’IA pour faciliter la comparaison des offres fournisseurs.',
@@ -748,15 +735,15 @@ export const projects: {
   {
     id: 'azure-infra',
     family: 'data',
-    year: 2023,
-    title: { FR: 'Tableau de bord Microsoft 365', EN: 'Microsoft 365 dashboard' },
-    org: same('Microsoft 365 / Azure AD'),
-    category: { FR: 'Données & reporting', EN: 'Data & reporting' },
+    year: 2026,
+    title: { FR: 'Licences et comptes Microsoft 365', EN: 'Microsoft 365 licences and accounts' },
+    org: { FR: 'Neemba Togo\u00a0· tenant du groupe', EN: 'Neemba Togo\u00a0· group tenant' },
+    category: dataCat,
     desc: {
-      FR: 'J’ai construit un tableau de bord Power BI pour suivre les utilisateurs et les licences Microsoft 365 à partir de Microsoft Graph.',
-      EN: 'I built a Power BI dashboard to track Microsoft 365 users and licences using Microsoft Graph.',
+      FR: 'Un tableau de bord Power BI qui répond à trois questions\u00a0: a-t-on assez de licences, paie-t-on des licences inutiles, quels comptes faut-il vérifier.',
+      EN: 'A Power BI dashboard that answers three questions: do we have enough licences, are we paying for unused ones, which accounts need a check.',
     },
-    tags: ['Power BI', 'Graph API', 'DAX', 'Power Query'],
+    tags: ['Power BI', 'Microsoft 365', 'DAX', 'Python'],
   },
   {
     id: 'automate',
@@ -766,8 +753,8 @@ export const projects: {
     org: same('Microsoft 365'),
     category: { FR: 'Automatisation', EN: 'Automation' },
     desc: {
-      FR: 'J’ai automatisé le suivi des sauvegardes Veeam : les notifications email alimentent un tableau Excel, sans ressaisie.',
-      EN: 'I automated Veeam backup reporting: email notifications feed an Excel table without manual re-entry.',
+      FR: 'Un flux Power Automate récupère les rapports de sauvegarde Veeam, en extrait les données utiles aux indicateurs et les consolide dans un fichier Excel qui alimente un histogramme.',
+      EN: 'A Power Automate flow collects the Veeam backup reports, extracts the data the KPIs need and consolidates it in an Excel file that feeds a histogram.',
     },
     tags: ['Power Automate', 'Veeam', 'Excel Online', 'Outlook'],
   },
@@ -791,17 +778,14 @@ export const projects: {
     id: 'ubuntu_ldap',
     family: 'guides',
     year: 2024,
-    title: {
-      FR: 'Active Directory sur Ubuntu avec Samba',
-      EN: 'Active Directory on Ubuntu with Samba',
-    },
+    title: { FR: 'Serveur LDAP sous Ubuntu', EN: 'LDAP server on Ubuntu' },
     org: guideOrg,
     category: guideCat,
     desc: {
-      FR: 'Je détaille la mise en place d’un domaine Samba sur Ubuntu, avec Kerberos, DNS et intégration des clients.',
-      EN: 'I walk through setting up a Samba domain on Ubuntu, with Kerberos, DNS and client integration.',
+      FR: 'Je détaille la configuration d’un serveur LDAP sur Ubuntu avec Samba, Kerberos et DNS, et l’intégration des clients Windows et Linux.',
+      EN: 'I walk through configuring an LDAP server on Ubuntu with Samba, Kerberos and DNS, and joining Windows and Linux clients.',
     },
-    tags: ['Samba AD', 'Kerberos', 'DNS'],
+    tags: ['LDAP', 'Samba', 'Kerberos', 'DNS'],
   },
   {
     id: 'postgresql_ssl',
@@ -815,6 +799,174 @@ export const projects: {
       EN: 'I document PostgreSQL SSL/TLS encryption on Windows Server 2022 and access configuration.',
     },
     tags: ['PostgreSQL', 'Windows Server 2022', 'OpenSSL'],
+  },
+  {
+    id: 'api-python',
+    family: 'apps',
+    year: 2022,
+    title: {
+      FR: 'API REST avec Python (Flask, FastAPI)',
+      EN: 'REST API with Python (Flask, FastAPI)',
+    },
+    org: { FR: 'Travaux pratiques', EN: 'Lab work' },
+    category: { FR: 'Développement', EN: 'Development' },
+    desc: {
+      FR: 'J’ai développé une API avec Flask puis FastAPI\u00a0: routes, validation des données et documentation générée automatiquement.',
+      EN: 'I built an API with Flask and then FastAPI: routes, data validation and automatically generated documentation.',
+    },
+    tags: ['Python', 'Flask', 'FastAPI'],
+  },
+  {
+    id: 'nextcloud',
+    family: 'infra',
+    year: 2023,
+    title: { FR: 'Serveur Nextcloud', EN: 'Nextcloud server' },
+    org: { FR: 'Travaux pratiques', EN: 'Lab work' },
+    category: { FR: 'Systèmes', EN: 'Systems' },
+    desc: {
+      FR: 'J’ai déployé un serveur Nextcloud pour le partage et la synchronisation de fichiers, avec son stockage et ses comptes utilisateurs.',
+      EN: 'I deployed a Nextcloud server for file sharing and synchronisation, with its storage and user accounts.',
+    },
+    tags: ['Nextcloud', 'Linux', 'Apache'],
+  },
+  {
+    id: 'mail-server',
+    family: 'infra',
+    year: 2023,
+    title: {
+      FR: 'Serveur de messagerie sécurisé (Postfix, Dovecot, Rainloop)',
+      EN: 'Secure mail server (Postfix, Dovecot, Rainloop)',
+    },
+    org: { FR: 'Travaux pratiques', EN: 'Lab work' },
+    category: { FR: 'Systèmes', EN: 'Systems' },
+    desc: {
+      FR: 'J’ai installé et sécurisé un serveur de messagerie\u00a0: Postfix pour l’envoi, Dovecot pour la réception, Rainloop comme webmail.',
+      EN: 'I installed and secured a mail server: Postfix for sending, Dovecot for delivery, Rainloop as the webmail.',
+    },
+    tags: ['Postfix', 'Dovecot', 'Rainloop', 'TLS'],
+  },
+  {
+    id: 'pfsense',
+    family: 'infra',
+    year: 2023,
+    title: { FR: 'Pare-feu pfSense', EN: 'pfSense firewall' },
+    org: { FR: 'Travaux pratiques', EN: 'Lab work' },
+    category: { FR: 'Cybersécurité', EN: 'Cybersecurity' },
+    desc: {
+      FR: 'J’ai installé et configuré un pare-feu pfSense\u00a0: règles de filtrage, NAT et segmentation du réseau.',
+      EN: 'I installed and configured a pfSense firewall: filtering rules, NAT and network segmentation.',
+    },
+    tags: ['pfSense', 'Pare-feu', 'NAT'],
+  },
+  {
+    id: 'irc',
+    family: 'infra',
+    year: 2023,
+    title: { FR: 'Serveur IRC', EN: 'IRC server' },
+    org: { FR: 'Travaux pratiques', EN: 'Lab work' },
+    category: { FR: 'Réseaux', EN: 'Networks' },
+    desc: {
+      FR: 'J’ai installé et configuré un serveur IRC (Internet Relay Chat) pour la messagerie instantanée interne.',
+      EN: 'I installed and configured an IRC (Internet Relay Chat) server for internal instant messaging.',
+    },
+    tags: ['IRC', 'Linux'],
+  },
+  {
+    id: 'openvpn-mfa',
+    family: 'infra',
+    year: 2024,
+    title: { FR: 'VPN OpenVPN avec MFA sur pfSense', EN: 'OpenVPN with MFA on pfSense' },
+    org: { FR: 'Travaux pratiques', EN: 'Lab work' },
+    category: { FR: 'Cybersécurité', EN: 'Cybersecurity' },
+    desc: {
+      FR: 'J’ai sécurisé l’authentification d’un VPN OpenVPN sur pfSense avec un second facteur.',
+      EN: 'I secured OpenVPN authentication on pfSense with a second factor.',
+    },
+    tags: ['OpenVPN', 'pfSense', 'MFA'],
+  },
+  {
+    id: 'it-filiales',
+    family: 'data',
+    year: 2025,
+    title: { FR: 'Tableau de bord IT des filiales', EN: 'IT dashboard of the subsidiaries' },
+    org: { FR: 'DSI du groupe Neemba', EN: 'Neemba group IT' },
+    category: dataCat,
+    desc: {
+      FR: 'Le tableau de bord Power BI qui montre aux directions des filiales l’activité de leur service informatique\u00a0: parc, SIM, incidents et SLA, liaisons Internet, sécurité, budget et projets.',
+      EN: 'The Power BI dashboard that shows the subsidiaries’ management their IT activity: fleet, SIM cards, incidents and SLA, internet links, security, budget and projects.',
+    },
+    tags: ['Power BI', 'KPI', 'Parc IT', 'SLA'],
+  },
+  {
+    id: 'rh-groupe',
+    family: 'data',
+    year: 2026,
+    title: { FR: 'Ressources humaines du groupe', EN: 'Group human resources' },
+    org: {
+      FR: 'Groupe Neemba\u00a0· onze filiales',
+      EN: 'Neemba group\u00a0· eleven subsidiaries',
+    },
+    category: dataCat,
+    desc: {
+      FR: 'Un tableau de bord Power BI multi-filiales (effectifs, embauches, départs, absences, formation, recrutement) et le modèle de collecte Excel 2026 qui l’alimente.',
+      EN: 'A multi-subsidiary Power BI dashboard (headcount, hires, departures, absences, training, recruitment) and the 2026 Excel collection template that feeds it.',
+    },
+    tags: ['Power BI', 'Excel', 'Modèle de collecte'],
+  },
+  {
+    id: 'finance-guinee',
+    family: 'data',
+    year: 2026,
+    title: { FR: 'Fiscalité de Neemba Guinée', EN: 'Neemba Guinea tax dashboard' },
+    org: same('Neemba Guinée'),
+    category: dataCat,
+    desc: {
+      FR: 'Un tableau de bord Power BI pour la direction financière\u00a0: impôts sur salaires, TVA, retenues à la source, échéances fiscales et risque sur opérations, mois par mois.',
+      EN: 'A Power BI dashboard for the finance department: payroll taxes, VAT, withholding taxes, tax deadlines and operational risk, month by month.',
+    },
+    tags: ['Power BI', 'Fiscalité', 'Excel'],
+  },
+  {
+    id: 'academy',
+    family: 'data',
+    year: 2026,
+    title: { FR: 'Formation du groupe, Neemba Academy', EN: 'Group training, Neemba Academy' },
+    org: { FR: 'Neemba Academy\u00a0· douze entités', EN: 'Neemba Academy\u00a0· twelve entities' },
+    category: dataCat,
+    desc: {
+      FR: 'La collecte sur listes SharePoint (une par filiale), les scripts PowerShell qui créent le site et le tableau de bord Power BI de pilotage de la formation.',
+      EN: 'Collection on SharePoint lists (one per subsidiary), the PowerShell scripts that provision the site and the Power BI dashboard that steers training.',
+    },
+    tags: ['Power BI', 'SharePoint', 'PowerShell'],
+  },
+  {
+    id: 'neemba-reports',
+    family: 'data',
+    year: 2026,
+    title: {
+      FR: 'Neemba Reports, rapports logistiques',
+      EN: 'Neemba Reports, logistics reporting',
+    },
+    org: { FR: 'Neemba Togo\u00a0· logistique', EN: 'Neemba Togo\u00a0· logistics' },
+    category: { FR: 'Automatisation', EN: 'Automation' },
+    desc: {
+      FR: 'Un outil Python en ligne de commande qui consolide les exports Excel de la logistique et produit les rapports Call & Demande, Stock antériorité et complet.',
+      EN: 'A Python command-line tool that consolidates the logistics Excel exports and produces the Call & Demand, Stock ageing and full reports.',
+    },
+    tags: ['Python', 'pandas', 'openpyxl', 'Excel'],
+  },
+  {
+    id: 'biasa-immo',
+    family: 'apps',
+    year: 2026,
+    title: { FR: 'Registre des immobilisations BIASA', EN: 'BIASA fixed-asset register' },
+    org: { FR: 'Clinique BIASA, Lomé', EN: 'BIASA Clinic, Lomé' },
+    category: businessApp,
+    desc: {
+      FR: 'Une application de registre des immobilisations et d’amortissements au référentiel SYSCOHADA, servie en local et utilisable hors ligne.',
+      EN: 'A fixed-asset register and depreciation application under the SYSCOHADA framework, served locally and usable offline.',
+    },
+    tags: ['JavaScript', 'HTML / CSS', 'SYSCOHADA', 'Excel'],
   },
 ];
 
@@ -834,8 +986,14 @@ const pdfReport: LS = { FR: 'Rapport PDF', EN: 'PDF report' };
 
 // Projects shown as related at the end of a page (the written studies may name their own).
 export const projectRelated: Record<string, string[]> = {
-  automate: ['azure-infra', 'siem'],
-  'azure-infra': ['automate', 'wisignal'],
+  automate: ['azure-infra', 'neemba-reports'],
+  'azure-infra': ['it-filiales', 'automate'],
+  'it-filiales': ['azure-infra', 'rh-groupe'],
+  'rh-groupe': ['academy', 'it-filiales'],
+  'finance-guinee': ['rh-groupe', 'azure-infra'],
+  academy: ['rh-groupe', 'azure-infra'],
+  'neemba-reports': ['automate', 'printtrack'],
+  'biasa-immo': ['tracker', 'biasa'],
   wisignal: ['moov', 'azure-infra'],
   printtrack: ['tracker', 'smartprocure'],
   smartprocure: ['printtrack', 'tracker'],
@@ -948,6 +1106,14 @@ export const references: { name: string; role: LS; organization: LS }[] = [
     name: 'Jerome KPETO',
     role: { FR: 'Responsable des systèmes d’information', EN: 'Information Systems Manager' },
     organization: same('Coris Bank International Togo'),
+  },
+  {
+    name: 'Marcel Komi BOSSOU',
+    role: { FR: 'Administrateur systèmes', EN: 'Systems Administrator' },
+    organization: {
+      FR: 'Direction de l’alerte précoce · Commission de la CEDEAO',
+      EN: 'Early Warning Directorate · ECOWAS Commission',
+    },
   },
   {
     name: 'Ousseni NAITE',

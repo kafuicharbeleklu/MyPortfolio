@@ -61,8 +61,13 @@ npm run preview      # serve dist/ locally
   serif italic word, an SVG thread drawn on load). The letters of the title tick (`SwapText`):
   each letter exists once in the DOM, its twin is the `::after` pseudo-element, and the `h1`
   carries the accessible name. The home page is five scenes (`sectionIds`): Profil (portrait and
-  statement; the "Fiche de mesures" card is `BriefDrawer.tsx`, a paper tab sewn to the right edge
-  of every page that opens a side `<dialog>`), Expertise (six domains on three columns), Réalisations
+  statement; the "En bref" card is `BriefDrawer.tsx`: a small paper companion sewn to the right
+  edge of every page, drawn on canvas by `companion.ts` in the manner of the notch companions (soft
+  superellipse body, a face that slides to follow the pointer, eyes that change shape for each mood,
+  squash and stretch on the jump that opens the side `<dialog>`, a wink on close; inside the open drawer a
+  poke winks, two make him jump, three quick ones give spiral eyes; asleep after 15 s without a pointer). He is the site's own character, not a
+  copy of Coucou's Mochi, whose name and design are reserved: paper, stitched seam, honey blush, no
+  state colours. His label "En bref" turns around him as a ring of text. He has no name yet), Expertise (six domains on three columns), Réalisations
   (three featured cases, the only poster-sized opener, `.sm-scene__word.is-big`, plus the
   rotating `ProjectsBadge`), Parcours (experience on the left, education and languages on the
   right) and Contact (the ten references folded in a `<details>`, names on request). Each scene
@@ -72,6 +77,27 @@ npm run preview      # serve dist/ locally
   every link into the site (header, menu, poster, drawer) goes through the curtain too
   (`interceptCoverLinks` in `SiteRoot`) and lands on its destination; the header has no seam on the
   cover and the home page (`.sm-header.is-seamless`).
+- Project cards carry no status labels (the user removed "en cours", "MVP", "Livré"); names are
+  exactly "Tracker" and "SmartProcure"; the lab works carry the years the user gave (api-python 2022, nextcloud,
+  mail-server, pfsense and irc 2023, openvpn-mfa 2024). The Power BI dashboards (it-filiales,
+  azure-infra, rh-groupe, finance-guinee, academy), neemba-reports and biasa-immo have written
+  studies in `studies.ts` drawn from the user's work folder `C:UsersekluDownloadsI` (readable
+  only after `/add-dir`; never open its `BIDC` folders).
+- Phones (the `@media (max-width: 860px)` and `520px` blocks at the end of site.css, before the
+  motion layer): `SceneBar.tsx` is a bottom bar with the five scenes (the active one shows its
+  name, the others their number; hidden on the cover and under the open menu), and the companion
+  sits on its right end at two thirds of his size, without his ring; `.sm[data-page]` on the root
+  drives these rules. On phones the chat toggle is a bare icon in the header, in a slot kept free on the
+  left of the music and menu icons (the user found a floating bubble too close to the companion). "En bref" rises as a bottom sheet (`BriefDrawer` switches the motion axis with
+  `useMediaQuery`); the poster title is cut on four lines (`ui.posterTitleSplit`: INFRA- /
+  STRUCTURE / fiable / ET SÉCURISÉE) and the door becomes a full-width bar at the bottom of the
+  poster; the scene words fill the width; the portrait sits right with the statement on a paper
+  card over its corner; project rows stack. The menu button is a bare three-line icon flush with
+  the right edge and "close" a bare cross (`.sm-menu-btn__label` hidden). Under 521px the inner
+  pages show "K. C. Eklu" and an arrow as back link. The menu carries the language and theme rows
+  (`.sm-menu__lang`, `.sm-menu__theme`), since the header hides them on small screens.
+  Hover-only transforms are gated by `@media (hover: hover)`; the audio element is
+  `preload="none"`.
 - Typography: the Anton titles are approved as they are. The open point is the other family,
   the Cormorant Garamond sentences and sub-titles (`.sm-serif`, weight 600, the profile
   statement up to 68px), which the user finds too bold and oversized and wants replaced by a
@@ -94,7 +120,7 @@ npm run preview      # serve dist/ locally
   `document.startViewTransition` (the old page is cut away along a diagonal, `sm-cut-away`) (project titles share a `view-transition-name` between the list
   and the project page) and plays the opening curtain once per session. CSS side: the "Motion
   layer" block at the end of `site.css` holds the scroll-driven effects (`animation-timeline:
-  view()`, inside `@supports`, so unsupported browsers get the static result). Anything added
+view()`, inside `@supports`, so unsupported browsers get the static result). Anything added
   there must also be neutralised in the reduced-motion block that follows it.
 
 Content rules for this design: no financial amounts, no em dashes in copy. The tailoring mood lives
@@ -218,6 +244,6 @@ routing has no URLs, the sitemap only describes the single page.
 ## Conventions
 
 - Conventional Commits with optional scope, short imperative summary: `feat(seo): add sitemap.xml and
-  robots.txt`, `fix(lightbox): hide chatbot, remove prev/next`.
+robots.txt`, `fix(lightbox): hide chatbot, remove prev/next`.
 - Prettier: 2 spaces, single quotes, semicolons, 100-character width.
 - Components and their files are PascalCase; state, refs, helpers and DOM ids are camelCase.

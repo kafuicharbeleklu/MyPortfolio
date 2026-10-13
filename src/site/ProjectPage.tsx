@@ -167,7 +167,6 @@ function ProjectPage({ lang, id }: ProjectPageProps) {
   const period = study?.start
     ? formatSpan(study.start, study.end ?? null, lang)
     : (data?.duration ?? null);
-  const status = text?.status ?? data?.status ?? null;
   const environment = study?.environment ?? project.tags.join(' · ');
   const related = (study?.related ?? projectRelated[id] ?? [])
     .map((relatedId) => projects.find((item) => item.id === relatedId))
@@ -218,12 +217,6 @@ function ProjectPage({ lang, id }: ProjectPageProps) {
             <div>
               <dt className="sm-cap sm-muted">{detailUi.period[lang]}</dt>
               <dd>{period}</dd>
-            </div>
-          )}
-          {status && (
-            <div>
-              <dt className="sm-cap sm-muted">{detailUi.status[lang]}</dt>
-              <dd>{status}</dd>
             </div>
           )}
           <div>

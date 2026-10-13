@@ -1,6 +1,6 @@
 [
   {
-    "title": "Active Directory on Ubuntu with Samba",
+    "title": "LDAP server on Ubuntu",
     "slug": "active-directory-ubuntu-samba",
     "tagline": "Step-by-step setup of a Samba/LDAP domain controller on Ubuntu.",
     "description": "I wrote a guide to create a Samba domain on Ubuntu with Kerberos and DNS. I cover server preparation and Windows and Linux client integration.",
@@ -11,21 +11,10 @@
     "primary_language": "Bash",
     "tech_stack": {
       "frontend": [],
-      "backend": [
-        "Ubuntu Server",
-        "Samba AD DC",
-        "Kerberos",
-        "DNS"
-      ],
+      "backend": ["Ubuntu Server", "Samba AD DC", "Kerberos", "DNS"],
       "database": [],
       "devops": [],
-      "tools": [
-        "samba-tool",
-        "smbclient",
-        "winbind",
-        "realm",
-        "dnsutils"
-      ]
+      "tools": ["samba-tool", "smbclient", "winbind", "realm", "dnsutils"]
     },
     "features": [
       "Preparing the Ubuntu environment with a static IP, hostname and resolv.conf.",
