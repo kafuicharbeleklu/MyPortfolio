@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { assetPaths, withBaseAsset } from '../config/assets';
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion';
 import type { Language } from '../translations';
@@ -146,10 +146,118 @@ function useCompanion(reduced: boolean, open: boolean) {
  * measurements card from the side, on every page. A native modal dialog gives focus containment,
  * Escape and the return of focus to the tab.
  */
+type BriefPanelProps = {
+  lang: Language;
+  reduced: boolean;
+  /** on phones the panel is a sheet rising from the bottom */
+  sheet: boolean;
+  /** true while the panel slides out: the backdrop fades with it */
+  closing: boolean;
+  resumeHref: string;
+  onClose: () => void;
+  onPoke: () => void;
+  attach: (canvas: HTMLCanvasElement | null) => (() => void) | undefined;
+};
+
+/** The card itself: a native modal dialog, slid in by motion and slid out before it is removed. */
+function BriefPanel({
+  lang,
+  reduced,
+  sheet,
+  closing,
+  resumeHref,
+  onClose,
+  onPoke,
+  attach,
+}: BriefPanelProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) {
+      return undefined;
+    }
+    const root = document.documentElement;
+    const previousOverflow = root.style.overflow;
+    root.style.overflow = 'hidden';
+    dialog.showModal();
+    return () => {
+      dialog.close();
+      root.style.overflow = previousOverflow;
+    };
+  }, []);
+
+  const away = sheet ? { y: '100%' } : { x: '100%' };
+
+  return (
+    <motion.dialog
+      ref={dialogRef}
+      className={closing ? 'sm-brief sm-twill is-closing' : 'sm-brief sm-twill'}
+      aria-label={ui.cardTitle[lang]}
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
+      }}
+      onClick={(event) => {
+        // a click on the backdrop reaches the dialog element itself
+        if (event.target === event.currentTarget) onClose();
+      }}
+      initial={reduced ? false : away}
+      animate={{ x: 0, y: 0 }}
+      exit={reduced ? undefined : away}
+      transition={{ duration: reduced ? 0 : 0.45, ease }}
+    >
+      <div className="sm-brief__buddy" aria-hidden="true" onClick={onPoke}>
+        <canvas ref={attach} className="sm-buddy__canvas" />
+      </div>
+      <div className="sm-brief__inner">
+        <div className="sm-brief__head">
+          <div>
+            <p className="sm-cap sm-card__kicker">{ui.cardKicker[lang]}</p>
+            <p className="sm-serif sm-card__title">{ui.cardTitle[lang]}</p>
+          </div>
+          <button
+            type="button"
+            className="sm-menu-btn sm-cap"
+            onClick={onClose}
+            aria-label={ui.close[lang]}
+          >
+            <span className="sm-menu-btn__label">{ui.close[lang]}</span>
+            <span className="sm-menu-btn__x" aria-hidden="true">
+              ×
+            </span>
+          </button>
+        </div>
+        <dl>
+          {measurements.map((row) => (
+            <div key={row.label.FR} className="sm-card__row">
+              <dt className="sm-cap">{row.label[lang]}</dt>
+              <dd>{row.value[lang]}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="sm-brief__actions">
+          <a
+            className="sm-stitch is-on-dark"
+            href={resumeHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {ui.cv[lang]}
+          </a>
+          <a className="sm-stitch is-on-dark" href="#contact" onClick={onClose}>
+            {ui.contactMe[lang]}
+          </a>
+        </div>
+      </div>
+    </motion.dialog>
+  );
+}
+
 function BriefDrawer({ lang }: { lang: Language }) {
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const reduced = usePrefersReducedMotion();
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const pokes = useRef<number[]>([]);
   const resumeHref = withBaseAsset(assetPaths.resumes[lang]);
   const { engine, tabRef, attach } = useCompanion(reduced, open);
@@ -160,16 +268,18 @@ function BriefDrawer({ lang }: { lang: Language }) {
   const ring = unit.repeat(Math.max(1, Math.round(RING_LENGTH / (unit.length * 8))));
 
   const openDrawer = () => {
-    engine.hop();
+    engine.lean();
+    setClosing(false);
     setOpen(true);
   };
   const closeDrawer = () => {
     engine.wink();
+    setClosing(true);
     setOpen(false);
   };
   /**
    * Taps on him inside the open drawer, where a click no longer has to open anything: one is a
-   * wink, a second within half a second makes him jump, a third gives him spiral eyes.
+   * wink, a second within half a second a stretch, a third gives him spiral eyes.
    */
   const poke = () => {
     const now = performance.now();
@@ -179,27 +289,11 @@ function BriefDrawer({ lang }: { lang: Language }) {
       pokes.current = [];
       engine.dizzy();
     } else if (count === 2) {
-      engine.hop();
+      engine.stretch();
     } else {
       engine.wink();
     }
   };
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!open || !dialog) {
-      return undefined;
-    }
-
-    const root = document.documentElement;
-    const previousOverflow = root.style.overflow;
-    root.style.overflow = 'hidden';
-    dialog.showModal();
-    return () => {
-      dialog.close();
-      root.style.overflow = previousOverflow;
-    };
-  }, [open]);
 
   return (
     <>
@@ -222,68 +316,21 @@ function BriefDrawer({ lang }: { lang: Language }) {
         </svg>
         <canvas ref={attach} className="sm-buddy__canvas" aria-hidden="true" />
       </button>
-      {open && (
-        <motion.dialog
-          ref={dialogRef}
-          className="sm-brief sm-twill"
-          aria-label={ui.cardTitle[lang]}
-          onCancel={(event) => {
-            event.preventDefault();
-            closeDrawer();
-          }}
-          onClick={(event) => {
-            // a click on the backdrop reaches the dialog element itself
-            if (event.target === event.currentTarget) closeDrawer();
-          }}
-          initial={reduced ? false : sheet ? { y: '100%' } : { x: '100%' }}
-          animate={{ x: 0, y: 0 }}
-          transition={{ duration: reduced ? 0 : 0.5, ease }}
-        >
-          <div className="sm-brief__buddy" aria-hidden="true" onClick={poke}>
-            <canvas ref={attach} className="sm-buddy__canvas" />
-          </div>
-          <div className="sm-brief__inner">
-            <div className="sm-brief__head">
-              <div>
-                <p className="sm-cap sm-card__kicker">{ui.cardKicker[lang]}</p>
-                <p className="sm-serif sm-card__title">{ui.cardTitle[lang]}</p>
-              </div>
-              <button
-                type="button"
-                className="sm-menu-btn sm-cap"
-                onClick={closeDrawer}
-                aria-label={ui.close[lang]}
-              >
-                <span className="sm-menu-btn__label">{ui.close[lang]}</span>
-                <span className="sm-menu-btn__x" aria-hidden="true">
-                  ×
-                </span>
-              </button>
-            </div>
-            <dl>
-              {measurements.map((row) => (
-                <div key={row.label.FR} className="sm-card__row">
-                  <dt className="sm-cap">{row.label[lang]}</dt>
-                  <dd>{row.value[lang]}</dd>
-                </div>
-              ))}
-            </dl>
-            <div className="sm-brief__actions">
-              <a
-                className="sm-stitch is-on-dark"
-                href={resumeHref}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {ui.cv[lang]}
-              </a>
-              <a className="sm-stitch is-on-dark" href="#contact" onClick={closeDrawer}>
-                {ui.contactMe[lang]}
-              </a>
-            </div>
-          </div>
-        </motion.dialog>
-      )}
+      <AnimatePresence onExitComplete={() => setClosing(false)}>
+        {open && (
+          <BriefPanel
+            key="brief"
+            lang={lang}
+            reduced={reduced}
+            sheet={sheet}
+            closing={closing}
+            resumeHref={resumeHref}
+            onClose={closeDrawer}
+            onPoke={poke}
+            attach={attach}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

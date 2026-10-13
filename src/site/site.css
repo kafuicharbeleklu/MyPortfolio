@@ -2576,6 +2576,12 @@ html.sm-theme-fade .sm *:not(.sm-theme, .sm-theme *)::after {
 
 .sm-brief::backdrop {
   background: rgba(47, 48, 51, 0.45);
+  transition: opacity 0.45s;
+}
+
+/* while the panel slides out, the backdrop fades with it */
+.sm-brief.is-closing::backdrop {
+  opacity: 0;
 }
 
 .sm-brief__inner {

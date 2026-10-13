@@ -7,7 +7,18 @@
 
 export type EyeShape = 'pill' | 'wide' | 'happy' | 'closed' | 'spiral' | 'wink';
 
-type Prop = 'yaw' | 'pitch' | 'roll' | 'sx' | 'sy' | 'oy' | 'open' | 'es' | 'tint' | 'hands';
+type Prop =
+  | 'yaw'
+  | 'pitch'
+  | 'roll'
+  | 'lean'
+  | 'sx'
+  | 'sy'
+  | 'oy'
+  | 'open'
+  | 'es'
+  | 'tint'
+  | 'hands';
 type Ease = (t: number) => number;
 type Key = [target: number, duration: number, ease: Ease];
 type Tween = { keys: Key[]; index: number; from: number; start: number; done?: () => void };
@@ -88,6 +99,7 @@ export class Companion {
     yaw: 0,
     pitch: 0,
     roll: 0,
+    lean: 0,
     sx: 1,
     sy: 1,
     oy: 0,
@@ -186,6 +198,45 @@ export class Companion {
       [0, 230, EASE.in],
     ]);
     this.burst(6);
+  }
+
+  /** the gesture that opens the drawer: he leans toward the panel, happy, with a warm flush */
+  lean() {
+    this.show('happy', 1200);
+    this.tween('tint', [
+      [0.3, 180, EASE.out],
+      [0, 1200, EASE.inOut],
+    ]);
+    if (this.reduced) {
+      return;
+    }
+    this.tween('lean', [
+      [0.22, 240, EASE.out],
+      [0.22, 320, EASE.linear],
+      [0, 480, EASE.inOut],
+    ]);
+    this.tween('sy', [
+      [1.05, 200, EASE.out],
+      [1, 420, EASE.out],
+    ]);
+  }
+
+  /** a quick stretch upward, eyes wide, then back: the second poke */
+  stretch() {
+    this.show('wide', 900);
+    if (this.reduced) {
+      return;
+    }
+    this.tween('sy', [
+      [1.18, 160, EASE.out],
+      [0.96, 160, EASE.inOut],
+      [1, 220, EASE.out],
+    ]);
+    this.tween('sx', [
+      [0.9, 160, EASE.out],
+      [1.03, 160, EASE.inOut],
+      [1, 220, EASE.out],
+    ]);
   }
 
   /** hello: paper hands come out, the left one waves */
@@ -473,7 +524,7 @@ export class Companion {
     ctx.save();
     const wobble = now < this.wobbleUntil ? Math.sin(t * 24) * 0.1 : 0;
     ctx.translate(cx, baseY + s.oy + bob);
-    ctx.rotate(s.roll + wobble);
+    ctx.rotate(s.roll + s.lean + wobble);
     ctx.scale(s.sx * bsx, s.sy * bsy);
     ctx.translate(0, -ry);
 

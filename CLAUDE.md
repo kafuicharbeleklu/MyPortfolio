@@ -64,8 +64,9 @@ npm run preview      # serve dist/ locally
   statement; the "En bref" card is `BriefDrawer.tsx`: a small paper companion sewn to the right
   edge of every page, drawn on canvas by `companion.ts` in the manner of the notch companions (soft
   superellipse body, a face that slides to follow the pointer, eyes that change shape for each mood,
-  squash and stretch on the jump that opens the side `<dialog>`, a wink on close; inside the open drawer a
-  poke winks, two make him jump, three quick ones give spiral eyes; asleep after 15 s without a pointer). He is the site's own character, not a
+  a lean toward the panel when he opens the side `<dialog>` (the user rejected the jump), a wink on
+  close while the panel slides out (AnimatePresence exit, backdrop fading); inside the open drawer a
+  poke winks, two make him stretch, three quick ones give spiral eyes; asleep after 15 s without a pointer). He is the site's own character, not a
   copy of Coucou's Mochi, whose name and design are reserved: paper, stitched seam, honey blush, no
   state colours. His label "En bref" turns around him as a ring of text. He has no name yet), Expertise (six domains on three columns), Réalisations
   (three featured cases, the only poster-sized opener, `.sm-scene__word.is-big`, plus the

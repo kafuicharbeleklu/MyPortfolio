@@ -575,7 +575,7 @@ export const education: {
       FR: 'TEF Canada 2026 : C2 à l’oral, C1 en compréhension, B2 à l’écrit',
       EN: 'TEF Canada 2026: C2 speaking, C1 listening and reading, B2 writing',
     },
-    grade: { FR: 'Anglais B2, usage professionnel', EN: 'English B2, professional use' },
+    grade: { FR: 'Anglais B2, usage professionnel', EN: 'English B2, professional' },
   },
 ];
 
